@@ -131,52 +131,52 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_below="@id/ll_switch_date"
-        android:layout_above="@+id/rl_switch_bottom"
+        android:layout_above="@+id/rl_switch_sportorsleep"
         >
 
 
 
     </LinearLayout>
    <RelativeLayout
-    android:id="@+id/rl_switch_bottom"
+    android:id="@+id/rl_switch_sportorsleep"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
        android:background="@color/white"
        android:layout_alignParentBottom="true"
        >
-       <LinearLayout
-           android:id="@+id/ll_switch_sportorsleep"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_centerHorizontal="true"
-           android:layout_marginLeft="10dp"
-           android:layout_marginRight="10dp"
-           android:layout_marginBottom="10dp"
-           android:background="@drawable/switch_sportorsleep"
+    <LinearLayout
+        android:id="@+id/ll_switch_sportorsleep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/switch_sportorsleep"
 
-           android:orientation="horizontal">
+        android:orientation="horizontal">
 
-           <TextView
-               android:id="@+id/tv_switch_sports"
-               android:layout_width="0dp"
-               android:layout_height="match_parent"
-               android:layout_weight="1"
-               android:gravity="center"
-               android:text="运动"
-               android:textColor="@color/white"
-               android:textSize="18sp" />
+        <TextView
+            android:id="@+id/tv_switch_sports"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="运动"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
-           <TextView
-               android:id="@+id/tv_switch_sleep"
-               android:layout_width="0dp"
-               android:layout_height="match_parent"
-               android:layout_weight="1"
-               android:gravity="center"
-               android:text="睡眠"
-               android:textColor="@color/shouhuan_day_bgcolor"
-               android:textSize="18sp" />
+        <TextView
+            android:id="@+id/tv_switch_sleep"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="睡眠"
+            android:textColor="@color/shouhuan_day_bgcolor"
+            android:textSize="18sp" />
 
-       </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
     <ImageView
         android:id="@+id/iv_bracelete_set"

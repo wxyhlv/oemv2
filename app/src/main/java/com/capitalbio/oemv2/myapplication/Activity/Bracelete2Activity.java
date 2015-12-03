@@ -137,14 +137,6 @@ public class Bracelete2Activity extends Activity implements View.OnClickListener
         tv_month = (TextView) findViewById(R.id.tv_month);
         tv_day = (TextView) findViewById(R.id.tv_day);
 
-        Date date =new Date();
-        curyearString = date.getYear()+1900+"年";
-        curmonthString = date.getMonth()+1+"月";
-        curdayString = date.getDate()+"日";
-
-        tv_year.setText(curyearString);
-        tv_month.setText(curmonthString);
-        tv_day.setText(curdayString);
         tv_switch_day = (TextView) findViewById(R.id.tv_switch_day);
         tv_switch_month = (TextView) findViewById(R.id.tv_switch_month);
         ll_switch_date = (LinearLayout) findViewById(R.id.ll_switch_date);
