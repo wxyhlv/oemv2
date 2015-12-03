@@ -1,0 +1,62 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.LinearLayout;
+
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.View.CalendarView;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class Main2Activity extends AppCompatActivity {
+
+    LinearLayout view;
+    CalendarView calendar;
+    private SimpleDateFormat format, sf;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.test_calendarview);
+        calendar = (CalendarView)findViewById(R.id.calendar_view);
+
+     // view = (LinearLayout)findViewById(R.id.content_calendar);
+/*
+       List<String > list = new ArrayList<>();
+        list.add("2015-11-05 15:14:16");
+        list.add("2015-11-10 15:14:16");
+        list.add("2015-11-17 15:14:16");
+        //view.setvalue(list);
+        calendar= new CalendarView(getApplicationContext(),list);
+        view.addView(calendar);*/
+        calendar.setSelectMore(false); // 单选
+        /*format = new SimpleDateFormat("yyyy-MM-dd");
+
+            // 设置日历日期
+            Date date;
+            try {
+                date = format.parse("2015-11-16");
+                calendar.setCalendarData(date);
+            } catch (java.text.ParseException e) {
+                e.printStackTrace();
+            }*/
+        // 日历中的点击监听
+        calendar.setOnItemClickListener(new CalendarView.OnItemClickListener() {
+
+            @Override
+            public void OnItemClick(Date selectedStartDate,
+                                    Date selectedEndDate, Date downDate) {
+
+            }
+        });
+
+
+}}

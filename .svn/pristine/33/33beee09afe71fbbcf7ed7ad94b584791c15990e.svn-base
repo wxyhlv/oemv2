@@ -1,0 +1,277 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
+import com.capitalbio.oemv2.myapplication.Const.Const;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.View.ISelectedDeviceChange;
+import com.capitalbio.oemv2.myapplication.View.SpinnerLoader;
+import com.slidingmenu.lib.SlidingMenu;
+import com.capitalbio.oemv2.myapplication.View.charview.ChartViewPBM;
+
+/**
+ * Created by chengkun on 15-11-4.
+ */
+public class MainActivity extends BaseActivity implements ISelectedDeviceChange, View.OnClickListener{
+
+
+    public static final String TAG = "MainActivity";
+    private RelativeLayout fmMainView;
+    private ImageView icSelectedDevice;
+    private Bitmap bmBracelet;
+    private BitmapDrawable bmBraceletDrable;
+    private SpinnerLoader spinnerView;
+    private GestureDetector mGestureDetector;
+    private String currentDeviceName;
+
+    // 侧滑菜单
+    private SlidingMenu slidingMenu;
+
+    @Override
+    public void selectDeviceChange(SpinnerLoader.CirclePoint cp) {
+        Log.d(TAG, "selected device changed current device is " + cp.deviceName);
+        setCurrentDevice(cp);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.ic_slected_device:
+                startSelectedDevice(currentDeviceName);
+                break;
+        }
+
+    }
+
+    private class DefaultGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        // Touch down时触发
+        @Override
+        public boolean onDown(MotionEvent e) {
+            Log.d(TAG, "onDown");
+            return super.onDown(e);
+        }
+
+        // 在Touch down之后一定时间（115ms）触发
+        @Override
+        public void onShowPress(MotionEvent e) {
+            Log.d(TAG, "onShowPress");
+        }
+
+        /**
+         * 这个方法不同于onSingleTapUp，他是在GestureDetector确信用户在第一次触摸屏幕后，没有紧跟着第二次触摸屏幕，也就是不是“双击”的时候触发
+         * */
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Log.d(TAG, "onSingleTapUp");
+            return super.onSingleTapUp(e);
+        }
+
+        /**
+         * @param e1 The first down motion event that started the scrolling.
+         @param e2 The move motion event that triggered the current onScroll.
+         @param distanceX The distance along the X axis(轴) that has been scrolled since the last call to onScroll. This is NOT the distance between e1 and e2.
+         @param distanceY The distance along the Y axis that has been scrolled since the last call to onScroll. This is NOT the distance between e1 and e2.
+         无论是用手拖动view，或者是以抛的动作滚动，都会多次触发 ,这个方法在ACTION_MOVE动作发生时就会触发 参看GestureDetector的onTouchEvent方法源码
+          * */
+        // 滑动时触发
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2,
+                                float distanceX, float distanceY) {
+
+            Log.d(TAG, "onScroll");
+
+            if((e2.getX() - e1.getX()) > 0) {
+                /*mSpinerView.setBigStep(-6);
+                mSpinerView.setDirection(10);*/
+            } else if (e2.getX() - e1.getX() < -30){
+                spinnerView.setBigStep(2);
+                spinnerView.setDirection(Const.MAIN_VIEW_SLIP_DIRECTION_LEFT);
+                spinnerView.invalidate();
+            }
+
+            return super.onScroll(e1, e2, distanceX, distanceY);
+        }
+        /**
+         * @param e1 第1个ACTION_DOWN MotionEvent 并且只有一个
+         * @param e2 最后一个ACTION_MOVE MotionEvent
+         * @param velocityX X轴上的移动速度，像素/秒
+         * @param velocityY Y轴上的移动速度，像素/秒
+         * 这个方法发生在ACTION_UP时才会触发 参看GestureDetector的onTouchEvent方法源码
+         *
+         * */
+        // 滑动一段距离，up时触发
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                               float velocityY) {
+
+            Log.d(TAG, "onFling");
+
+            return super.onFling(e1, e2, velocityX, velocityY);
+        }
+
+        // 长按后触发(Touch down之后一定时间（500ms）)
+        @Override
+        public void onLongPress(MotionEvent e) {
+
+            Log.d(TAG, "onLongPress");
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            // TODO Auto-generated method stub
+            return super.onDoubleTap(e);
+        }
+
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent e) {
+            // TODO Auto-generated method stub
+            return super.onDoubleTapEvent(e);
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            // TODO Auto-generated method stub
+            return super.onSingleTapConfirmed(e);
+        }
+
+    }
+
+
+
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void initChildLayout() {
+        super.initChildLayout();
+
+        rl.setBackgroundResource(R.drawable.bg_main);
+        //在activity中设置手势监听
+        mGestureDetector = new GestureDetector(new DefaultGestureListener());
+
+//        setNavigateBarBackGround(R.drawable.bg_main);
+        setLeftTopIcon(R.drawable.ic_person);
+        setIvTopRight(R.drawable.ic_share);
+        setTvTopTitle(R.string.app_name);
+        ivSplitLine.setBackgroundResource(R.color.mainSplitLine);
+
+        fmMainView = (RelativeLayout) View.inflate(this, R.layout.activity_main, null);
+
+        //设置对应设备大圈的图标
+        icSelectedDevice = (ImageView) fmMainView.findViewById(R.id.ic_slected_device);
+        bmBracelet = BitmapFactory.decodeResource(getResources(), R.drawable.ic_bracelet);
+        bmBraceletDrable = new BitmapDrawable(bmBracelet);
+        icSelectedDevice.setBackground(bmBraceletDrable);
+
+        //取得滚轮view的引用
+        spinnerView = (SpinnerLoader) fmMainView.findViewById(R.id.slid_spinner);
+        spinnerView.setDeviceChangeListener(this);
+        llBody.addView(fmMainView);
+
+        icSelectedDevice.setOnClickListener(this);
+
+        //设置初始选择的设备的名称
+        currentDeviceName = getResources().getString(R.string.bracelete);
+
+//        initSlidingMenu();
+    }
+
+
+    private static Bitmap small(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.postScale(2.3f, 2.3f); //长和宽放大缩小的比例
+        Bitmap resizeBmp = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+        return resizeBmp;
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Log.d(TAG, "onTouchEvent");
+        return mGestureDetector.onTouchEvent(event);
+    }
+
+
+
+    private void setCurrentDevice(SpinnerLoader.CirclePoint cp) {
+
+        currentDeviceName = cp.deviceName;
+
+        if (getResources().getString(R.string.bodyfat).equals(cp.deviceName)) {
+            icSelectedDevice.setBackgroundResource(R.drawable.ic_body_fat);
+        } else if (getResources().getString(R.string.glycolipid).equals(cp.deviceName)) {
+            //设置血糖图片
+        } else if (getResources().getString(R.string.bracelete).equals(cp.deviceName)) {
+            icSelectedDevice.setBackgroundResource(R.drawable.ic_bracelet);
+        } else if (getResources().getString(R.string.bloodpress).equals(cp.deviceName)) {
+            icSelectedDevice.setBackgroundResource(R.drawable.ic_blood_press);
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        spinnerView.invalidate();
+    }
+
+    private void startSelectedDevice(String deviceName) {
+        Intent intent;
+
+        if (deviceName.equals(getResources().getString(R.string.bloodpress))) {
+            intent = new Intent(this, BloodPressActivity.class);
+            startActivity(intent);
+        }
+        if (deviceName.equals(getResources().getString(R.string.bracelete))) {
+            intent = new Intent(this, BraceleteActivity.class);
+            startActivity(intent);
+        }
+
+    }
+
+    /**
+     * 侧滑菜单
+     */
+    private void initSlidingMenu() {
+        // configure the SlidingMenu
+        SlidingMenu menu = new SlidingMenu(this);
+        menu.setMode(SlidingMenu.LEFT);
+        // 设置触摸屏幕的模式
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        menu.setShadowWidthRes(R.dimen.shadow_width);
+        menu.setShadowDrawable(R.drawable.shadow);
+
+        // 设置滑动菜单视图的宽度
+        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        // 设置渐入渐出效果的值
+        menu.setFadeDegree(0.35f);
+        /**
+         * SLIDING_WINDOW will include the Title/ActionBar in the content
+         * section of the SlidingMenu, while SLIDING_CONTENT does not.
+         */
+        //把滑动菜单添加进所有的Activity中，可选值SLIDING_CONTENT ， SLIDING_WINDOW
+        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        //为侧滑菜单设置布局
+        menu.setMenu(R.layout.leftmenu);
+    }
+
+    public void edit(View view ){
+        Intent i =new Intent();
+        i.setClass(getApplicationContext(),ChartViewPBM.class);
+        startActivity(i);
+    }
+}

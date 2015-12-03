@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!--设备名称-->
+    <string name="glycolipid">糖脂三项</string>
+    <string name="aircat">空气猫</string>
+    <string name="bracelete">运动手环</string>
+    <string name="bloodpress">血压计</string>
+    <string name="bodyfat">体脂仪</string>
+
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

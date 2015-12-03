@@ -1,0 +1,13 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.capitalbio.oemv2.myapplication.View.SpinnerLoader
+        android:id="@+id/three"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="480dp"
+        />
+
+</FrameLayout><!-- From: file:/home/chengkun/svnTest1/app/src/main/res/layout/activity_main.xml -->

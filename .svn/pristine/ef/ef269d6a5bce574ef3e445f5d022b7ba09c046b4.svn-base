@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"  >
+
+        <!-- 顶部导航 -->
+
+        <RelativeLayout
+            android:id="@+id/rl_navigate_bar"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+            <!-- 左箭头 -->
+            <ImageView
+                android:id="@+id/iv_top_left_return"
+                android:layout_width="28dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="5dp"
+                android:paddingRight="15dip"
+                android:layout_marginTop="17dp" />
+
+            <!-- 标题名称 -->
+            <TextView
+                android:id="@+id/tv_top_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:layout_centerHorizontal="true"
+                android:textColor="#ffffff"
+                android:textSize="28sp" />
+
+            <!-- 分割线 -->
+            <ImageView
+                android:id="@+id/iv_split_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="54dp"
+                android:background="@color/white" />
+
+            <!--记一下 -->
+            <ImageView
+                android:id="@+id/iv_top_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="8dp" />
+
+            <!--日历选择-->
+            <ImageView
+                android:id="@+id/iv_set_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="18dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp" />
+        </RelativeLayout>
+
+        <!-- 中间填充部分 -->
+
+        <LinearLayout
+            android:id="@+id/ll_body"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/rl_navigate_bar"
+            android:layout_marginTop="55dp"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical" />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

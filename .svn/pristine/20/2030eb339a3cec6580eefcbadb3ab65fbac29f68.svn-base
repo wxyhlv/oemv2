@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#4e4e4e"
+        android:gravity="center_horizontal" >
+
+        <LinearLayout
+            android:id="@+id/rl_user_photo_name"
+            android:layout_width="match_parent"
+            android:padding="8dp"
+            android:orientation="vertical"
+            android:layout_height="wrap_content" >
+
+
+            <FrameLayout
+                android:id="@+id/fl_sliding"
+                android:layout_width="105dp"
+                android:layout_gravity="center"
+
+                android:layout_height="105dp">
+                <ImageView
+                    android:id="@+id/photo_greyline"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
+                    android:src="@drawable/bg_transparent_circle" />
+
+                <com.capitalbio.oemv2.myapplication.View.RoundImageView
+                    android:id="@+id/iv_slide_user_photo"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_scene" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/tv_userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="颐健谱"
+                android:layout_toEndOf="@id/fl_sliding"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                 />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view_first_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/rl_user_photo_name"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@color/text_grey_light" />
+
+        <LinearLayout
+            android:id="@+id/ll_goal_plan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_first_line"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/text_grey_light" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" >
+
+                <ImageView
+                    android:id="@+id/iv_goal_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/ic_user_guide" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/iv_goal_icon"
+                    android:text="@string/slide_user_guide"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textColor="@color/white" />
+
+                <ImageView
+                    android:id="@+id/iv_jiantou_bottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_arrows" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/text_grey_light" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/userhelp_ll"
+            android:layout_width="wrap_content"
+            android:layout_alignLeft="@id/ll_goal_plan"
+            android:layout_below="@id/ll_goal_plan"
+            android:gravity="right"
+            android:paddingBottom="20dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/iv_user_help_icon"
+                    android:layout_width="40dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_version_update"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/iv_user_help_icon"
+                    android:text="@string/slide_user_version_update"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_medium" />
+                <ImageView
+                    android:id="@+id/iv_jiantou_user_help"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_arrows" />
+            </RelativeLayout>
+            <View
+                android:id="@+id/user_help_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/text_grey_light" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/iv_last_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_below="@id/userhelp_ll"
+            android:layout_marginTop="230dp"
+            android:background="@color/text_grey_light" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/iv_last_line"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:drawableLeft="@drawable/ic_logout"
+                android:text="@string/slide_user_logout"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>
+
+
+
+
+

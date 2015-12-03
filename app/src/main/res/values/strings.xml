@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">颐健谱</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!--设备名称-->
+    <string name="glycolipid">糖脂三项</string>
+    <string name="aircat">空气猫</string>
+    <string name="bracelete">运动手环</string>
+    <string name="bloodpress">血压计</string>
+    <string name="bodyfat">体脂仪</string>
+    <string name="register">注 册</string>
+
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+
+    <!--用户土司提示-->
+    <string name="veryfication_code_is_not_correct">请输入正确的验证码</string>
+
+
+    <!--登录页资源字符串-->
+    <string name="please_input_user_name">请输入用户名</string>
+    <string name="foget_password">忘记密码</string>
+    <string name="title_activity_personal_details_acitivity">PersonalDetailsAcitivity</string>
+
+
+    <!--个人信息字符串-->
+    <string name="persondetail_submit">提  交</string>
+
+
+
+    <!--侧滑页面字符串-->
+    <string name="slide_user_guide">用户指南</string>
+    <string name="slide_user_version_update">版本更新</string>
+    <string name="slide_user_logout">注销</string>
+
+
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <!--体重仪-->
+    <string name="switch_mesure">即时测量</string>
+    <string name="switch_history">历史纪录</string>
+</resources>

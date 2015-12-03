@@ -1,0 +1,249 @@
+package com.capitalbio.oemv2.myapplication.Fragment;
+
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.View.Sleephistogram;
+import com.capitalbio.oemv2.myapplication.View.TasksCompletedView;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by wxy on 15-11-26.
+ */
+public class BraceleteFragmentDaySleep extends BaseFragment  implements OnChartValueSelectedListener {
+
+    private TasksCompletedView arcView;//progress
+    private TextView tv_distance,tv_kal,tv_hours;
+    private BarChart mChart;
+    private Typeface mtf;
+    private String[] mTimes ={
+            "0:00","1:00","2:00","3:00",
+            "4:00","5:00","6:00","7:00",
+            "8:00","9:00","10:00","11:00",
+            "12:00","13:00","14:00","15:00",
+            "16:00","17:00","18:00","19:00",
+            "20:00","21:00","22:00","23:00",
+    };
+    private GridView gv_info;
+    List<Map<String, Object>> list;
+    private Sleephistogram sleepView;
+
+    @Override
+    protected View loadViewLayout(LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.fg_bracelete_day2,container,false);
+    }
+
+    @Override
+    protected void findViewById(View view) {
+       //
+        arcView = (TasksCompletedView) view.findViewById(R.id.arcView);
+        gv_info = (GridView) view.findViewById(R.id.gv_info);
+   /*     tv_distance = (TextView) view.findViewById(R.id.tv_distance);
+        tv_kal = (TextView) view.findViewById(R.id.tv_kal);
+        tv_hours = (TextView) view.findViewById(R.id.tv_hours);*/
+      /*  mChart = (BarChart)view.findViewById(R.id.barchart);
+
+        mChart.setBackgroundColor(Color.WHITE);*/
+        sleepView = (Sleephistogram) view.findViewById(R.id.sleep);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    @Override
+    protected void processLogic() {
+        arcView.setProgressInfo(1500,3000,50 );
+        List<Map<String,String>> shenshui = new ArrayList<>();
+        Map<String,String> map = new HashMap<>();
+        map.put("time","1441771356000");
+        map.put("widthtime", "900000");
+        shenshui.add(map);
+        List<Map<String,String>> qianshui = new ArrayList<>();
+        Map<String,String> map1 = new HashMap<>();
+        map1.put("time","1441778729000");
+        map1.put("widthtime","800000");
+        qianshui.add(map1);
+        sleepView.setSleepData(shenshui,qianshui);
+       /* initchar();
+        setData(24, 50);*/
+        list = buildListForSimpleAdapter();
+        //实例适配器
+        SimpleAdapter chat = new SimpleAdapter(getActivity(), list, R.layout.item_bracelete_sleep,
+                new String[] {"title","value"}, new int[] {R.id.tv_infotitle,R.id.tv_infovalue});
+        gv_info.setAdapter(chat);
+        gv_info.setSelection(0);
+    }
+    public void initchar(){
+
+       mChart.setOnChartValueSelectedListener(this);
+
+        mChart.setDrawBarShadow(false);
+        //mChart.setDrawValueAboveBar(true);
+
+        mChart.setDescription("");
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        mChart.setMaxVisibleValueCount(24);
+
+
+        // scaling can now only be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+
+        mChart.setDrawGridBackground(false);
+        // mChart.setDrawYLabels(false);
+
+        //  mChart.setAutoScaleMinMaxEnabled(true);
+        mChart.setScaleYEnabled(false);
+        mtf = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTypeface(mtf);
+        xAxis.setDrawGridLines(false);
+        xAxis.setSpaceBetweenLabels(3);
+
+
+        YAxis leftAxis = mChart.getAxisLeft();
+
+        leftAxis.setLabelCount(8, false);
+        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        leftAxis.setSpaceTop(10f);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawAxisLine(false);
+        leftAxis.setDrawLabels(false);
+        mChart.getAxisRight().setEnabled(false);
+        mChart.getLegend().setEnabled(false);
+
+    }
+
+    private void setData(int count, float range) {
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        for (int i = 0; i < count; i++) {
+            xVals.add(mTimes[i % 24]);
+        }
+
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        ArrayList<Integer> vals =new ArrayList<>();
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+        vals.add(1000);
+
+        for (int i = 0; i < vals.size(); i++) {
+
+            yVals1.add(new BarEntry(vals.get(i), i));
+        }
+
+        BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
+
+        //  set1.setBarSpacePercent(35f);
+        set1.setDrawValues(false);
+        set1.setColor(getResources().getColor(R.color.shouhuan_day_bgcolor));
+        set1.setHighLightColor(Color.parseColor("#FF7E00"));
+        set1.setHighLightAlpha(255);
+        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(set1);
+
+        BarData data = new BarData(xVals, dataSets);
+        data.setValueTextSize(15f);
+        data.setValueTypeface(mtf);
+        mChart.setData(data);
+        mChart.setVisibleXRangeMinimum(7);
+        mChart.setScaleMinima(1.5f,1f);
+        mChart.moveViewToX(6);
+
+    }
+
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
+    private List<Map<String, Object>> buildListForSimpleAdapter() {
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>(2);
+
+        //向列表容器中添加数据（每列中包括一个头像和聊天信息）
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("title","深度睡眠时长");
+        map.put("value", "4小时3分钟");
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title","浅度睡眠时长");
+        map.put("value", "4小时3分钟");
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title","清醒睡眠时长");
+        map.put("value", "4小时3分钟");
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title","清醒次数");
+        map.put("value", "3");
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title","入睡时间");
+        map.put("value", "4小时3分钟");
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title","清醒睡眠时长");
+        map.put("value", "4小时3分钟");
+        list.add(map);
+        return list;
+    }
+
+
+
+}

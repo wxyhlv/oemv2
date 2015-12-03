@@ -1,0 +1,18 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import com.capitalbio.oemv2.myapplication.R;
+
+/**
+ * Created by chengkun on 15-11-4.
+ */
+public class BraceleteActivity extends BaseActivity {
+
+    @Override
+    protected void initChildLayout() {
+
+        setNavigateBarBackGround(R.drawable.bg_shou_huan);
+        setTvTopTitle(R.string.bracelete);
+        setIvTopRight(R.drawable.ic_edit);
+        setIvSetDate(R.drawable.ic_down);
+    }
+}

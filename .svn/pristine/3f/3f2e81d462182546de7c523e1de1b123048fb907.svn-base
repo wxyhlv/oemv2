@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="grey">#F0F0F0</color>
+    <color name="text_grey_light">#BEBEBE</color>
+    <color name="text_grey">#E5E5E5</color>
+    <color name="text_newgrey">#C8C8C8</color>
+    <color name="green">#A8D76F</color>
+    <color name="lucency">#00000000</color>
+    <color name="blue_light">#22beef</color>
+    <color name="red_light">#fa8564</color>
+    <color name="green_light">#a9d76f</color>
+    <color name="orange_light">#f8a20f</color>
+    <color name="ching_light">#32d2c9</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="grey_light">#BBBBBB</color>
+    <color name="grey_deep">#6A6A6A</color>
+    <color name="brown">#AB7B07</color>
+    <color name="green_deep">#355000</color>
+    <color name="red">#AD1400</color>
+    <color name="blue">#5FAEE3</color>
+    <color name="yellow">#ffb80c</color>
+    <color name="transparent">#00000000</color>
+    <color name="wheelview_bg">#ee4e4e4e</color>
+
+    <!--主界面圆圈的颜色-->
+    <color name="bigCircle">#CDF0F2</color>
+    <color name="middleCircle">#9ADFE6</color>
+    <color name="smallCircle">#59C7D4</color>
+
+    <!--主界面分割线颜色-->
+    <color name="mainSplitLine">#80C6E8</color>
+
+</resources>

@@ -1,0 +1,12 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+/**
+ * Created by chengkun on 15-11-4.
+ */
+public class BodyFatActivity extends BaseActivity{
+
+    @Override
+    protected void initChildLayout() {
+        super.initChildLayout();
+    }
+}

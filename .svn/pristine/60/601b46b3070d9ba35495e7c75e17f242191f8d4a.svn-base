@@ -1,0 +1,127 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.NetUtils.AsyncResponseHandler;
+import com.capitalbio.oemv2.myapplication.R;
+
+import java.io.IOException;
+
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.util.EntityUtils;
+
+public class BaseActivity extends Activity {
+
+    public static final String TAG = "BaseActivity";
+
+    protected RelativeLayout rl;
+    protected RelativeLayout rlNavigateBar;
+    protected LinearLayout llBody;
+    private ImageView ivTopLeftReturn;
+    private TextView tvTopTitle;
+    private ImageView ivTopRight;
+    private ImageView ivSetDate;
+    protected ImageView ivSplitLine;
+
+    //全局app对象
+    protected MyApplication myApp;
+
+
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.iv_top_left_return:
+                    finish();
+                    break;
+                default:break;
+            }
+        }
+    };
+
+
+
+    protected AsyncResponseHandler asyncResponseHandler = new AsyncResponseHandler(){
+
+        @Override
+        public void sendStartMessage() {
+            super.sendStartMessage();
+            Log.d(TAG, "netRequest begin...");
+        }
+
+        @Override
+        public void sendResponseMessage(HttpResponse response) throws IOException {
+            super.sendResponseMessage(response);
+            String result = EntityUtils.toString(response.getEntity());
+            Log.d(TAG, "result is " + result);
+            networkCallBack(result);
+        }
+
+    };
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.base);
+        init();
+        initChildLayout();
+    }
+    
+
+    private void init() {
+
+        //初始化app
+        myApp = MyApplication.getInstance();
+
+        rl = (RelativeLayout) findViewById(R.id.rl);
+        rlNavigateBar = (RelativeLayout) findViewById(R.id.rl_navigate_bar);
+        llBody = (LinearLayout) findViewById(R.id.ll_body);
+        ivTopLeftReturn = (ImageView) findViewById(R.id.iv_top_left_return);
+        tvTopTitle = (TextView) findViewById(R.id.tv_top_title);
+        ivTopRight = (ImageView) findViewById(R.id.iv_top_right);
+        ivSetDate = (ImageView) findViewById(R.id.iv_set_date);
+        ivSplitLine = (ImageView) findViewById(R.id.iv_split_line);
+
+        //为顶端的返回按钮设置监听事件
+        ivTopLeftReturn.setOnClickListener(mOnClickListener);
+    }
+
+
+    protected void initChildLayout() {
+
+    }
+
+    protected void setLeftTopIcon(int id) {
+        ivTopLeftReturn.setBackgroundResource(id);
+    }
+
+    public void setTvTopTitle(int id) {
+        tvTopTitle.setText(id);
+    }
+
+    public void setIvSetDate(int id) {
+        ivSetDate.setBackgroundResource(id);
+    }
+
+    public void setIvTopRight(int id) {
+        ivTopRight.setBackgroundResource(id);
+    }
+
+    public void setNavigateBarBackGround(int id) {
+        rlNavigateBar.setBackgroundResource(id);
+    }
+
+    protected void networkCallBack(String result){
+
+    }
+}
