@@ -1,0 +1,124 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Bean.WarnInfo;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+import com.capitalbio.oemv2.myapplication.adapter.CustomWarnAdapter;
+
+import org.xutils.ex.DbException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BraceleteCustomWarnSettingActivity extends BaseActivity implements View.OnClickListener {
+
+    RelativeLayout contentLayout;
+    ListView listview;
+    CustomWarnAdapter adpter;
+    List<WarnInfo> list = new ArrayList<>();
+
+    int REQUSET =3;
+    @Override
+    protected void initChildLayout() {
+        initChildView();
+    }
+
+    private void initChildView() {
+        rl.setBackgroundResource(R.color.bg_content);
+        rlNavigateBar.setBackgroundResource(R.drawable.bg_tang_zhi_san_xiang);
+        setLeftTopIcon(R.drawable.ic_back);
+        contentLayout = (RelativeLayout) View.inflate(this, R.layout.activity_customsetting, null);
+        llBody.addView(contentLayout);
+        setTvTopTitle(R.string.customWarn);
+        //setIvTopRight(R.string.ok);
+        //  findViewById(R.id.tv_addwarn).setOnClickListener(this);
+        listview = (ListView) findViewById(R.id.listview);
+        list = getDate();
+        adpter = new CustomWarnAdapter(getContext(), list);
+        listview.setAdapter(adpter);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == list.size() - 1) {
+
+                    Intent intent = new Intent(context, BraceleteAddWarnActivity.class);
+                    startActivityForResult(intent, REQUSET);
+                }
+            }
+        });
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position != list.size() - 1) {
+                list.remove(position);
+                    try {
+                        MyApplication.getDB().delete(list.get(position));
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                    adpter.notifyDataSetChanged();
+                return true;
+                }
+                return false;
+            }
+        });
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+        }
+
+    }
+
+    public List<WarnInfo> getDate() {
+
+        List<WarnInfo> infos = null;
+        try {
+           infos= MyApplication.getDB().selector(WarnInfo.class).findAll();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        if(infos!=null&&infos.size()>0){
+            list.addAll(infos);
+        }
+
+        WarnInfo info5 = new WarnInfo();
+        info5.setWarnType("+添加提醒");
+
+        /*list.add(info1);
+        list.add(info2);
+        list.add(info3);*/
+        list.add(info5);
+        return list;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data!=null){
+            if(requestCode==REQUSET){
+                WarnInfo  info= new WarnInfo();
+                info.setTime(data.getStringExtra("warnTime"));
+                info.setWarnType(data.getStringExtra("warntype"));
+
+                list.remove(list.size()-1);
+                list.add(info);
+                WarnInfo info5 = new WarnInfo();
+                info5.setWarnType("+添加提醒");
+                list.add(info5);
+                adpter.notifyDataSetChanged();
+            }
+        }
+    }
+}

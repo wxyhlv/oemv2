@@ -3,16 +3,20 @@ package com.capitalbio.oemv2.myapplication.NetUtils;
 import android.content.Context;
 import android.util.Log;
 
+
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.ResponseHandlerInterface;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.message.BasicHeader;
 import cz.msebera.android.httpclient.protocol.HTTP;
@@ -23,7 +27,11 @@ import cz.msebera.android.httpclient.util.EntityUtils;
  */
 public class HttpTools {
 
-    private static AsyncHttpClient httpClient = new AsyncHttpClient();
+    public static AsyncHttpClient httpClient = new AsyncHttpClient();
+    static {
+        //设置网络超时时间
+        httpClient.setTimeout(10000);
+    }
 
     public static void post(Context context, String url, JSONObject json, ResponseHandlerInterface handlerInterface) {
 
@@ -39,6 +47,8 @@ public class HttpTools {
         requestHeader.add(baseHeader);
         requestHeader.add(acceptHeader);
 
+       // httpClient.getParams().setParameter("http.socket.timeout", new Integer(30000));
+
         //通过获取请求的字符串
         StringEntity entity = new StringEntity(json.toString(), HTTP.UTF_8);
         try {
@@ -48,6 +58,11 @@ public class HttpTools {
         }
         //发送http请求
         httpClient.post(context, url, requestHeader.toArray(new Header[requestHeader.size()]), entity, contentType, handlerInterface);
+
+    }
+
+    public static void get(Context context, String url, ResponseHandlerInterface handlerInterface){
+        httpClient.get(context,url,handlerInterface);
 
     }
 

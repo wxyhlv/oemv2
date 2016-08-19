@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--title-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/bg_tang_zhi_san_xiang">
+        <RelativeLayout
+            android:id="@+id/rl_datainputbodyfat_back"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="脂肪测量仪数据录入"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:layout_centerInParent="true"
+            />
+        <RelativeLayout
+            android:id="@+id/rl_datainputbodyfat_save"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:textColor="@color/white"
+                android:textStyle="normal"
+                android:text="保存"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <!--body-->
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/grey">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <!-- time -->
+
+            <LinearLayout
+                android:id="@+id/ll_bodyfatinput_time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="15dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/clock" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="测量时间"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <Space
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tv_bodyfatinput_testtime"
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="0000-00-00 00:00" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_gray_arrow" />
+            </LinearLayout>
+
+            <!--体重-->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/tv_bodyfatinput_tz_text"
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="体重"
+                    android:textColor="@color/blue" />
+
+                <TextView
+                    android:id="@+id/tv_bodyfatinput_tz_unit"
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(㎏)"
+                    android:textColor="@color/grey_light" />
+
+                <Space
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <EditText
+                    android:id="@+id/et_bodyfatinput_tz"
+                    android:inputType="numberDecimal"
+                    android:padding="4dp"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_catdatainput_et" />
+            </LinearLayout>
+
+
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</LinearLayout>

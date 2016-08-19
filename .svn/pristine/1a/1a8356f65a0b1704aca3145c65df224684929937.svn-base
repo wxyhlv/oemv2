@@ -1,0 +1,91 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+
+
+/**
+ * 第一次进入加载页，并附带自动更新功能检查
+ * @author jiantao.tu
+ *
+ */
+public class LoadActivity extends Activity{
+
+	private static final int REQUEST_PERMISSON_SUCCESSFULL = 200;
+	private static final String TAG = "LoadActivity";
+
+	//	private Bitmap bitmap;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);  //无title
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);  //全屏*/
+
+		/*if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS) == PackageManager.PERMISSION_GRANTED)) {
+			//your code that requires permission
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_SETTINGS},
+					REQUEST_PERMISSON_SUCCESSFULL);
+		}*/
+
+		ImageView iv=new ImageView(this);
+		setContentView(iv);
+		MyApplication.getInstance().addActivity(this);
+
+		iv.setImageResource(R.drawable.load);
+		iv.setScaleType(ScaleType.FIT_XY);
+
+		iv.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				// ////////////////////自动更新/////////////////////////
+				Intent i = new Intent();
+				if (PreviewActivity.IS_FIRST_ENTRY_VALUE.equals(
+						PreferencesUtils.getString(LoadActivity.this, PreviewActivity.IS_FIRST_ENTRY_KEY))) {
+
+					i.setClass(LoadActivity.this, LoginActivity.class);
+				} else {
+					i.setClass(LoadActivity.this, PreviewActivity.class);
+				}
+				startActivity(i);
+				finish();
+			}
+
+
+		}, 1000);
+
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		MyApplication.getInstance().removeActivity(this);
+	}
+
+	/*@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		OemLog.log(TAG, "request result is " + requestCode);
+	}*/
+}

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="ddde541c289c8b816a8f8fd6c325d80788c522a6">
+        <dex dex="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/pre-dexed/debug/classes-059679825c36576838cb9315550ec772065ee1b2.jar" />
+    </item>
+    <item
+        jar="/home/wxy/androidstudioworkspace/oem_v2.0/app/libs/slidingmenu.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="942c0d8b6512d787707afbe8293566c413cdb86a">
+        <dex dex="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/pre-dexed/debug/slidingmenu-abb71f24ee2c47da8cf934537624655e2d415558.jar" />
+    </item>
+    <item
+        jar="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/exploded-aar/oem_v2.0/MPChartLib/unspecified/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="011f633f47375438909c355e7ecab3fb6a5523ed">
+        <dex dex="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/pre-dexed/debug/classes-9a672e4183555e1d00b27f2f8757f8385dfb7fcb.jar" />
+    </item>
+    <item
+        jar="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/exploded-aar/oem_v2.0/HttpLibrary/unspecified/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="236f8bcee536ad9fa13d6ea53ee207eba24ac322">
+        <dex dex="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/pre-dexed/debug/classes-eff36461673214d5b0eecf23788141a8293c7a09.jar" />
+    </item>
+    <item
+        jar="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.0/jars/libs/internal_impl-23.1.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="8716243bf04bae8d6c9ca94d27b9a9be7236f0a3">
+        <dex dex="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/pre-dexed/debug/internal_impl-23.1.0-013caa0d63ae4d63930ce90cc8c694c0b65e54ba.jar" />
+    </item>
+    <item
+        jar="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="3f151e49c316a5ab2c065969a3b3b55ef9b393fc">
+        <dex dex="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/pre-dexed/debug/classes-9fc56a4b32bb68d10e81528c4d17f0c28a897203.jar" />
+    </item>
+    <item
+        jar="/home/wxy/.gradle/caches/modules-2/files-2.1/cz.msebera.android/httpclient/4.3.6/526a9f794eab830eae4f23a62c572878b3f491ab/httpclient-4.3.6.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="526a9f794eab830eae4f23a62c572878b3f491ab">
+        <dex dex="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/pre-dexed/debug/httpclient-4.3.6-e3f865269e348976ed111fc7631db3bd07b150d8.jar" />
+    </item>
+    <item
+        jar="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/exploded-aar/com.android.support/design/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="19026d31f5d3ae868db81319671a642be5fbba08">
+        <dex dex="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/pre-dexed/debug/classes-dfbb54c3467bab54ce69836917a63fe0072b597d.jar" />
+    </item>
+    <item
+        jar="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="57ae0d750ff83f0c738d21720224ac7ea866a094">
+        <dex dex="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/pre-dexed/debug/classes-da3954af72e6992dbf0cb460c888120310bfcd2e.jar" />
+    </item>
+    <item
+        jar="/home/wxy/androidstudio-enviroment/extras/android/m2repository/com/android/support/support-annotations/23.1.0/support-annotations-23.1.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="92e3fc113ec3ee36b64603a38857b95700025633">
+        <dex dex="/home/wxy/androidstudioworkspace/oem_v2.0/app/build/intermediates/pre-dexed/debug/support-annotations-23.1.0-a990baefaec18ceb4cf6d67011d623b28e53b8be.jar" />
+    </item>
+
+</items>

@@ -1,26 +1,153 @@
 package com.capitalbio.oemv2.myapplication.Base;
 
-import android.app.Application;
+import android.app.Activity;
+import android.content.Context;
+import android.os.Environment;
+import android.support.multidex.MultiDexApplication;
+import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.capitalbio.oemv2.myapplication.Bean.AircatDevice;
+import com.capitalbio.oemv2.myapplication.Bean.LoginUser;
+import com.capitalbio.oemv2.myapplication.BraceleteLib.BraceleteDevices;
+import com.capitalbio.oemv2.myapplication.Devices.Bracelete.DevicesDataObserver;
+import com.capitalbio.oemv2.myapplication.FirstPeriod.BlueTooth.BluetoothManage;
+import com.capitalbio.oemv2.myapplication.Tools.MDTools;
+import com.capitalbio.oemv2.myapplication.Utils.ExceptionHandler;
+import com.capitalbio.oemv2.myapplication.Utils.OemLog;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+import com.umeng.socialize.PlatformConfig;
+
+import org.xutils.BuildConfig;
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
+import org.xutils.x;
+
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by chengkun on 15-11-19.
  */
-public class MyApplication extends Application{
+public class MyApplication extends  MultiDexApplication {
 
     public static final String TAG = "MyApplication";
+    public static boolean isLogin = false;// 用户是否登录
 
-    private static Application app;
+    private boolean hasBindDevices = false;
 
-    //apikey
-    public  String apikey = "85038e9d-b7fc-4f41-bf16-34cce1096b92";
+    private boolean isOnBraceleteUI = false;
+
+    public void setHasBindDevices(boolean hasBindDevices) {
+        this.hasBindDevices = hasBindDevices;
+    }
+
+    private static MyApplication app;
+    private  LoginUser user = null;
+
+    private boolean isOnDevicesMeasureUI = false;
+
+    private boolean isDevicesMeasuring = false;
+
+    private DevicesDataObserver devicesDataObserver;
+
+    //apikey   /storage/sdcard0
+   // public  String apikey = "85038e9d-b7fc-4f41-bf16-34cce1096b92";
+    public  String apikey = "35a872f5-e411-484d-8e27-93583813d85d";//二期key
+
+
+
+    public static DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
+            .setDbName("oemv2")
+            .setDbDir(new File(""))
+            .setDbVersion(2)
+            .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
+                @Override
+                public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
+                    try {
+                        OemLog.log(TAG,"update .....");
+                        if(oldVersion == 1 ) {
+
+                            db.addColumn(LoginUser.class, "token");
+                            db.addColumn(LoginUser.class, "loginTime");
+                            db.addColumn(LoginUser.class, "loginTime_");
+                            db.addColumn(LoginUser.class, "isLogin");
+                            db.addColumn(LoginUser.class, "exitlogintime");
+                            List<LoginUser> loginUsers = db.findAll(LoginUser.class);
+                            for (int i = 0;i< loginUsers.size();i++){
+                                LoginUser user =  loginUsers.get(i);
+                               /* String password_ = MDTools.MD5(user.getPassword());
+                                String mobileId = MyApplication.getInstance().getIMEI();
+                                OemLog.log(TAG, "imei is" + mobileId);
+                                String token = MDTools.MD5(MyApplication.getInstance().apikey + password_ + mobileId);
+                                user.setToken(token);*/
+                                user.setIsLogin("false");
+                                db.saveOrUpdate(user);
+                            }
+                        }
+                     //   db.addColumn(LoginUser.class, "tokenwxy");
+
+
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
+    //cat
+    private BluetoothManage bluetoothManage;
+
+    public Boolean ischeck = false;
+
+    public String ApiKey = "85038e9d-b7fc-4f41-bf16-34cce1096b92";//一期的key
+    public static List<Activity> activitys = null;
+
+    public static final int REQUEST_PERMISSON_SUCCESSFULL = 200;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "app is running...");
+        
         app = this;
+        activitys = new LinkedList<Activity>();
+        initImageLoader(getApplicationContext());
+
+        x.Ext.init(this);
+        x.Ext.setDebug(BuildConfig.DEBUG);
+        devicesDataObserver = DevicesDataObserver.getObserver();
+        // 崩溃日志
+        ExceptionHandler handler = ExceptionHandler.getInstance();
+        handler.init(this);
+
+        //
+        refWatcher = LeakCanary.install(this);
     }
+    public static RefWatcher getRefWatcher(Context context) {
+        MyApplication application = (MyApplication) context.getApplicationContext();
+        return application.refWatcher;
+    }
+
+    private RefWatcher refWatcher;
+
+    public static void initImageLoader(Context context) {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+                context).threadPriority(Thread.NORM_PRIORITY - 2)
+                .denyCacheImageMultipleSizesInMemory()
+                .discCacheFileNameGenerator(new Md5FileNameGenerator())
+                .tasksProcessingOrder(QueueProcessingType.LIFO).build();
+        ImageLoader.getInstance().init(config);
+    }
+
 
     public static MyApplication getInstance() {
         if (app != null) {
@@ -28,5 +155,210 @@ public class MyApplication extends Application{
         }
         return null;
     }
+    public static DbManager getDB() {
+        DbManager db = x.getDb(daoConfig);
+        return db;
+    }
 
+   /* public static void exit(){
+        ActivityTaskManager activityTaskManager = ActivityTaskManager.getInstance();
+        if (activityTaskManager != null) {
+            activityTaskManager.closeAllActivity();
+
+           isLogin = false;
+        }
+    }*/
+
+    public  void setCurrentUser(LoginUser user){
+        this.user = user;
+    }
+    public LoginUser getCurrentUser(){
+        try {
+            LoginUser first = getDB().selector(LoginUser.class).where("isLogin", "=", "true").findFirst();
+            return  first;
+
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return  user;
+    }
+
+    public String getCurrentUserName(){
+      //  String username = PreferencesUtils.getString(this,"username");
+         //   OemLog.log(TAG,"username is null");
+
+            if(getCurrentUser()!=null){
+                return getCurrentUser().getUsername();
+            }
+        return "";
+
+    }
+
+    public String getCurentToken(){
+        if(getCurrentUser()!=null){
+            return getCurrentUser().getToken();
+        }
+        return null;
+    }
+    AircatDevice aircatDevice = null;
+    public String getAircatDeviceMac(){
+
+        String mac =  PreferencesUtils.getString(this,"curAircatMac");
+        return mac;
+    }
+
+    public String getAircatDeviceName(){
+
+        String name =  PreferencesUtils.getString(this,"curAircatName");
+        return name;
+    }
+
+    public void setBluetoothManage(BluetoothManage bluetoothManage) {
+        this.bluetoothManage = bluetoothManage;
+    }
+
+    public BluetoothManage getBluetoothManage() {
+        return bluetoothManage;
+    }
+
+    public String getIMEI(){
+        TelephonyManager mTm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+
+        String imei = mTm.getDeviceId();
+        return  imei;
+    }
+
+
+    public void addActivity(Activity activity) {
+        if (activitys != null && activitys.size() > 0) {
+            if (!activitys.contains(activity)) {
+                activitys.add(activity);
+            }
+        } else {
+            activitys.add(activity);
+        }
+    }
+    public void removeActivity(Activity activity) {
+        if (activitys != null) {
+            if (activitys.contains(activity)) {
+                activitys.remove(activity);
+            }
+        }
+    }
+
+    public void exit(){
+        getInstance().setCurrentUser(null);
+        PreferencesUtils.putBoolean(this, "isLogin", false);
+        MyApplication.getInstance().setCurrentUser(user);
+        PreferencesUtils.putString(this, "username", "");
+        PreferencesUtils.putString(this, "mobile", "");
+        PreferencesUtils.putString(this, "token", "");
+        PreferencesUtils.putString(this, "curAircatMac", "");
+        PreferencesUtils.putString(this,"curAircatName","");
+        PreferencesUtils.getString(this, "loginNum", "");
+        PreferencesUtils.putBoolean(this, "isChecked", false);
+        PreferencesUtils.putBoolean(this, "phoneWarn", false);
+        PreferencesUtils.putBoolean(this, "msgWarn", false);
+        PreferencesUtils.putBoolean(this, "lostWarn", false);
+        PreferencesUtils.putString(this, "sex", "");
+        PreferencesUtils.putString(this, "birth", "");
+        PreferencesUtils.putString(this, "age", "");
+        PreferencesUtils.putString(this, "height", "");
+        PreferencesUtils.putString(this, "weight","");
+        PreferencesUtils.putString(this, "default_bracelete_address", "");
+
+        if (activitys != null && activitys.size() > 0) {
+            for (Activity activity : activitys) {
+                if (activity != null) {
+                    activity.finish();
+                }
+            }
+        }
+    }
+
+    public String getSDPath(){
+        File sdDir = null;
+        boolean sdCardExist = Environment.getExternalStorageState()
+                .equals(android.os.Environment.MEDIA_MOUNTED);//判断sd卡是否存在
+        if(sdCardExist)
+        {
+            sdDir = Environment.getExternalStorageDirectory();//获取跟目录
+        }
+        return sdDir.toString();
+    }
+
+
+    public boolean isAllowBleAutoScan() {
+
+        OemLog.log("isAllowBleAutoScan", "hasBindDevices " + hasBindDevices + " isDevicesMeasuring " + isDevicesMeasuring + " isOnDevicesMeasureUI " + isOnDevicesMeasureUI);
+
+        if (!hasBindDevices) {
+            return true;
+        }
+
+        if (isDevicesMeasuring) {
+            return false;
+        }
+
+        if (isOnDevicesMeasureUI) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void startOemBleScan() {
+        isOnDevicesMeasureUI = true;
+    }
+
+    public void forbidOemBleScan() {
+        isOnDevicesMeasureUI = false;
+    }
+
+    public void stopBleScan() {
+        BraceleteDevices.getInstance().stopBleScan();
+    }
+
+
+    //各个平台的配置，建议放在全局Application或者程序入口
+    {
+        //微信     wx12342956d1cab4f9,a5ae111de7d9ea137e88a5e02c07c94d
+        PlatformConfig.setWeixin("wx5a378965fa9578b0", "cc7ea99bddd9855598e1f5406b39fe1e");
+        //豆瓣RENREN平台目前只能在服务器端配置
+        //新浪微博
+        PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad");
+        //易信
+        PlatformConfig.setYixin("yxc0614e80c9304c11b0391514d09f13bf");
+        PlatformConfig.setQQZone("1105154211", "4DpdmWlknFDigRBB");
+        PlatformConfig.setTwitter("3aIN7fuF685MuZ7jtXkQxalyi", "MK6FEYG63eWcpDFgRYw4w9puJhzDl0tyuqWjZ3M7XJuuG7mMbO");
+        PlatformConfig.setAlipay("2015111700822536");
+        PlatformConfig.setLaiwang("laiwangd497e70d4", "d497e70d4c3e4efeab1381476bac4c5e");
+        PlatformConfig.setPinterest("1439206");
+
+    }
+
+    public void setIsOnDevicesMeasureUI(boolean isOnDevicesMeasureUI) {
+        this.isOnDevicesMeasureUI = isOnDevicesMeasureUI;
+    }
+
+    public void setIsDevicesMeasuring(boolean isDevicesMeasuring) {
+        this.isDevicesMeasuring = isDevicesMeasuring;
+    }
+
+    public boolean isOtherDevicesMeasuring() {
+        return  isDevicesMeasuring;
+    }
+
+
+    public boolean isOnDevicesMeasureUI() {
+        return isOnDevicesMeasureUI;
+    }
+
+    public void setIsOnBraceleteUI(boolean isOnBraceleteUI) {
+        this.isOnBraceleteUI = isOnBraceleteUI;
+    }
+
+    public boolean  isOnBraceleteUI() {
+        return isOnBraceleteUI;
+    }
 }

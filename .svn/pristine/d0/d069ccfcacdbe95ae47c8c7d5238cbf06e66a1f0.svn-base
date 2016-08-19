@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--秤-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <com.capitalbio.oemv2.myapplication.View.views.BodyFatBalanceView
+            android:id="@+id/bfbv"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentBottom="true" />
+
+        <!--<com.capitalbio.oemv2.myapplication.View.views.BodyFat2View
+            android:id="@+id/bf2v"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentBottom="true"/>-->
+
+        <!--文字提示区-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50">
+
+            <TextView
+                android:id="@+id/tv_bodyfatmeasure_promote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="设备已绑定"
+                android:textSize="@dimen/dp_18" />
+        </RelativeLayout>
+
+        <!--按钮-->
+        <RelativeLayout
+            android:id="@+id/rl_fatsmeasure_setting"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true">
+
+            <ImageView
+                android:layout_width="@dimen/dp_35"
+                android:layout_height="@dimen/dp_35"
+                android:layout_centerInParent="true"
+                android:src="@drawable/setting_gray" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+    <!--数值-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_bodyfatmeasure_weight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0"
+                android:textColor="@color/blue_fatsmeasure_result"
+                android:textSize="@dimen/dp_60"
+                android:textStyle="bold"
+                android:typeface="serif" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="kg"
+                android:textColor="@color/gray_fatsmeasure_unit"
+                android:textSize="@dimen/dp_40"
+                android:textStyle="bold"
+                android:typeface="serif" />
+        </LinearLayout>
+    </RelativeLayout>
+    <!--八个圆-->
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_30"
+        android:background="@color/white">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_10"
+
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bodyfatmeasure_weight"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_value_weight_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="0.0"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_grade_weight_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_value_weight_measure"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="----"
+                        android:textColor="@color/white" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/weight" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bodyfatmeasure_bmi"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_value_bmi_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="0.0"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_grade_bmi_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_value_bmi_measure"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="----"
+                        android:textColor="@color/white" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/BMI" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bodyfatmeasure_bmr"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_value_bmr_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_grade_bmr_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_value_bmr_measure"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="----"
+                        android:textColor="@color/white" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/BMR" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bodyfatmeasure_visceralgrade"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_value_viscus_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_grade_viscus_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_value_viscus_measure"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="----"
+                        android:textColor="@color/white" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/viscus_grade" />
+            </LinearLayout>
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_10"
+
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bodyfatmeasure_bonecontent"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_value_bone_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="0.0"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_grade_bone_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_value_bone_measure"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="----"
+                        android:textColor="@color/white" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/bone_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bodyfatmeasure_fatcontent"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_value_fat_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="0.0%"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_grade_fat_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_value_fat_measure"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="----"
+                        android:textColor="@color/white" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/fat_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bodyfatmeasure_musclecontent"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_value_muscle_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="0.0%"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_grade_muscle_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_value_muscle_measure"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="----"
+                        android:textColor="@color/white" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/muscal_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bodyfatmeasure_watercontent"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_value_water_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="0.0%"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_grade_water_measure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_value_water_measure"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="----"
+                        android:textColor="@color/white" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/water_content" />
+            </LinearLayout>
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

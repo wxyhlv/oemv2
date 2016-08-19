@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户使用说明</title>
+<style type="text/css">
+body{
+	font-family:"MicroSoft YaHei", Helvetica, Arial, Tahoma; color:#3e3e3e;
+} 
+h3,ul,li {
+	line-height: 30px;
+}
+
+h2 {
+	-webkit-margin-before: 0.2em;
+	-webkit-margin-after: 0.5em;
+}
+div{
+	text-indent: 2em;
+	line-height: 30px;
+}
+</style>
+</head>
+<body>
+   <h2 style="text-align: center">空气猫操作使用指南</h2>
+		<div><B>空气猫介绍</B></div>
+
+   <div><li>空气猫可监测室内空气质量，包括：甲醛、化学污染物（TVOC）、PM2.5、空气污染指数、温度、湿度等</li></div>
+	<p align=center>
+		<img src="kongqimao1.jpg"height="330" width="300"  /></p>
+		<div><B>添加空气猫</B></div>
+		<div><B><li>首次添加设备</li></B></div>
+		<div><li>首先保证您的手机已经连接一个可以连接到internet的无线路由器（能上网）</li></div>
+				<div><li>点击桌面空气猫设备，此时会弹出一个框，您需要输入您已经连接上的路由器密码</li></div>
+		<p align=center>
+			<img src="kongqimao2.jpg"height="500" width="300"  /></p>
+			<p align=center>
+				<img src="kongqimao3.jpg"height="500" width="300"  /></p>
+		<div><li>进入搜索界面，空气猫连接成功后会自动搜索到空气猫的mac地址</li></div>
+		<div><li>点击mac地址进行添加，同时为空气猫设置备注，确认添加</li></div>
+	    <div><li>添加成功</li></div>
+		<p align=center>
+			<img src="kongqimao4.jpg"height="500" width="300"  /></p>
+		<div><B><li>新增设备</li></B></div>
+		<div><li>1.进入空气猫主界面后点击右上角的加号“+”图标</li></div>
+			<div><li>2.为空气猫设置可连接外网的路由器，然后通过搜索进行添加</li></div>
+			<div><li>3.扫描朋友分享的二维码或是扫描设备上的二维码进行添加</li></div>
+	    <div><B><li>查看各指标历史记录</li></B></div>
+	       <div><li>点击空气猫主页某个指标，就可弹出对应指标的历史记录</li></div>
+		<p align=center>
+			<img src="kongqimao5.jpg"height="500" width="300"  /></p>
+	     <div><B><li>切换设备</li></B></div>
+		<div><li>点击主页切换图标，进入切换设备页面，可切换任何设备为当前设备、修改设备备注名称、删除设备等</li></div>
+		<p align=center>
+			<img src="kongqimao6.jpg"height="500" width=300"  /></p>
+		<div><B><li>分享设备</li></B></div>
+		<div><li>1.推送消息分享：点击分享图标，选择推送消息，输入对方用户名，点击“发送”</li></div>
+				<div><li>2.生成二维码分享：点击分享图标，选择生成二维码分享，对方可扫描分享的二维码进行添加</li></div>
+			<p align=center>
+				<img src="kongqimao7.jpg"height="500" width="300"  /></p>
+		<div><span style="margin-left:50px;"/>
+		<div style="margin:0;padding:0; width:350px;height:1px;background-color:#D4D4D4;">
+
+		</div>
+			<span style="margin-left:10px;"/>
+		<div><B>注意问题</B></div>
+		<div>为什么添加空气猫有时时间比较长，有时连接又很短</div>
+		<div>解决：</div>
+		<div><li>如果空气猫是首次设置连接上网，设置时间就会比较长；添加已经连上网的空气猫，不需要去进行网络设置，连接时间就会比较短</li></div>
+</body>
+</html>

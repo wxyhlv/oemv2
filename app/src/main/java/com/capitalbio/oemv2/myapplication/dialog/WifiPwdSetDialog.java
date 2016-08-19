@@ -1,0 +1,154 @@
+package com.capitalbio.oemv2.myapplication.dialog;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.capitalbio.oemv2.myapplication.Activity.AirCatActivity;
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Devices.AirCatDevices.esptouch.Const;
+import com.capitalbio.oemv2.myapplication.Devices.AirCatDevices.esptouch.IEsptouchListener;
+import com.capitalbio.oemv2.myapplication.Devices.AirCatDevices.esptouch.IEsptouchResult;
+import com.capitalbio.oemv2.myapplication.Devices.AirCatDevices.esptouch.ISetTargetApCallBack;
+import com.capitalbio.oemv2.myapplication.Devices.AirCatDevices.esptouch.command.SetTargetAPCommand;
+import com.capitalbio.oemv2.myapplication.Devices.AirCatDevices.esptouch.demo_activity.WifiUtils;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.OemLog;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+
+/**
+ * Created by wxy on 16-1-5.
+ */
+public class WifiPwdSetDialog extends Dialog implements View.OnClickListener, ISetTargetApCallBack{
+    public static final int NO_DEVICES_ENTER = 10;
+    private Context context;
+    private EditText pwd;
+    SetTargetAPCommand setTargetAPCommand;
+    String TAG = "WifiPwdSetDialog";
+    TextView  tv_ssid;
+    String wifiname;
+    private int actionType;
+
+    private IAircatInitSelect aircatInitSelect;
+
+    RegistFinishCallback finishCallback;
+
+    public WifiPwdSetDialog(Context context) {
+        super(context);
+    }
+    public WifiPwdSetDialog(Context context,RegistFinishCallback callback,int theme){
+        super(context, theme);
+        this.context = context;
+        this.finishCallback = callback;
+    }
+
+    public WifiPwdSetDialog(Context context,int theme){
+        super(context, theme);
+        this.context = context;
+    }
+
+    private IEsptouchListener myListener = new IEsptouchListener() {
+        @Override
+        public void onEsptouchResultAdded(IEsptouchResult result) {
+
+        }
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        this.setContentView(R.layout.dialog_wifipwd_set);
+        findViewById(R.id.btn_ok).setOnClickListener(this);
+        findViewById(R.id.btn_skip).setOnClickListener(this);
+        pwd = (EditText) findViewById(R.id.edt_pwd);
+        tv_ssid = (TextView) findViewById(R.id.tv_ssid);
+        WifiUtils wifiUtils = new WifiUtils(context);
+        wifiname = wifiUtils.getWifiConnectedSsid();
+        tv_ssid.setText(wifiname);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_ok:
+                //设置AP
+                if(wifiname==null||wifiname.equals("")){
+                    Toast.makeText(context,"您的手机没有连接到局域网上！",Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                String wifiPassWord= pwd.getText().toString().trim();
+
+                if (aircatInitSelect != null) {
+                    aircatInitSelect.onOk(wifiPassWord);
+                }
+
+                if (actionType == NO_DEVICES_ENTER) {
+                    Utility.startActivity(getContext(), AirCatActivity.class);
+                }
+                Toast.makeText(MyApplication.getInstance(), "请稍后...", Toast.LENGTH_LONG).show();
+                dismiss();
+                break;
+
+            case R.id.btn_skip:
+                /*Utility.startActivity(getContext(), AircatSearcDeviceActivtity.class);
+                this.dismiss();
+                if(finishCallback != null){
+                    finishCallback.onFinish();
+                }*/
+//                Utility.startActivity(getContext(), AircatAddDeviceActivtity.class);
+                this.dismiss();
+                break;
+        }
+        /*Utility.startActivity(getContext(), AircatSearcDeviceActivtity.class);
+        finish();*/
+
+    }
+
+
+
+    @Override
+    public void onSetTargetAp(int result) {
+        OemLog.log(TAG, result + "");
+        if(result== Const.AIRCAT_COMMAND_SETTARGETAP_SUCCESSFUL){
+            PreferencesUtils.putBoolean(context, wifiname, true);
+         //   Utility.startActivity(getContext(), AircatSearcDeviceActivtity.class);
+
+        }else{
+            PreferencesUtils.putBoolean(context, wifiname, false);
+        }
+
+      /*  if(finishCallback != null){
+            finishCallback.onFinish();
+        }*/
+    }
+
+
+
+
+
+    public interface RegistFinishCallback{
+        void onFinish();
+    };
+
+    public WifiPwdSetDialog(Context context,int theme, int actionType){
+        super(context, theme);
+        this.actionType = actionType;
+        this.context = context;
+    }
+
+    public interface IAircatInitSelect{
+        public void onOk(String wifiPassword);
+        public void onCancel();
+    }
+
+    public void setAircatInitSelect(IAircatInitSelect aircatInitSelect) {
+        this.aircatInitSelect = aircatInitSelect;
+    }
+}

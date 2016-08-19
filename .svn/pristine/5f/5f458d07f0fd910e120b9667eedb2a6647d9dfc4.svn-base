@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/youNowPanel"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:background="@drawable/persondetail_bg"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/tv_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/persondetail_person_desease_now"
+        android:padding="7dp"
+        android:textSize="18sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+    <RadioGroup
+        android:id="@+id/radio_group_yousicking"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radiobtn_yousicking_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/radiobtn_yousicking_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+    <ViewStub
+        android:id="@+id/viewStubYouNow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp"
+        android:background="@drawable/persondetail_bg"
+        android:layout="@layout/personalinfo_desease">
+
+    </ViewStub>
+</LinearLayout>

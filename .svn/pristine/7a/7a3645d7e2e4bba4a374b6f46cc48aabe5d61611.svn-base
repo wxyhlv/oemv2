@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.capitalbio.oemv2.myapplication.Activity.SettingActivity"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--title-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+            android:background="@color/blue_setting_title">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/modifypassword"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dp_25" />
+
+            <RelativeLayout
+                android:id="@+id/rl_modifypassword_back"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_back" />
+            </RelativeLayout>
+
+
+
+        </RelativeLayout>
+        <!--body-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/gray_zonghe_bg"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/dp_50"
+                android:paddingRight="@dimen/dp_40"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_modifypassword_oldpassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_veryfication_gray"
+                            android:background="@color/white"
+                            android:inputType="textPassword"
+                            android:maxLength="6"
+                            android:singleLine="true"
+                            android:hint="请输入原密码"
+                            android:textColorHint="@color/register_text"
+                            />
+
+
+                    </RelativeLayout>
+
+
+                    <ImageView
+                        android:id="@+id/iv_get_veryfication_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/grey"/>
+
+                </LinearLayout>
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/et_modifypassword_newpassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_password_gray"
+                        android:background="@color/white"
+                        android:inputType="textPassword"
+                        android:maxLength="16"
+                        android:digits="1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+                        android:singleLine="true"
+                        android:hint="请输入新密码"
+                        android:textColorHint="@color/register_text"
+                        />
+
+                    <ImageView
+
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/grey"/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/et_modifypassword_newpasswordagain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_password_gray"
+                        android:background="@color/white"
+                        android:inputType="textPassword"
+                        android:maxLength="16"
+                        android:digits="1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+                        android:singleLine="true"
+                        android:hint="请再次输入新密码"
+                        android:textColorHint="@color/register_text"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_re_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/grey"/>
+
+                </LinearLayout>
+
+
+
+
+
+                <Button
+                    android:id="@+id/bt_modifypassword_commit"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:text="提交"
+                    android:layout_marginTop="60dp"
+                    android:background="@drawable/bg_comit_btn"/>
+
+
+            </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

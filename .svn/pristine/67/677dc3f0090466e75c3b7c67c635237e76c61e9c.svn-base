@@ -1,0 +1,152 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
+
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.View.DropView;
+import com.capitalbio.oemv2.myapplication.View.MyScrollView;
+
+
+public class PreviewActivity extends Activity{
+
+private LinearLayout mContainer;
+	
+	private MyScrollView myScrollView;
+	
+	private DropView dropView;
+	
+	private Button button;
+	
+	public static final String IS_FIRST_ENTRY_KEY="isFirstEntry";
+	
+	public static final String IS_FIRST_ENTRY_VALUE="1";
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);  //无title
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);  //全屏*/
+		setContentView(R.layout.ac_preview);
+		MyApplication.getInstance().addActivity(this);
+		mContainer = (LinearLayout) findViewById(R.id.container);
+		myScrollView=(MyScrollView)findViewById(R.id.myScrollView);
+		dropView=(DropView)findViewById(R.id.dropView);
+		button=(Button)findViewById(R.id.immediate_experience_btn);
+		myScrollView.setMoveListener(new MyScrollView.MoveListener(){
+
+			@Override
+			public void translation(int currentPage, float centum,
+					int moveType, boolean isMoveEnd) {
+				dropView.redraw(currentPage, centum, moveType, isMoveEnd);
+				//处理魅族4独有的bug--锁屏再开屏后导航页回到第一页，立即体验应该隐藏而没有隐藏
+				if(currentPage==0){
+					if(button.getVisibility()!=View.GONE)
+						button.setVisibility(View.GONE);
+				}
+			}
+
+			@Override
+			public void lastPage(boolean flag){
+				if(flag){
+					if(button.getVisibility()!=View.VISIBLE)
+						button.setVisibility(View.VISIBLE);
+				}else{
+					if(button.getVisibility()!=View.GONE)
+						button.setVisibility(View.GONE);
+				}
+				
+			}
+		});
+		button.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i=new Intent(PreviewActivity.this,LoginActivity.class);
+				PreferencesUtils.putString(PreviewActivity.this, "ss", "1");
+
+				SharedPreferences preferences=getSharedPreferences("oemv2Preview", Context.MODE_PRIVATE);
+				SharedPreferences.Editor editor=preferences.edit();
+
+				editor.putString("isFirstEnter", "1");
+
+				editor.commit();
+				startActivity(i);
+				finish();
+			}
+		});
+		LayoutParams params = new LayoutParams(getWinWidth(), getWinHeight());
+		ImageView imageView1 = new ImageView(this);
+		imageView1.setLayoutParams(params);
+		imageView1.setScaleType(ScaleType.FIT_XY);
+		imageView1.setImageResource(R.drawable.preview1);
+		mContainer.addView(imageView1);
+		ImageView imageView2 = new ImageView(this);
+		imageView2.setLayoutParams(params);
+		imageView2.setScaleType(ScaleType.FIT_XY);
+		imageView2.setImageResource(R.drawable.preview2);
+		mContainer.addView(imageView2);
+		ImageView imageView3 = new ImageView(this);
+		imageView3.setLayoutParams(params);
+		imageView3.setScaleType(ScaleType.FIT_XY);
+		imageView3.setImageResource(R.drawable.preview3);
+		mContainer.addView(imageView3);
+		/*ImageView imageView4 = new ImageView(this);
+		imageView4.setLayoutParams(params);
+		imageView4.setScaleType(ScaleType.FIT_XY);
+		imageView4.setImageResource(R.drawable.preview_xd);
+		mContainer.addView(imageView4);
+		ImageView imageView5 = new ImageView(this);
+		imageView5.setLayoutParams(params);
+		imageView5.setScaleType(ScaleType.FIT_XY);
+		imageView5.setImageResource(R.drawable.preview_cat);
+		mContainer.addView(imageView5);*/
+	}
+
+
+	private int getWinWidth() {
+		DisplayMetrics dm = new DisplayMetrics();
+		// 获取屏幕信息
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm.widthPixels;
+	}
+
+	private int getWinHeight() {
+		DisplayMetrics dm = new DisplayMetrics();
+		// 获取屏幕信息
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm.heightPixels;
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		MyApplication.getInstance().removeActivity(this);
+	}
+}

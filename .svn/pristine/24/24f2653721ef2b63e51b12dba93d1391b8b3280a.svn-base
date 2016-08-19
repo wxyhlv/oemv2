@@ -1,0 +1,182 @@
+<resources>
+    <string name="app_name">颐健谱</string>
+    <string name="app_name2">颐健谱二期</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!--设备名称-->
+    <string name="glycolipid">糖脂五项</string>
+    <string name="aircat">空气猫</string>
+    <string name="bracelete">运动手环</string>
+    <string name="bloodpress">血压计</string>
+    <string name="bodyfat">脂肪秤</string>
+    <string name="register">注 册</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="skip">跳过</string>
+    <string name="getPwd">找回密码</string>
+    <string name="useragreement">用户协议</string>
+    <string name="userhelp">用户指南</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+
+    <!--用户土司提示-->
+    <string name="veryfication_code_is_null">请输入验证码</string>
+    <string name="veryfication_code_is_not_correst">请输入正确的验证码</string>
+    <string name="veryfication_phone_is_null">请输入手机号</string>
+    <string name="veryfication_phone_request">手机号码格式不正确</string>
+    <string name="request_sucess">注册成功</string>
+    <string name="username_exist">用户名已存在</string>
+    <string name="save">保存</string>
+    <string name="readAgreement">请先阅读用户协议</string>
+
+    <!--登录页资源字符串-->
+    <string name="please_input_user_name">请输入用户名</string>
+    <string name="please_input_login_name">请输入用户名/手机号</string>
+    <string name="please_input_user_pwd">请输入密码</string>
+    <string name="please_input_user_confirmpwd">请输入确认密码</string>
+    <string name="pwd_not_same">两次密码不一致</string>
+    <string name="foget_password">忘记密码</string>
+    <string name="remember_password">记住密码</string>
+    <string name="no_user">当前用户不存在</string>
+    <string name="findpwd">密码修改成功</string>
+    <string name="title_activity_personal_details_acitivity">PersonalDetailsAcitivity</string>
+
+    <!--糖脂字符串-->
+
+    <!--个人信息字符串-->
+    <string name="note">(带*为必填项)</string>
+
+    <string name="persondetail_submit">提  交</string>
+    <string name="persondetail_birthday">出生日期</string>
+    <string name="persondetail_sex">性别</string>
+    <string name="persondetail_height">身高(cm)</string>
+    <string name="persondetail_weight">体重(kg)</string>
+    <string name="persondetail_profession">职业</string>
+    <string name="persondetail_familyhistory">你的父母或兄弟是否患有明确诊断的疾病？</string>
+    <string name="persondetail_person_desease_history">你是否曾经患有明确诊断的疾病？</string>
+    <string name="persondetail_person_desease_now">你是否现在患有明确诊断的疾病？</string>
+
+    <string name="persondetail_hypertension">高血压</string>
+    <string name="persondetail_diabetic">糖尿病</string>
+
+    <string name="persondetail_stroke">脑卒中</string>
+    <string name="persondetail_chd">冠心病</string>
+    <string name="persondetail_obesity">肥胖症</string>
+    <string name="persondetail_therioma">恶性肿瘤</string>
+    <string name="persondetail_others">其他</string>
+
+    <string name="persondetail_hypertension_factor">高血压危险因素</string>
+    <string name="persondetail_diabetic_factor">糖尿病危险因素</string>
+
+    <string name="persondetail_stroke_factor">脑卒中危险因素</string>
+    <string name="persondetail_chd_factor">冠心病危险因素</string>
+    <string name="persondetail_obesity_factor">肥胖症危险因素</string>
+    <string name="persondetail_therioma_factor">恶性肿瘤危险因素</string>
+
+    <string name="persondetail_factor">以上各种疾病危险因素调查问卷</string>
+    <!--侧滑页面字符串-->
+    <string name="slide_user_guide">用户指南</string>
+    <string name="slide_user_version_update">版本更新</string>
+    <string name="slide_user_logout">注销</string>
+    <string name="slide_user_setting">设置</string>
+    <string name="slide_user_aboutus">关于我们</string>
+
+
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_forget_pw">ForgetPwActivity</string>
+
+
+    <!--体重仪-->
+    <string name="switch_mesure">即时测量</string>
+    <string name="switch_history">历史纪录</string>
+    <string name="weight">体重(kg)</string>
+    <string name="BMI">BMI</string>
+    <string name="BMR">BMR(卡)</string>
+    <string name="bone_content">骨含量(kg)</string>
+    <string name="fat_content">脂肪率</string>
+    <string name="muscal_content">肌肉含量</string>
+    <string name="water_content">水份含量</string>
+    <string name="viscus_grade">内脏等级</string>
+
+    <!-- 血压计-->
+    <string name="systolic_blood_pressure">收缩压</string>
+    <string name="diastolic_blood_pressure">舒张压</string>
+    <string name="heart_rate">心率</string>
+    <string name="title_activity_bracelete_setting">BraceleteSettingActivity</string>
+
+    <!-- 手环设置-->
+    <string name="bracleteSetting">手环设置</string>
+    <string name="goalSetting">目标计划</string>
+    <string name="lrHandSetting">左右手设置</string>
+    <string name="unbindSetting">解绑</string>
+    <string name="warnSetting">提醒设置</string>
+    <string name="msgWarn">短信提醒</string>
+    <string name="callWarn">来电提醒</string>
+    <string name="lostWarn">手机防丢</string>
+    <string name="customWarn">自定义提醒</string>
+    <string name="warnContent">提醒内容</string>
+    <string name="warnType">提醒类型</string>
+    <string name="DateSettedWarn">指定日期提醒</string>
+    <string name="warnTime">提醒时间</string>
+    <string name="addWarn">添加提醒</string>
+    <string name="modifyWarn">修改提醒</string>
+    <string name="repeat">重复</string>
+    <string name="messureTime">测量时间</string>
+    <string name="distance">距离</string>
+    <string name="cosume_fewer">消耗热能</string>
+    <string name="step">步数</string>
+    <string name="braceleteEdit">运动手环数据录入</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+
+    <string name="tizhichengshezhi">体脂秤设置</string>
+    <string name="tangzhiwuxiangshezhi">糖脂五项设置</string>
+    <string name="jiebangshebei">解绑设备</string>
+    <string name="tangzhiwuxiangyishujuluru">糖脂五项仪数据录入</string>
+    <string name="tizhigexiangzhibiaocankao">体脂各项指标参考标准</string>
+    <string name="tangzhigexiangzhibiaocankao">糖脂各项指标参考标准</string>
+    <string name="qingxuanzepeijian">请选择配件</string>
+    <string name="chongxinsousuo">重新搜索</string>
+    <string name="zanbubangding">暂不绑定</string>
+    <string name="xueyajishezhi">血压计设置</string>
+    <string name="xueyagexiangzhibiaocankao">血压各项指标参考标准</string>
+    <string name="baocun">保存</string>
+    <string name="xueyajishujuluru">血压计数据录入</string>
+
+    <string name="zhongguotianqiwang">中国天气网</string>
+
+    <string name="share_device">设备分享</string>
+    <string name="device_add">设备添加</string>
+    <string name="device_search">搜索设备</string>
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <string name="ger_qecode">生成二维码</string>
+    <string name="scan_success">扫描成功</string>
+    <string name="search_result">搜索成功</string>
+    <string name="title_activity_air_cat_blue">AirCatBlueActivity</string>
+    <string name="adddevice">添加设备</string>
+    <string name="loading">正在努力加载</string>
+
+    <string name="hint_device_off">设备已关机</string>
+    <string name="title_activity_zongheceping">ZonghecepingActivity</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_about_us">AboutUsActivity</string>
+
+    <string name="describe_bmi">（Body Mass Index）指身体质量指数，是与体内总量密切相关的指标，主要反映全身体型超重和肥胖，身体指数=体重（kg）/身高~2</string>
+    <string name="describe_bmr">即基础代谢率，为维持呼吸、心脏跳动和保持体温等基本生命活动而消耗掉的能量，占一天中能量消耗的70%，基础代谢率越高，就越不容易肥胖</string>
+    <string name="describe_visceralgrade">内脏等级即内脏脂肪，是人体脂肪中的一种，与皮下脂肪（即肥肉）不同，它是积累在腹部内脏周围的脂肪</string>
+    <string name="describe_bonecontent">单位体积内，骨组织【骨矿物质（钙、磷等）和骨基质（骨胶原、蛋白质、无机盐等等】含量，它代表骨骼健康的情况</string>
+    <string name="describe_fatcontent">脂肪在身体成分中所占的比率，是判断肥胖与否的参考标准</string>
+    <string name="describe_musclecontent">肌肉在身体成分中越多，基础代谢率高，就越不容易肥胖</string>
+    <string name="describe_watercontent">指身体成分中所占的比率，水对人体来讲是构成细胞不可缺少的物质，具有调节生理机能、溶解营养等重要的作用</string>
+
+    <string name="describe_sys">即高压，是当心脏收缩时，从心室射入的血液对血管壁产生的侧压力，这时血压最大</string>
+    <string name="describe_dia">即低压，是心脏舒张末期，血液暂时停止射入动脉，而已流入动脉的血液靠血管壁的弹力和张力作用，继续流动，对血管壁仍有压力</string>
+    <string name="describe_hearterate">心率是指正常人安静状态下每分钟心跳的次数，也叫安静心率，一般为60～100次/分</string>
+    <string name="version_update">版本更新</string>
+
+</resources>

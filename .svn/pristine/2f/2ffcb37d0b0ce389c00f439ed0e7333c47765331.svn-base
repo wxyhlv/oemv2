@@ -1,0 +1,332 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.capitalbio.oemv2.myapplication.BraceleteLib.BraceleteDevices;
+import com.capitalbio.oemv2.myapplication.Devices.Bracelete.BraceleteCommand.SetGoalStepBraceleteCommand;
+import com.capitalbio.oemv2.myapplication.Utils.BraceleteRule;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.View.GoalSetProgressbar;
+import com.capitalbio.oemv2.myapplication.View.adapter.AbstractWheelTextAdapter;
+import com.capitalbio.oemv2.myapplication.View.views.OnWheelChangedListener;
+import com.capitalbio.oemv2.myapplication.View.views.OnWheelScrollListener;
+import com.capitalbio.oemv2.myapplication.View.views.WheelView;
+import com.capitalbio.oemv2.myapplication.R;
+
+import java.util.ArrayList;
+
+public class BraceleteGoalSettingActivity extends BaseActivity implements View.OnClickListener {
+
+
+    LinearLayout contentLayout;
+    GoalSetProgressbar progressbar;
+    WheelView wheelViewStep,wv_minute,wv_hour;
+    private ArrayList<String> arry_steps = new ArrayList<String>();
+    private ArrayList<String> arry_hour = new ArrayList<String>();
+
+    private ArrayList<String> arry_minute = new ArrayList<String>();
+
+    private BraceleteDevices braceleteDevices = BraceleteDevices.getInstance();
+
+    CalendarTextAdapter wheelAdapter,wheelMinuteAdapter;
+    HourTextAdapter wheelHourAdapter;
+    private int maxTextSize = 22;
+    private int minTextSize = 14;
+    private String TAG = "GOAL";
+    private String currentSteps,currentHour,currentMinute;
+    private TextView tvDis,tvCal;
+    String sex,height;
+    @Override
+    protected void initChildLayout() {
+        initChildView();
+    }
+
+    private void initChildView() {
+         sex = PreferencesUtils.getString(context,"sex");
+         height = PreferencesUtils.getString(context,"height");
+        rl.setBackgroundResource(R.color.bg_content);
+        rlNavigateBar.setBackgroundResource(R.drawable.bg_tang_zhi_san_xiang);
+        setLeftTopIcon(R.drawable.ic_back);
+        contentLayout = (LinearLayout) View.inflate(this, R.layout.activity_bracelete_goal_setting, null);
+        llBody.addView(contentLayout);
+
+        tvDis = (TextView) findViewById(R.id.tv_dis_value);
+        tvCal = (TextView) findViewById(R.id.tv_cal_value);
+        setTvTopTitle(R.string.goalSetting);
+        setTvTopRight(R.string.save);
+        tvTopRight.setOnClickListener(this);
+        progressbar = (GoalSetProgressbar) findViewById(R.id.progressbar);
+        progressbar.setProgress(50);
+        currentSteps =PreferencesUtils.getString(context,"goal_steps","5000");
+
+        int heightInt = 0;
+        if(height !=null&&currentSteps!=null){
+            heightInt = Integer.valueOf(height);
+            String dis = BraceleteRule.getDis(sex,heightInt,Integer.valueOf(currentSteps));
+            tvDis.setText(dis+"km");
+        }
+
+        int hour = Integer.valueOf(PreferencesUtils.getString(context, "goal_sleeptime", "480"))/60;
+        currentHour =hour+"h" ;
+        int minute = Integer.valueOf(PreferencesUtils.getString(context, "goal_sleeptime", "480"))%60;
+        currentMinute = minute+"min";
+        Log.i(TAG," currentHour" + currentHour+ "currentMinute " + currentMinute);
+
+        for (int i = 0;i<100;i++){
+            arry_steps.add((i+1)*1000+"");
+        }
+        for(int i=0;i<24;i++){
+            arry_hour.add(i+"h");
+        }
+        for(int i = 0;i<60;i++){
+            arry_minute.add(i+"min");
+        }
+        wheelViewStep = (WheelView) findViewById(R.id.wv_step);
+        wheelAdapter = new CalendarTextAdapter(getContext(),arry_steps,setCurrent(arry_steps,currentSteps),maxTextSize,minTextSize);
+        wheelMinuteAdapter = new CalendarTextAdapter(getContext(),arry_minute,setCurrent(arry_minute,currentMinute),maxTextSize,minTextSize);
+        wheelHourAdapter =new HourTextAdapter(getContext(),arry_hour,setCurrent(arry_hour,currentHour),maxTextSize,minTextSize);
+        wheelViewStep.setVisibleItems(5);
+        wheelViewStep.setViewAdapter(wheelAdapter);
+        wheelViewStep.setCurrentItem(setCurrent(arry_steps, currentSteps));
+
+        wv_minute = (WheelView)findViewById(R.id.wv_minute);
+        wv_minute.setViewAdapter(wheelMinuteAdapter);
+        wv_minute.setVisibleItems(5);
+        wv_minute.setCurrentItem(setCurrent(arry_minute, currentMinute));
+
+
+        wv_hour = (WheelView) findViewById(R.id.wv_hour);
+        wv_hour.setViewAdapter(wheelHourAdapter);
+        wv_hour.setVisibleItems(5);
+        wv_hour.setCurrentItem(setCurrent(arry_hour, currentHour));
+        wheelViewStep.addChangingListener(new OnWheelChangedListener() {
+
+            @Override
+            public void onChanged(WheelView wheel, int oldValue, int newValue) {
+                // TODO Auto-generated method stub
+                currentSteps = (String) wheelAdapter.getItemText(wheel.getCurrentItem());
+                setTextviewSize(currentSteps, wheelAdapter);
+                //  selectDay = currentText;
+
+                int heightInt = 0;
+                if(height !=null&&currentSteps!=null){
+                    heightInt = Integer.valueOf(height);
+                    String dis = BraceleteRule.getDis(sex,heightInt,Integer.valueOf(currentSteps));
+                    tvDis.setText(dis+"km");
+                }
+            }
+        });
+
+        wheelViewStep.addScrollingListener(new OnWheelScrollListener() {
+
+            @Override
+            public void onScrollingStarted(WheelView wheel) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onScrollingFinished(WheelView wheel) {
+                // TODO Auto-generated method stub
+                currentSteps = (String) wheelAdapter.getItemText(wheel.getCurrentItem());
+       //         Toast.makeText(context, "" + wheel.getCurrentItem(), Toast.LENGTH_SHORT).show();
+                setTextviewSize(currentSteps, wheelAdapter);
+                String sex = PreferencesUtils.getString(context,"sex");
+                String height = PreferencesUtils.getString(context,"height");
+                int heightInt = 0;
+                if(height !=null&&currentSteps!=null){
+                    heightInt = Integer.valueOf(height);
+                    String dis = BraceleteRule.getDis(sex,heightInt,Integer.valueOf(currentSteps));
+                    tvDis.setText(dis+"km");
+                }
+            }
+        });
+
+        wv_minute.addChangingListener(new OnWheelChangedListener() {
+
+            @Override
+            public void onChanged(WheelView wheel, int oldValue, int newValue) {
+                // TODO Auto-generated method stub
+                currentMinute = (String) wheelMinuteAdapter.getItemText(wheel.getCurrentItem());
+                setTextviewSize(currentMinute, wheelMinuteAdapter);
+                //  selectDay = currentText;
+            }
+        });
+
+        wv_minute.addScrollingListener(new OnWheelScrollListener() {
+
+            @Override
+            public void onScrollingStarted(WheelView wheel) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onScrollingFinished(WheelView wheel) {
+                // TODO Auto-generated method stub
+                currentMinute = (String) wheelMinuteAdapter.getItemText(wheel.getCurrentItem());
+                setTextviewSize(currentMinute, wheelMinuteAdapter);
+            }
+        });
+
+
+        wv_hour.addChangingListener(new OnWheelChangedListener() {
+
+            @Override
+            public void onChanged(WheelView wheel, int oldValue, int newValue) {
+                // TODO Auto-generated method stub
+                currentHour = (String) wheelHourAdapter.getItemText(wheel.getCurrentItem());
+                setTextviewSize(currentHour, wheelHourAdapter);
+                //  selectDay = currentText;
+            }
+        });
+
+        wv_hour.addScrollingListener(new OnWheelScrollListener() {
+
+            @Override
+            public void onScrollingStarted(WheelView wheel) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onScrollingFinished(WheelView wheel) {
+                // TODO Auto-generated method stub
+                currentHour = (String) wheelHourAdapter.getItemText(wheel.getCurrentItem());
+                setTextviewSize(currentHour, wheelHourAdapter);
+            }
+        });
+    }
+
+
+    /**
+     * 设置字体大小
+     *
+     * @param curriteItemText
+     * @param adapter
+     */
+    public void setTextviewSize(String curriteItemText, CalendarTextAdapter adapter) {
+        ArrayList<View> arrayList = adapter.getTestViews();
+        int size = arrayList.size();
+        String currentText;
+        for (int i = 0; i < size; i++) {
+            TextView textvew = (TextView) arrayList.get(i);
+            currentText = textvew.getText().toString();
+            if (curriteItemText.equals(currentText)) {
+                textvew.setTextSize(maxTextSize);
+                textvew.setTextColor(Color.parseColor("#0096c1"));
+
+            } else {
+                textvew.setTextSize(minTextSize);
+                textvew.setTextColor(Color.parseColor("#8D9A99"));
+
+            }
+        }
+    }
+    public void setTextviewSize(String curriteItemText, HourTextAdapter adapter) {
+        ArrayList<View> arrayList = adapter.getTestViews();
+        int size = arrayList.size();
+        String currentText;
+        for (int i = 0; i < size; i++) {
+            TextView textvew = (TextView) arrayList.get(i);
+            currentText = textvew.getText().toString();
+            if (curriteItemText.equals(currentText)) {
+                textvew.setTextSize(maxTextSize);
+                textvew.setTextColor(Color.parseColor("#0096c1"));
+            } else {
+                textvew.setTextSize(minTextSize);
+                textvew.setTextColor(Color.parseColor("#8D9A99"));
+            }
+        }
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tv_right:
+                //TODO 保存用户目标计划
+            //    Toast.makeText(context,currentHour + currentMinute,Toast.LENGTH_SHORT).show();
+                PreferencesUtils.putString(context, "goal_steps", currentSteps);
+                PreferencesUtils.putString(context, "goal_sleeptime", Integer.valueOf(currentHour.substring(0, currentHour.length() - 1)) * 60 + Integer.valueOf(currentMinute.substring(0, currentMinute.length() - 3)) + "");
+                braceleteDevices.addCommandToQueue(new SetGoalStepBraceleteCommand(Integer.parseInt(currentSteps)));
+                finish();
+                break;
+
+        }
+
+    }
+
+
+    private class CalendarTextAdapter extends AbstractWheelTextAdapter {
+        ArrayList<String> list;
+
+        protected CalendarTextAdapter(Context context, ArrayList<String> list, int currentItem, int maxsize, int minsize) {
+            super(context, R.layout.item_wheel_kedu, NO_RESOURCE, currentItem, maxsize, minsize);
+            this.list = list;
+            setItemTextResource(R.id.tempValue);
+        }
+
+        @Override
+        public View getItem(int index, View cachedView, ViewGroup parent) {
+            View view = super.getItem(index, cachedView, parent);
+            return view;
+        }
+
+        @Override
+        public int getItemsCount() {
+            return list.size();
+        }
+
+        @Override
+        protected CharSequence getItemText(int index) {
+            return list.get(index) + "";
+        }
+    }
+
+    private class HourTextAdapter extends AbstractWheelTextAdapter {
+        ArrayList<String> list;
+
+        protected HourTextAdapter(Context context, ArrayList<String> list, int currentItem, int maxsize, int minsize) {
+            super(context, R.layout.item_birth_year, NO_RESOURCE, currentItem, maxsize, minsize);
+            this.list = list;
+            setItemTextResource(R.id.tempValue);
+        }
+
+        @Override
+        public View getItem(int index, View cachedView, ViewGroup parent) {
+            View view = super.getItem(index, cachedView, parent);
+            view.setBackground(null);
+            return view;
+        }
+
+        @Override
+        public int getItemsCount() {
+            return list.size();
+        }
+
+        @Override
+        protected CharSequence getItemText(int index) {
+            return list.get(index) + "";
+        }
+
+
+
+    }
+
+    public int setCurrent(ArrayList<String>data,String s){
+
+        for(int i = 0;i<data.size();i++){
+            if(s.equals(data.get(i))){
+                return i;
+            }
+        }
+        return 0;
+    }
+}

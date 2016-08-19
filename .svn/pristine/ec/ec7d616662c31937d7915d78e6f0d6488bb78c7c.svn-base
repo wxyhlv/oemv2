@@ -1,0 +1,134 @@
+package com.capitalbio.oemv2.myapplication.Devices.BodyFatDevices.src.com.bayh.sdk.ble;
+
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Bean.LoginUser;
+import com.capitalbio.oemv2.myapplication.Const.BodyFatConst;
+import com.capitalbio.oemv2.myapplication.Devices.BodyFatDevices.src.com.bayh.sdk.ble.bean.BodyFatSaid;
+import com.capitalbio.oemv2.myapplication.Devices.BodyFatDevices.src.com.bayh.sdk.ble.utils.HexUtils;
+import com.capitalbio.oemv2.myapplication.Utils.FatRule;
+import com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil;
+
+
+/**
+ * 设备协议数据解析工具
+ * @author jiantao.tu
+ *
+ */
+public class AnalyzeDataUtils {
+
+
+	/**
+	 * 根据用户基本信息生成往体脂称写入的指令
+	 * @param height 身高
+	 * @param sex 性别  BodyFatSaid此类有常量
+	 * @param age 年龄
+	 * @param sportMode 运动模式   BodyFatSaid此类有常量
+	 * @return 字节数组
+	 */
+	public static byte[] getFatWriteData(int height,char sex,int age,String sportMode){
+		String hexStr="FD534000";
+		StringBuilder binary=new StringBuilder("01");//֬脂肪称，秤类型
+		binary.append(sportMode);//运动模式
+		binary.append("0000");//用户编号
+		String binaryAge=Integer.toBinaryString(age);
+		int ageCount=7-binaryAge.length();
+		for(int i=0;i<ageCount;i++){
+			binaryAge="0"+binaryAge;
+		}
+		binary.append(sex);
+		binary.append(binaryAge);
+		binary.append(HexUtils.fullbit8(Integer.toBinaryString(height)));
+		hexStr+=HexUtils.binaryString2hexString(binary.toString());
+		return HexUtils.hexStr2Bytes(hexStr);
+	}
+
+
+	/**
+	 * 获取体脂称数据信息
+	 * @param arrayBinary
+	 * @return
+	 */
+
+	public static BodyFatSaid analyzeArrayBinaryToData(String[] arrayBinary) {
+		LoginUser user =MyApplication.getInstance().getCurrentUser();
+		String height = user.getHeight();
+		String ageString = user.getAge();
+		int age = TimeStampUtil.getAgeByBirth(ageString);
+		String sex = user.getSex();
+
+		BodyFatSaid bodyFat=new BodyFatSaid();
+		//[start]体重
+		String weightH=arrayBinary[1].substring(2, 8);//���ظ��ֽ�
+		float weight=(float)HexUtils.binaryStringToNum(weightH+arrayBinary[2])/10;//ʵ������
+		bodyFat.setWeight(weight);
+		//[end]
+		//[start]脂肪
+		String fatH=arrayBinary[12].substring(0, 4);
+		String hex=HexUtils.binaryString2hexString(HexUtils.fullbit8(fatH));
+		if("0F".equals(hex.toUpperCase())){
+			bodyFat.setIsBarefoot(false);
+			return bodyFat;
+		}else{
+			bodyFat.setIsBarefoot(true);
+		}
+		float fat=(float)HexUtils.binaryStringToNum(fatH+arrayBinary[11])/10;
+		bodyFat.setFat(fat);
+		//[end]
+		//[start]水份
+		String waterH=arrayBinary[12].substring(4, 8);
+		float water=(float)HexUtils.binaryStringToNum(waterH+arrayBinary[13])/10;
+		bodyFat.setWater(water);
+		//[end]
+		//[start]肌肉
+		float muscle=(float)HexUtils.binaryStringToNum(arrayBinary[14]+arrayBinary[15])/10;
+		bodyFat.setMuscle(muscle);
+		//[end]
+		//[start]骨量
+		float bone=(float)HexUtils.binaryStringToNum(arrayBinary[16])/10;
+		bodyFat.setBone(bone);
+		//[end]
+		//[start]内脏脂肪
+		float visceraFat=(float)HexUtils.binaryStringToNum(arrayBinary[17])/10;
+		bodyFat.setVisceraFat(visceraFat * 10);
+		//[end]
+		//[start]热量
+		int kcal=HexUtils.binaryStringToNum(arrayBinary[18]+arrayBinary[19]);
+		bodyFat.setKcal(kcal);
+		//[end]
+
+		//longTime
+		bodyFat.setLongTime(System.currentTimeMillis());
+
+		//年月日
+		bodyFat.setYmd(TimeStampUtil.currTime2(1));
+		//时
+		bodyFat.setTestHour(TimeStampUtil.getHour(System.currentTimeMillis()) + "");
+
+		//分钟
+		bodyFat.setTestMinute(String.valueOf(TimeStampUtil.getMinute(System.currentTimeMillis())));
+
+		bodyFat.setUserName(user.getUsername());
+		bodyFat.setBmi(FatRule.computeBmi(weight, Float.parseFloat(height)));
+
+		String weightGrade = FatRule.getRate(weight,BodyFatConst.TYPE_WEIGHT,sex,age,Integer.valueOf(height),weight);
+		String bmiGrade = weightGrade;
+		String bmrGrade = FatRule.getRate(weight,BodyFatConst.TYPE_BMR,sex,age,Integer.valueOf(height),kcal);
+		String viscerGrade = FatRule.getRate(weight,BodyFatConst.TYPE_VISCERAL_LEVAL,sex,age,Integer.valueOf(height),visceraFat);
+		String boneGrade = FatRule.getRate(weight,BodyFatConst.TYPE_BONECONTENT,sex,age,Integer.valueOf(height),bone);
+		String fatGrade = FatRule.getRate(weight,BodyFatConst.TYPE_FAT_RATION,sex,age,Integer.valueOf(height),fat);
+		String muscaleGrade = FatRule.getRate(weight,BodyFatConst.TYPE_MUSLE_CONTENT,sex,age,Integer.valueOf(height),muscle/100);
+		String waterGrade = FatRule.getRate(weight,BodyFatConst.TYPE_WATER_CONTENT,sex,age,Integer.valueOf(height),water/100);
+
+		bodyFat.setWeightGrade(weightGrade);
+		bodyFat.setBmrGrade(bmrGrade);
+		bodyFat.setVisceraGrade(viscerGrade);
+		bodyFat.setBoneGrade(boneGrade);
+		bodyFat.setFatGrade(fatGrade);
+		bodyFat.setMuscleGrade(muscaleGrade);
+		bodyFat.setWaterGrade(waterGrade);
+		bodyFat.setDataSource("体脂秤");
+		bodyFat.setIsUpload(false);
+
+		return bodyFat;
+	}
+}

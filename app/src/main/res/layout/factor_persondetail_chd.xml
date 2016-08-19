@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/text"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否吸烟？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_chd_1"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_chd_1_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_chd_1_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+    <TextView
+        android:id="@+id/text1"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否经常锻炼？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_chd_2"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_chd_2_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_chd_2_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否有早发冠心病？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_chd_3"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_chd_3_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_chd_3_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text3"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否是高LDL-C？"
+        android:padding="7dp"
+        android:textSize="18sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_chd_4"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_chd_4_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_chd_4_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+
+</LinearLayout>

@@ -1,0 +1,594 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.capitalbio.oemv2.myapplication.Devices.BloodPressDevice;
+
+import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
+import com.capitalbio.oemv2.myapplication.Base.IBloodPressDevicesCallBack;
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Bean.BloodPressureBean;
+import com.capitalbio.oemv2.myapplication.Const.Const;
+import com.capitalbio.oemv2.myapplication.Devices.Bracelete.OemBackgroundService;
+import com.capitalbio.oemv2.myapplication.FirstPeriod.Utils.TimeStampUtil;
+import com.capitalbio.oemv2.myapplication.Utils.OemLog;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+
+
+/**
+ * Service for managing connection and data communication with a GATT server hosted on a
+ * given Bluetooth LE device.
+ */
+@SuppressLint("NewApi")
+public class BloodPressDevices {
+    private final static String TAG = "BloodPressDevices";
+    private Object insertLock = new Object();
+    public static final int REMOVE_MULTI_DATA_MESSAGE = 10001;
+    public static final int REMOVE_MULTI_DATA_MESSAGE_DELAY_TIME = 15 * 1000;
+    public static final int CONNECT_DELAY_MESSAGE = 30001;
+    public static final int CONNECT_DELAY_TIME = 4000;
+
+    public static final int IGNORE_DISCONNECT_MESSAGE = 20001;
+
+    private Context mContext = MyApplication.getInstance();
+    private static BloodPressDevices Instance;
+    private BluetoothManager mBluetoothManager;
+    private BluetoothAdapter mBluetoothAdapter;
+    private String mBluetoothDeviceAddress;
+    private BluetoothGatt mBluetoothGatt;
+    private BloodPressCommandListener mBloodPressCommandListener;
+    private CommandResult mCommandResult;
+    private DbManager dbManager;
+    private BloodPressureBean mBloodPressBean;
+    private boolean isMeasuring = false;
+    private boolean allowInsertResult;
+    private BluetoothDevice mDevice;
+	byte [] sendCharacteristi=new byte[] {(byte)0xFD, (byte)0xFD, (byte)0xFA, (byte)0x05, (byte)0X0D, (byte)0x0A};
+    byte[] shutDownCommand = new byte[] {(byte)0xFD,(byte)0xFD,(byte)0xFE, (byte)0x06, (byte)0X0D, (byte)0x0A};
+
+    private boolean isDataTranfer = false;
+    private BluetoothGattCharacteristic btReadGattCharacteristic;
+    private BluetoothGattCharacteristic btWriteGattCharacteristic;
+    private List<BluetoothGattCharacteristic> gattCharacteristics;
+    private Handler servicesCallbackHandler;
+    private boolean ignoreDis = false;
+    public BluetoothGatt getmBluetoothGatt() {
+		return mBluetoothGatt;
+	}
+
+    private IBloodPressDevicesCallBack bloodPressDevicesCallBack;
+
+	public void setmBluetoothGatt(BluetoothGatt mBluetoothGatt) {
+		this.mBluetoothGatt = mBluetoothGatt;
+	}
+
+    private Handler removeMutiHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what) {
+                case REMOVE_MULTI_DATA_MESSAGE:
+                    isDataTranfer = false;
+                    break;
+                case IGNORE_DISCONNECT_MESSAGE:
+                    //忽略3秒之内报上来的重复断开消息
+//                    ignoreDis = false;
+                    break;
+                case CONNECT_DELAY_MESSAGE:
+                    //超时之后认为断开
+                    disconnect();
+                    OemLog.log(TAG, "receive connect delay message...");
+                    if (servicesCallbackHandler != null) {
+                        servicesCallbackHandler.sendEmptyMessage(Const.BLOOD_PRESS_MEASURE_COMMPLETE_DISSCONNECT);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+
+        }
+    };
+
+	private int mConnectionState = STATE_DISCONNECTED;
+
+    private static final int STATE_DISCONNECTED = 0;
+    private static final int STATE_CONNECTING = 1;
+    private static final int STATE_CONNECTED = 2;
+
+    public final static String ACTION_GATT_CONNECTED           = "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
+    public final static String ACTION_GATT_DISCONNECTED        = "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED";
+    public final static String ACTION_GATT_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED";
+    public final static String ACTION_DATA_AVAILABLE           = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
+    public final static String EXTRA_DATA                      = "com.example.bluetooth.le.EXTRA_DATA";
+
+    public final static UUID UUID_HEART_RATE_MEASUREMENT       = UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
+    
+    public static BloodPressDevices getInstance() {
+        if (Instance == null) {
+            Instance = new BloodPressDevices();
+        }
+        
+        return Instance;
+    }
+    
+    private BloodPressDevices() {
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mCommandResult = new CommandResult();
+    }
+    
+    private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            Log.d(TAG, "newState is " + newState);
+            String intentAction;
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+                ignoreDis = false;
+                intentAction = ACTION_GATT_CONNECTED;
+                mConnectionState = STATE_CONNECTED;
+                allowInsertResult = true;
+                Log.i(TAG, "Connected to GATT server, callback to statemachine");
+                // Attempts to discover services after successful connection.
+                Log.i(TAG, "Attempting to start service discovery:" +
+                        mBluetoothGatt.discoverServices());
+                servicesCallbackHandler.sendEmptyMessage(Const.BRACELETE_COMMAND_EXECUTE_STATUS_COMPLETE);
+                mCommandResult.setmBloodPressCommandType(Constant.BLOOD_PRESS_COMMAND_CONNECT);
+                mCommandResult.setmBloodPresscommandResult(Constant.BLOOD_PRESS_CONNECT_COMMAND_SUCCESS);
+                mBloodPressCommandListener.onCommandResult(mCommandResult);
+
+
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                intentAction = ACTION_GATT_DISCONNECTED;
+                mConnectionState = STATE_DISCONNECTED;
+                isMeasuring = false;
+                Log.i(TAG, "Disconnected from BloodPress GATT server.and send delay message..." + " ignore is " + ignoreDis);
+                if (!removeMutiHandler.hasMessages(IGNORE_DISCONNECT_MESSAGE)) {
+                    removeMutiHandler.sendEmptyMessageDelayed(IGNORE_DISCONNECT_MESSAGE, 600l);
+                }
+                if (!ignoreDis) {
+                    OemLog.log(TAG, "send bloodpress disconnect message and enter the disconnect state...");
+                    mBloodPressCommandListener.onGattDisconnect();
+                    if (servicesCallbackHandler.hasMessages(Const.BLOOD_PRESS_MEASURE_COMMPLETE_DISSCONNECT)) {
+                        servicesCallbackHandler.removeMessages(Const.BLOOD_PRESS_MEASURE_COMMPLETE_DISSCONNECT);
+                    }
+                    servicesCallbackHandler.sendEmptyMessageDelayed(Const.BLOOD_PRESS_MEASURE_COMMPLETE_DISSCONNECT, 3000l);
+                    ignoreDis = true;
+                    if (mBluetoothGatt != null) {
+                        mBluetoothGatt.disconnect();
+                        mBluetoothGatt.close();
+                    }
+
+                }
+
+                MyApplication.getInstance().setIsDevicesMeasuring(false);
+
+            }
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                List<BluetoothGattService> gattServices = gatt.getServices();
+                for (BluetoothGattService bluetoothGattService : gattServices) {
+                    gattCharacteristics = bluetoothGattService.getCharacteristics();
+                    for (BluetoothGattCharacteristic bluetoothGattCharacteristic : gattCharacteristics) {
+
+                        String uuid = bluetoothGattCharacteristic.getUuid().toString();
+                        if (Constant.BLOOD_PRESS_SEND_UUID.equals(uuid) && !isMeasuring) {
+                            servicesCallbackHandler.sendEmptyMessage(OemBackgroundService.CONNECT_BLOODPRESS_DEVICES_SUCCESSFULL);
+                            OemLog.log(TAG, "discover services compelted measure...");
+                            btWriteGattCharacteristic = bluetoothGattCharacteristic;
+                            //向状态机发送可以测量的消息
+                            mBloodPressCommandListener.onDiscoverServiceComeplete();
+                            isMeasuring = true;
+                        } else if (Constant.BLOOD_PRESS_REV_UUID.equals(uuid)) {
+                            btReadGattCharacteristic = bluetoothGattCharacteristic;
+                        }
+                    }
+                }
+                if (removeMutiHandler.hasMessages(CONNECT_DELAY_MESSAGE)) {
+                    removeMutiHandler.removeMessages(CONNECT_DELAY_MESSAGE);
+                }
+            } else {
+                //发现服务失败认为断开,继续下一次流程
+                servicesCallbackHandler.sendEmptyMessage(Const.BLOOD_PRESS_MEASURE_COMMPLETE_DISSCONNECT);
+                Log.w(TAG, "onServicesDiscovered received: " + status);
+            }
+        }
+
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt,
+                                         BluetoothGattCharacteristic characteristic,
+                                         int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+            	
+                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+               Log.i(TAG,Arrays.toString(characteristic.getValue())) ;
+            }
+        }
+
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt,
+                                            BluetoothGattCharacteristic characteristic) {
+            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            
+            Log.i(TAG, "receice bloodpress byte is " + Arrays.toString(characteristic.getValue()));
+            byte[] tmp = new byte[15];
+            tmp = characteristic.getValue();
+
+            if (String.format("%2x", tmp[2]).equalsIgnoreCase("fa")) {
+                mCommandResult.setmBloodPresscommandResult(Constant.BLOOD_PRESS_CONNECT_COMMAND_SUCCESS);
+            } else if (String.format("%2x", tmp[2]).equalsIgnoreCase("fb")) {
+                mCommandResult.setmBloodPresscommandResult(Constant.BLOOD_PRESS_MEASURRE_COMMAND_SUCCESS);
+            } else if (String.format("%2x", tmp[2]).equalsIgnoreCase("fc")) {
+                mCommandResult.setmBloodPresscommandResult(Constant.BLOOD_PRESS_MEASURE_COMPLETED);
+            } else if (String.format("%2x", tmp[2]).equalsIgnoreCase("fd")) {
+                mCommandResult.setmBloodPresscommandResult(Constant.BLOOD_PRESS_MEASURE_RESULT_EXCEPTION);
+            }
+            mBloodPressBean = parse(tmp);
+            mCommandResult.setmBean(mBloodPressBean);
+            mBloodPressCommandListener.onCommandResult(mCommandResult);
+        }
+
+		@Override
+		public void onCharacteristicWrite(BluetoothGatt gatt,
+				BluetoothGattCharacteristic characteristic, int status) {
+			// TODO Auto-generated method stub
+			super.onCharacteristicWrite(gatt, characteristic, status);
+		}
+        
+    };
+
+    
+
+    private void broadcastUpdate(final String action,
+                                 final BluetoothGattCharacteristic characteristic) {
+        final Intent intent = new Intent(action);
+
+        // This is special handling for the Heart Rate Measurement profile.  Data parsing is
+        // carried out as per profile specifications:
+        // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
+        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
+            int flag = characteristic.getProperties();
+            int format = -1;
+            if ((flag & 0x01) != 0) {
+                format = BluetoothGattCharacteristic.FORMAT_UINT16;
+                Log.d(TAG, "Heart rate format UINT16.");
+            } else {
+                format = BluetoothGattCharacteristic.FORMAT_UINT8;
+                Log.d(TAG, "Heart rate format UINT8.");
+            }
+            final int heartRate = characteristic.getIntValue(format, 1);
+            Log.d(TAG, String.format("Received heart rate: %d", heartRate));
+            intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
+        } else {
+            // For all other profiles, writes the data formatted in HEX.
+            final byte[] data = characteristic.getValue();
+            Log.i(TAG, "data " + Arrays.toString(characteristic.getValue())) ;
+            if (data != null && data.length > 0) {
+                final StringBuilder stringBuilder = new StringBuilder(data.length);
+                for(byte byteChar : data)
+                    stringBuilder.append(String.format("%02X ", byteChar));
+                intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
+            }
+        }
+        
+    }
+
+
+    /**
+     * Connects to the GATT server hosted on the Bluetooth LE device.
+     *
+     * @param address The device address of the destination device.
+     *
+     * @return Return true if the connection is initiated successfully. The connection result
+     *         is reported asynchronously through the
+     *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     *         callback.
+     */
+    public boolean connect(String address) {
+        mBluetoothDeviceAddress = address;
+        if (mBluetoothAdapter == null) {
+            Log.w(TAG,
+                    "BluetoothAdapter not initialized or unspecified address.");
+            return false;
+        }
+        Log.d(TAG, "Blood Press address is " + mBluetoothDeviceAddress);
+        if (mBluetoothDeviceAddress != null) {
+            mDevice = mBluetoothAdapter
+                    .getRemoteDevice(mBluetoothDeviceAddress);
+            if (mDevice == null) {
+                Log.w(TAG, "Device not found.  Unable to connect.");
+                return false;
+            }
+            // We want to directly connect to the device, so we are setting the
+            // autoConnect
+            // parameter to false.
+            mBluetoothGatt = mDevice.connectGatt(mContext, false, mGattCallback);
+            Log.d(TAG, "Trying to create a new connection.");
+            mConnectionState = STATE_CONNECTING;
+            if (removeMutiHandler.hasMessages(CONNECT_DELAY_MESSAGE)) {
+                removeMutiHandler.removeMessages(CONNECT_DELAY_MESSAGE);
+            }
+            removeMutiHandler.sendEmptyMessageDelayed(CONNECT_DELAY_MESSAGE, CONNECT_DELAY_TIME);
+        }
+        return true;
+    }
+
+    /**
+     * Disconnects an existing connection or cancel a pending connection. The disconnection result
+     * is reported asynchronously through the
+     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     * callback.
+     */
+    public void disconnect() {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            Log.w(TAG, "BluetoothAdapter not initialized");
+            return;
+        }
+        mBluetoothGatt.disconnect();
+    }
+
+    /**
+     * After using a given BLE device, the app must call this method to ensure resources are
+     * released properly.
+     */
+    public void close() {
+        if (mBluetoothGatt == null) {
+            return;
+        }
+        mBluetoothGatt.close();
+        mBluetoothGatt = null;
+    }
+
+    /**
+     * Request a read on a given {@code BluetoothGattCharacteristic}. The read result is reported
+     * asynchronously through the {@code BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
+     * callback.
+     *
+     * @param characteristic The characteristic to read from.
+     */
+    public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            Log.w(TAG, "BluetoothAdapter not initialized");
+            return;
+        }
+        mBluetoothGatt.readCharacteristic(characteristic);
+    }
+
+    /**
+     * Enables or disables notification on a give characteristic.
+     *
+     * @param characteristic Characteristic to act on.
+     * @param enabled If true, enable notification.  False otherwise.
+     */
+    public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
+                                              boolean enabled) {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            Log.w(TAG, "BluetoothAdapter not initialized");
+            return;
+        }
+      
+        mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
+
+        // This is specific to Heart Rate Measurement.
+        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
+            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+                    UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            mBluetoothGatt.writeDescriptor(descriptor);
+        }
+    }
+
+    /**
+     * Retrieves a list of supported GATT services on the connected device. This should be
+     * invoked only after {@code BluetoothGatt#discoverServices()} completes successfully.
+     *
+     * @return A {@code List} of supported services.
+     */
+    public List<BluetoothGattService> getSupportedGattServices() {
+        if (mBluetoothGatt == null) return null;
+
+        return mBluetoothGatt.getServices();
+    }
+    
+    //测量过程中打开通知开关
+    public boolean measure() {
+
+        int count = 0;
+        boolean isWriteSuc = false;
+
+        try {
+            while (!isWriteSuc || count < 5) {
+                OemLog.log(TAG, "enable bloodPress notification...");
+                btWriteGattCharacteristic.setValue(sendCharacteristi);
+                isWriteSuc = mBluetoothGatt
+                        .writeCharacteristic(btWriteGattCharacteristic);
+                if (isWriteSuc) {
+                    setCharacteristicNotification(btReadGattCharacteristic, true);
+                    return true;
+                } else {
+                    Thread.sleep(200l);
+                }
+                count++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+        return false;
+    }
+    
+    public void registerCallBack(BloodPressCommandListener bloodPressCommandListener) {
+        mBloodPressCommandListener = bloodPressCommandListener;
+    }
+    
+    public BloodPressureBean parse(byte [] data) {
+        mBloodPressBean = new BloodPressureBean();
+       if(String.format("%2x", data[2]).equalsIgnoreCase("fb")) {
+           mBloodPressBean.setExceptionType(Constant.BLOOD_PRESS_MEASURE_EXCEPTION_RESULT_NORMAL);
+           mBloodPressBean.setDiaBp(ByteUtil.changeByteArrayToInt(new byte[]{data[3]}));
+           mBloodPressBean.setSysBp(ByteUtil.changeByteArrayToInt(new byte[]{data[4]}));
+           mBloodPressBean.setTestDate(TimeStampUtil.currTime4());
+           mBloodPressBean.setTime(System.currentTimeMillis());
+           mBloodPressBean.setTestHour(""+ com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil.getHour(System.currentTimeMillis()));
+           mBloodPressBean.setTestMinute(com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil.getMinute(System.currentTimeMillis())+"");
+           if (bloodPressDevicesCallBack != null) {
+               bloodPressDevicesCallBack.pressureDataCallBack(mBloodPressBean);
+           }
+       }
+        if (String.format("%2x", data[2]).equalsIgnoreCase("fc")) {
+            mBloodPressBean.setExceptionType(Constant.BLOOD_PRESS_MEASURE_EXCEPTION_RESULT_NORMAL);
+            mBloodPressBean.setSysBp(ByteUtil.changeByteArrayToInt(new byte[]{data[3]}));
+            mBloodPressBean.setDiaBp(ByteUtil.changeByteArrayToInt(new byte[]{data[4]}));
+            mBloodPressBean.setHeartRate(ByteUtil.changeByteArrayToInt(new byte[]{data[5]}));
+            mBloodPressBean.setTime(System.currentTimeMillis());
+            mBloodPressBean.setTestDate(TimeStampUtil.currTime4());
+            mBloodPressBean.setTestHour("" + com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil.getHour(System.currentTimeMillis()));
+            mBloodPressBean.setTestMinute(com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil.getMinute(System.currentTimeMillis()) + "");
+
+            //血压测量完成，关机
+           OemLog.log("bloodce", "measure commplete and shut down..." + ", hightpress is " + mBloodPressBean.getSysBp() + ", lowpress is " + mBloodPressBean.getDiaBp() +
+                   ", heartrate is " + mBloodPressBean.getHeartRate() + ", isDataTranfer is " + isDataTranfer);
+
+            synchronized (insertLock) {
+                //血压数据插入操作
+                try {
+                    if (!isDataTranfer) {
+                        isDataTranfer = true;
+                        dbManager = MyApplication.getDB();
+                        mBloodPressBean.setUsername(MyApplication.getInstance().getCurrentUserName());
+                        dbManager.saveOrUpdate(mBloodPressBean);
+                        PreferencesUtils.putString(mContext, "blood_press_latest_meausre_time", com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil.latestTestTime(0));
+                        if (removeMutiHandler.hasMessages(REMOVE_MULTI_DATA_MESSAGE)) {
+                            removeMutiHandler.removeMessages(REMOVE_MULTI_DATA_MESSAGE);
+                        }
+                        removeMutiHandler.sendEmptyMessageDelayed(REMOVE_MULTI_DATA_MESSAGE, REMOVE_MULTI_DATA_MESSAGE_DELAY_TIME);
+
+                        //UI显示回调,血压测量结果只显示一次.
+                        if (bloodPressDevicesCallBack != null) {
+                            bloodPressDevicesCallBack.resultDataCallBack(mBloodPressBean);
+                        }
+
+                        for (int i = 0; i < 5; i++) {
+                            btWriteGattCharacteristic.setValue(shutDownCommand);
+                            mBluetoothGatt.writeCharacteristic(btWriteGattCharacteristic);
+                            try {
+                                Thread.sleep(600l);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        disconnect();
+                        try {
+                            mBloodPressBean = MyApplication.getDB().selector(BloodPressureBean.class).findFirst();
+                            OemLog.log(TAG, "dbresult is " + mBloodPressBean.toString());
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+       } if (String.format("%2x", data[2]).equalsIgnoreCase("fd")) {
+            Log.d("MyTest", "exception comming....value is " + String.format("%2x", data[3]));
+
+            if (String.format("%2x", data[3]).equalsIgnoreCase("e")) {
+                mBloodPressBean.setExceptionType(Constant.BLOOD_PRESS_MEASURE_EXCEPTION_RESULT_EEPROM);
+            } else if (String.format("%2x", data[2]).equalsIgnoreCase("1")) {
+                mBloodPressBean.setExceptionType(Constant.BLOOD_PRESS_MEASURE_EXCEPTION_RESULT_PRESS_TOO_LOW);
+            } else if (String.format("%2x", data[2]).equalsIgnoreCase("2")) {
+                mBloodPressBean.setExceptionType(Constant.BLOOD_PRESS_MEASURE_EXCEPTION_RESULT_NOISE_INTERRUPT);
+            } else if (String.format("%2x", data[2]).equalsIgnoreCase("3")) {
+                mBloodPressBean.setExceptionType(Constant.BLOOD_PRESS_MEASURE_EXCEPTION_RESULT_INFLATABLE_TIME_TOO_LONG);
+            } else if (String.format("%2x", data[2]).equalsIgnoreCase("5")) {
+                mBloodPressBean.setExceptionType(Constant.BLOOD_PRESS_MEASURE_EXCEPTION_RESULT_EXCEPTION);
+            } else if (String.format("%2x", data[2]).equalsIgnoreCase("c")) {
+                mBloodPressBean.setExceptionType(Constant.BLOOD_PRESS_MEASURE_EXCEPTION_RESULT_CORRECT_EXCEPTION);
+            } else if (String.format("%2x", data[2]).equalsIgnoreCase("b")) {
+                mBloodPressBean.setExceptionType(Constant.BLOOD_PRESS_MEASURE_EXCEPTION_RESULT_LOW_VOLTAGE);
+            }
+        }
+         Log.i(TAG, " result is "+mBloodPressBean.toString());
+    
+    return mBloodPressBean;
+       
+      }
+
+    public void setServicesCallbackHandler(Handler servicesCallbackHandler) {
+        this.servicesCallbackHandler = servicesCallbackHandler;
+    }
+
+    public void registerBloodPressCallBack(IBloodPressDevicesCallBack bloodPressDevicesCallBack) {
+        this.bloodPressDevicesCallBack = bloodPressDevicesCallBack;
+    }
+
+    public void notifyServicesConnectFailture() {
+        OemLog.log(TAG, "notify services blood press connect timiout...");
+        //断开之前的链接
+        disconnectGatt();
+        if (servicesCallbackHandler != null) {
+            servicesCallbackHandler.sendEmptyMessage(Const.BLOOD_PRESS_MEASURE_COMMPLETE_DISSCONNECT);
+        }
+    }
+
+    public void disconnectGatt() {
+        if (mBluetoothGatt != null) {
+            mBluetoothGatt.disconnect();
+            mBluetoothGatt.close();
+        }
+    }
+
+
+}
+
+
+
+
+
+
+
+

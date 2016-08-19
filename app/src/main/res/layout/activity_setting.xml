@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.capitalbio.oemv2.myapplication.Activity.SettingActivity"
+    tools:showIn="@layout/activity_setting">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--title-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+            android:background="@color/blue_setting_title">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/slide_user_setting"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dp_25" />
+
+            <RelativeLayout
+                android:id="@+id/rl_setting_back"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_back" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+        <!--body-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/gray_zonghe_bg"
+            android:orientation="vertical">
+
+            <!--账号管理-->
+            <LinearLayout
+                android:id="@+id/ll_setting_accountmanagement"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                android:orientation="horizontal"
+                android:background="@color/white"
+                android:layout_marginTop="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingRight="@dimen/dp_20">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="账号管理"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dp_20"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:id="@+id/iv_setting_avatarcurrent"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_50"
+                    android:src="@drawable/ic_scene"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/dp_10"/>
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_gray_arrow"
+                    android:layout_gravity="center_vertical"/>
+
+
+            </LinearLayout>
+
+            <!--关于我们-->
+            <LinearLayout
+                android:id="@+id/ll_setting_aboutus"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                android:orientation="horizontal"
+                android:background="@color/white"
+                android:layout_marginTop="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingRight="@dimen/dp_20">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="关于我们"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dp_20"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_gray_arrow"
+                    android:layout_gravity="center_vertical"/>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

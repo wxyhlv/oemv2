@@ -1,0 +1,58 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+
+public class SettingActivity extends BaseActivity implements View.OnClickListener {
+
+    private RelativeLayout rlback;
+
+    //关于我们
+    private LinearLayout llaboutus;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setting);
+
+        find();
+        init();
+
+    }
+
+    private void find(){
+        rlback = (RelativeLayout) this.findViewById(R.id.rl_setting_back);
+        rlback.setOnClickListener(this);
+
+        llaboutus = (LinearLayout) this.findViewById(R.id.ll_setting_aboutus);
+        llaboutus.setOnClickListener(this);
+
+    }
+
+    private void init(){
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.rl_setting_back:
+                this.finish();
+                break;
+            //关于我们
+            case R.id.ll_setting_aboutus:
+                Utility.startActivity(SettingActivity.this,AboutUsActivity.class);
+                break;
+        }
+    }
+}

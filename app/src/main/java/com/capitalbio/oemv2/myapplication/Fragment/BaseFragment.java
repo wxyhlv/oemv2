@@ -6,10 +6,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.squareup.leakcanary.RefWatcher;
 
 /**
  * 
@@ -29,6 +33,12 @@ public abstract class BaseFragment extends Fragment implements OnClickListener {
 		return loadViewLayout;
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.i("ceshi","iiiiii");
+	}
+
 	/**
 	 * 初始activity方法
 	 */
@@ -37,6 +47,8 @@ public abstract class BaseFragment extends Fragment implements OnClickListener {
 		
 		findViewById(loadViewLayout);
 		processLogic();
+		RefWatcher refWatcher = MyApplication.getRefWatcher(getActivity());
+		refWatcher.watch(this);
 		return loadViewLayout;
 	}
 

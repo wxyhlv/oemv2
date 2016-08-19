@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/bg_tang_zhi_san_xiang">
+        <RelativeLayout
+            android:id="@+id/rl_datainputgly_back"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:layout_alignParentLeft="true">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tangzhiwuxiangyishujuluru"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:typeface="normal"
+            android:textSize="25dp"
+            android:layout_centerInParent="true"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_datainputgly_save"
+            android:layout_width="55dp"
+            android:clickable="true"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/baocun"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:textStyle="normal"/>
+        </RelativeLayout>
+    </RelativeLayout>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/grey">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+            <!-- time -->
+
+            <LinearLayout
+                android:id="@+id/ll_glyinput_time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:padding="15dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/clock" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="测量时间"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <Space
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tv_glyinput_time"
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="0000-00-00 00:00" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_gray_arrow" />
+            </LinearLayout>
+
+            <!-- 血糖 -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20dp" >
+
+                <TextView
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="血糖"
+                    android:textColor="@color/blue" />
+
+                <TextView
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(mmol/L)"
+                    android:textColor="@color/grey_light" />
+
+                <Space
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <EditText
+                    android:id="@+id/et_gly_bloodinput"
+                    android:inputType="numberDecimal"
+                    android:padding="4dp"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_catdatainput_et" />
+            </LinearLayout>
+
+
+            <!--总胆固醇-->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20dp" >
+
+                <TextView
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="总胆固醇"
+                    android:textColor="@color/blue" />
+
+                <TextView
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(mmol/L)"
+                    android:textColor="@color/grey_light" />
+
+                <Space
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <EditText
+                    android:id="@+id/et_gly_choleinput"
+                    android:inputType="numberDecimal"
+                    android:padding="4dp"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_catdatainput_et" />
+            </LinearLayout>
+
+
+
+            <!-- 甘油三脂 -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20dp" >
+
+                <TextView
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="甘油三脂"
+                    android:textColor="@color/blue" />
+
+                <TextView
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(mmol/L)"
+                    android:textColor="@color/grey_light" />
+
+                <Space
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <EditText
+                    android:id="@+id/et_gly_triinput"
+                    android:inputType="numberDecimal"
+                    android:padding="4dp"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_catdatainput_et" />
+            </LinearLayout>
+
+            <!--高密度脂蛋白-->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20dp" >
+
+                <TextView
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="高密度脂蛋白"
+                    android:textColor="@color/blue" />
+
+                <TextView
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(mmol/L)"
+                    android:textColor="@color/grey_light" />
+
+                <Space
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <EditText
+                    android:id="@+id/et_gly_highlipinput"
+                    android:inputType="numberDecimal"
+                    android:padding="4dp"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_catdatainput_et" />
+            </LinearLayout>
+            <!-- 低密度脂蛋白 -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20dp" >
+
+                <TextView
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="低密度脂蛋白"
+                    android:textColor="@color/blue" />
+
+                <TextView
+                    android:textSize="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(mmol/L)"
+                    android:textColor="@color/grey_light" />
+
+                <Space
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <EditText
+                    android:id="@+id/et_gly_lowlipinput"
+                    android:inputType="numberDecimal"
+                    android:padding="4dp"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_catdatainput_et" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

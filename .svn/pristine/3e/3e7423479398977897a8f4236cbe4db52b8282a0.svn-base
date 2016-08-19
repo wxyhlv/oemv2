@@ -1,0 +1,269 @@
+package com.capitalbio.oemv2.myapplication.Bean;
+
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
+import java.util.Arrays;
+
+/**
+ * Created by wxy on 15-12-25.
+ */
+@Table(name = "userinfo")
+public class LoginUser {
+
+
+    @Column(name = "id", isId = true)
+    private String id;
+    @Column(name = "username")
+    private String username;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "career")
+    private String career;
+    @Column(name = "idcard")
+    private String idcard;
+    @Column(name = "sex")
+    private String sex;
+    @Column(name = "mobile")
+    private String mobile;
+    @Column(name = "nickname")
+    private String nickname;
+    @Column(name = "age")
+    private String age;
+    @Column(name = "height")
+    private String height;
+    @Column(name = "weight")
+    private String weight;
+    @Column(name = "isRememberName")
+    private boolean isRememberName;
+    @Column(name = "token")
+    private String token;
+
+
+    @Column(name = "loginName",property = "UNIQUE")
+    private String loginName;
+    @Column(name = "headPic",property = "blob")
+    private byte[] headPic;
+    @Column(name = "picpath")
+    private String picpath;
+    private String headImage;
+
+    @Column(name = "loginTime")
+    private String loginTime; //登陆时间
+    @Column(name = "loginTime_")
+    private long loginTime_;
+    @Column(name = "isLogin")
+    private String isLogin;//登陆状态
+    @Column(name = "exitlogintime")
+    private long exitlogintime;//退出登陆时间
+
+
+    public String getIsLogin() {
+        return isLogin;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public long getExitlogintime() {
+        return exitlogintime;
+    }
+
+    public void setExitlogintime(long exitlogintime) {
+        this.exitlogintime = exitlogintime;
+    }
+
+    public long getLoginTime_() {
+        return loginTime_;
+    }
+
+    public void setLoginTime_(long loginTime_) {
+        this.loginTime_ = loginTime_;
+    }
+
+    public String isLogin() {
+        return isLogin;
+    }
+
+    public void setIsLogin(String isLogin) {
+        this.isLogin = isLogin;
+    }
+
+    public String getLoginTime() {
+        return loginTime;
+    }
+
+    public void setLoginTime(String loginTime) {
+        this.loginTime = loginTime;
+    }
+
+    public byte[] getHeadPic() {
+        return headPic;
+    }
+
+    public void setHeadPic(byte[] headPic) {
+        this.headPic = headPic;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getCareer() {
+        return career;
+    }
+
+    public void setCareer(String career) {
+        this.career = career;
+    }
+
+    public String getIdcard() {
+        return idcard;
+    }
+
+    public void setIdcard(String idcard) {
+        this.idcard = idcard;
+    }
+
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public String getCtime() {
+        return ctime;
+    }
+
+    public void setCtime(String ctime) {
+        this.ctime = ctime;
+    }
+
+
+    private String ctime;
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+
+
+    public String getPicpath() {
+        return picpath;
+    }
+
+    public void setPicpath(String picpath) {
+        this.picpath = picpath;
+    }
+
+    public String getHeadImage() {
+        return headImage;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginUser{" +
+                "age='" + age + '\'' +
+                ", id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", career='" + career + '\'' +
+                ", idcard='" + idcard + '\'' +
+                ", sex='" + sex + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", height='" + height + '\'' +
+                ", weight='" + weight + '\'' +
+                ", loginName='" + loginName + '\'' +
+                ", headPic=" + Arrays.toString(headPic) +
+                ", picpath='" + picpath + '\'' +
+                ", headImage='" + headImage + '\'' +
+                ", ctime='" + ctime + '\'' +
+                '}';
+    }
+
+    public boolean isRememberName() {
+        return isRememberName;
+    }
+
+    public void setIsRememberName(boolean isRememberName) {
+        this.isRememberName = isRememberName;
+    }
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+   android:padding="20dp"
+    >
+    
+	<TextView 
+	    android:id="@+id/tv_value"
+	    android:layout_width="60dp"
+	    android:layout_height="60dp"
+	    android:gravity="center"
+	    android:textColor="#000000"
+		android:textSize="20sp"
+		android:text="hahah "
+	    />
+
+	<TextView
+		android:id="@+id/tv_dot"
+		android:layout_width="10dp"
+		android:layout_height="10dp"
+		android:padding="20dp"
+		android:background="@drawable/ic_point_green"
+		android:gravity="center"
+
+		/>
+	<!--
+	<TextView
+		android:id="@+id/tv_dot"
+		android:layout_width="10dp"
+		android:layout_height="10dp"
+		android:padding="20dp"
+		android:background="@drawable/ic_point_green"
+		android:gravity="center"
+
+		/>-->
+    
+</LinearLayout>

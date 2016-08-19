@@ -1,0 +1,474 @@
+package com.capitalbio.oemv2.myapplication.Fragment;
+
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.TextView;
+
+import com.alibaba.fastjson.JSON;
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Bean.BraceleteSleepDataForMonth;
+import com.capitalbio.oemv2.myapplication.Bean.SleepDataTotalJson;
+import com.capitalbio.oemv2.myapplication.Bean.SleepDetailJson;
+import com.capitalbio.oemv2.myapplication.BraceleteLib.SleepDataTotalBean;
+import com.capitalbio.oemv2.myapplication.BraceleteLib.SleepDetailData;
+import com.capitalbio.oemv2.myapplication.Const.Base_Url;
+import com.capitalbio.oemv2.myapplication.Const.BraceleteConst;
+import com.capitalbio.oemv2.myapplication.NetUtils.HistoryDownd;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.OemLog;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+import com.capitalbio.oemv2.myapplication.View.SleepProgressbarView;
+import com.capitalbio.oemv2.myapplication.View.Sleephistogram;
+
+import org.xutils.db.Selector;
+import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.ex.DbException;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 日睡眠
+ * Created by wxy on 15-11-26.
+ */
+public class BraceleteFragmentDaySleep extends BaseFragment{
+
+    private String TAG = "BraceleteFragmentDaySleep";
+    private SleepProgressbarView arcView;//progress
+    private Sleephistogram sleepView;
+
+    private List<Map<String, String>> qianshui = new ArrayList<Map<String, String>>();
+    private List<Map<String, String>> shenshui = new ArrayList<Map<String, String>>();
+    private List<Map<String, String>> wake = new ArrayList<Map<String, String>>();
+    private long qianshuitotaltime,shenshuitotaltime,wakeTotalTime;
+    private String qianshuitotaltimeString,shenshuitotaltimeString,wakeTotalTimeString;
+    private TextView tv_shenshuitime,tv_qianshuitime,tv_waketime,tv_wakenum,tv_gotobedtime,tv_sleep_to_waketime;
+    private String gotoSleepTime,wakeTime;
+    private TextView tv_goal_sleep,tv_sleeptotalTime;
+    private SleepDataTotalJson totalbean;
+    private String goalSleepTime, totaltime;
+    private boolean hasDataInDb;
+    @Override
+    protected View loadViewLayout(LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.fg_bracelete_day2,container,false);
+    }
+
+    @Override
+    protected void findViewById(View view) {
+       //
+        arcView = (SleepProgressbarView) view.findViewById(R.id.arcView);
+
+        sleepView = (Sleephistogram) view.findViewById(R.id.sleep);
+        tv_goal_sleep = (TextView) view.findViewById(R.id.tv_goal_sleep);
+        tv_sleeptotalTime = (TextView) view.findViewById(R.id.sleeptotalTime);
+        tv_shenshuitime = (TextView) view.findViewById(R.id.tv_shenshuitime);
+        tv_qianshuitime = (TextView) view.findViewById(R.id.tv_qianshuitime);
+        tv_waketime = (TextView) view.findViewById(R.id.tv_waketime);
+        tv_wakenum = (TextView) view.findViewById(R.id.tv_wakenumbers);
+        tv_gotobedtime = (TextView) view.findViewById(R.id.tv_gotobedtime);
+        tv_sleep_to_waketime = (TextView) view.findViewById(R.id.tv_sleep_to_waketime);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setSleepGoal();
+        //TODO StringIndexOutOfBoundsException
+        if(totaltime!=null&&!"".equals(totaltime)){
+            int hour = Integer.valueOf(totaltime.substring(0, 2));
+            int min = Integer.valueOf(totaltime.substring(3,5));
+            int totaltime_min = hour  * 60 + min;
+            arcView.setProgressInfo(totaltime_min,Integer.valueOf(goalSleepTime),totaltime_min * 100 / Integer.valueOf(goalSleepTime));
+
+        }else{
+            arcView.setProgressInfo(0,0,0);
+
+        }
+    }
+
+    @Override
+    protected void processLogic() {
+        setSleepGoal();
+        arcView.setProgressInfo(1500,3000,50 );
+        // 获取屏幕宽高
+        WindowManager wm = (WindowManager)getActivity().getSystemService( Context.WINDOW_SERVICE);
+        int screenWidth = wm.getDefaultDisplay().getWidth();
+        int screenHeight = wm.getDefaultDisplay().getHeight();
+        Log.d("end", screenWidth + "");
+        sleepView.init(screenWidth, screenHeight / 4);
+         //获取睡眠详细数据
+        getSleepDataDetail();
+
+    }
+
+    public void setSleepGoal() {
+        goalSleepTime = PreferencesUtils.getString(mContext, "goal_sleeptime", "480");
+        tv_goal_sleep.setText("目标："+TimeStampUtil.formatMinute(Integer.valueOf(goalSleepTime)));
+    }
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int what = msg.what;
+            if(what == 1){
+                hasDataInDb = false;
+                totaltime ="";
+                tv_sleeptotalTime.setText("0");
+                tv_gotobedtime.setText("0");
+                tv_shenshuitime.setText("0");
+                tv_qianshuitime.setText("0");
+                tv_waketime.setText("0");
+                tv_wakenum.setText("0");
+                tv_sleep_to_waketime.setText("0");
+                qianshui = new ArrayList<>();
+                shenshui = new ArrayList<>();
+                wake = new ArrayList<>();
+                arcView.setProgressInfo(0,0,0);
+                sleepView.setSleepData(qianshui,shenshui,wake,null);
+            } else {
+                hasDataInDb = true;
+                BraceleteSleepDataForMonth bean = (BraceleteSleepDataForMonth) msg.obj;
+                totaltime =bean.getTotalSleeptime();
+                if(totaltime!=null){
+                    int hour = Integer.valueOf(totaltime.substring(0, 2));
+                    int min = Integer.valueOf(totaltime.substring(3,5));
+                    int totaltime_min = hour  * 60 + min;
+                    PreferencesUtils.putInt(MyApplication.getInstance(), "bracelete_total_sleep", totaltime_min);
+                    arcView.setProgressInfo(totaltime_min,Integer.valueOf(goalSleepTime),totaltime_min * 100 / Integer.valueOf(goalSleepTime));
+
+                }else{
+                    arcView.setProgressInfo(0,0,0);
+
+                }
+
+                tv_sleeptotalTime.setText(totaltime);
+
+                tv_gotobedtime.setText(gotoSleepTime);
+                tv_shenshuitime.setText(bean.getDeeptime());
+                tv_qianshuitime.setText(bean.getQianshuitime());
+                tv_waketime.setText(bean.getWakeTime());
+                 tv_wakenum.setText(bean.getWakeNum());
+                tv_sleep_to_waketime.setText(wakeTime);
+            }
+        }
+    };
+
+    private  void getSleepDataDetail(){
+        //首先从数据库中取数据、没有则从网络上取数据，
+
+
+        getSleepDetailDataByDB();
+        if(!hasDataInDb){
+            getSleepDetailDataByNet();
+        }
+      /* if(NetTool.isNetwork(mContext,true)){
+            getSleepDetailDataByNet();
+
+        }else{
+            getSleepDetailDataByDB();
+        }
+*/
+      //  getSleepDetailDataByDB();
+    }
+
+    private void getSleepDetailDataByNet() {
+        String url = Base_Url.downloadtotalUrl;
+        String day = BraceleteConst.day;
+        String lasttime = TimeStampUtil.getSpecifiedDayBefore(day) + " 20:00:00";
+        String todaytime = day + " 20:00:00";
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("modelType", "braceletSleep");
+        param.put("url", url);
+        param.put("beginDate", lasttime);
+        param.put("endDate", todaytime);
+
+        HistoryDownd.getHistory(mContext, param, new HistoryDownd.RegistOnGetResult() {
+            @Override
+            public void OnGetResult(int code, String msg, String data) {
+                List<SleepDetailJson> list = JSON.parseArray(data, SleepDetailJson.class);
+                //插入数据库
+                if (list != null && list.size() > 0) {
+                    try {
+                        MyApplication.getDB().delete(SleepDetailData.class, WhereBuilder.b("userName", "=", list.get(0).getUsername()));
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                    for (int i = 0; i < list.size(); i++) {
+                        SleepDetailData bean = new SleepDetailData();
+                        bean.setIsUpload(true);
+                        bean.setUserName(list.get(i).getUsername());
+                        bean.setSleepType(list.get(i).getSleepType());
+                        long time = list.get(i).getTestTime();
+                        bean.setLongSleepTime(time);
+                        bean.setFomatTime(TimeStampUtil.currTime3(time + ""));
+
+                        bean.setYmd(TimeStampUtil.currTime3(time));
+                        bean.setHour(TimeStampUtil.getHour(time) + "");
+                        bean.setDataSource("网上");
+                        try {
+
+                            MyApplication.getDB().save(bean);
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    getSleepDetailDataByDB();
+                }
+
+            }
+        });
+
+    }
+
+
+
+    /**
+     * 获取昨天晚上的睡眠明细数据
+     * 来源数据库
+     *
+     */
+    public void getSleepDetailDataByDB(){
+
+        Thread thread =new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    qianshui = new ArrayList<>();
+                    shenshui = new ArrayList<>();
+                    wake = new ArrayList<>();
+                    String day = BraceleteConst.day;
+                    String lasttime = TimeStampUtil.getSpecifiedDayBefore(day) + " 20:00";
+                    String todaytime = day + " 20:00";
+                    Selector<SleepDetailData> slector = MyApplication.getDB().selector(SleepDetailData.class).where("username", "=", MyApplication.getInstance().getCurrentUserName())
+                            .and("fomatTime", ">=", lasttime).and("fomatTime", "<=", todaytime).orderBy("longSleepTime");
+                    Log.i("sleepid" ,"jjjjjj");
+                    List<SleepDetailData> data = slector.findAll();
+                    if(data == null||data.size()==0){
+                        Message msg = new Message();
+                        msg.what = 1;
+                        handler.sendMessage(msg);
+
+                        return;
+                    }
+                    Log.i("sleepid" ,"jjjjjj" + "day is ---==" + day+"/n" + data.size() );
+
+                    long sleeptime = data.get(0).getLongSleepTime();
+                    long wake_time = data.get(data.size()-1).getLongSleepTime();
+
+                    gotoSleepTime = TimeStampUtil.singleIntToDoubleString(TimeStampUtil.getHour(sleeptime) )+":"+TimeStampUtil.singleIntToDoubleString(TimeStampUtil.getMinute(sleeptime));
+                    wakeTime = TimeStampUtil.singleIntToDoubleString(TimeStampUtil.getHour(wake_time)) +":"+
+                            TimeStampUtil.singleIntToDoubleString(TimeStampUtil.getMinute(wake_time));
+                    for(int i = 0;i<data.size();i++){
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        String type = data.get(i).getSleepType();
+                        long longSleepTime = data.get(i).getLongSleepTime();
+
+                        final int nextI = i + 1;
+                        if (nextI >= data.size()) {
+                            // 如果超出就跳出循环
+                            break;
+                        }
+                        Log.i("sleepid" ,"jjjjjj" + "day is ---" + day+"/n" + data.size() );
+//("准备入睡".equals(type)||"浅睡".equals(type)
+                        if ("浅睡".equals(type)) {
+                            // 浅睡
+
+                            // 取吓一条数据
+                            // 睡眠类型
+                            final String sleepType1 = data.get(nextI).getSleepType();
+                            // 睡眠毫秒值
+                            final long nextTime = data.get(nextI).getLongSleepTime();
+
+
+                            HashMap<String, String> dataMap = new HashMap<String, String>();
+                            // 睡眠开始时间 (取上一个的作为开始时间)
+                            dataMap.put("time", longSleepTime+"");
+                            // 睡眠时长
+                            dataMap.put("widthtime", String.valueOf(nextTime - longSleepTime));
+
+                            qianshui.add(dataMap);
+
+                        } else if ("睡着".equals(type)) {
+                            // 睡着
+                            // 取吓一条数据
+                            // 睡眠类型
+                            final String sleepType1 = data.get(nextI).getSleepType();
+                            // 睡眠毫秒值
+                            final long nextTime = data.get(nextI).getLongSleepTime();
+
+
+                            HashMap<String, String> dataMap = new HashMap<String, String>();
+                            // 睡眠开始时间 (取上一个的作为开始时间)
+                            dataMap.put("time", longSleepTime+"");
+                            // 睡眠时长
+                            dataMap.put("widthtime", String.valueOf(nextTime - longSleepTime));
+
+                            shenshui.add(dataMap);
+                        }else if ("醒着".equals(type)) {
+                            // 睡着
+                            // 取吓一条数据
+                            // 睡眠类型
+                            final String sleepType1 = data.get(nextI).getSleepType();
+                            // 睡眠毫秒值
+                            final long nextTime = data.get(nextI).getLongSleepTime();
+
+
+                            HashMap<String, String> dataMap = new HashMap<String, String>();
+                            // 睡眠开始时间 (取上一个的作为开始时间)
+                            dataMap.put("time", longSleepTime+"");
+                            // 睡眠时长
+                            dataMap.put("widthtime", String.valueOf(nextTime - longSleepTime));
+
+                            wake.add(dataMap);
+                        }
+                    }
+
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+
+                for(int i = 0;i<qianshui.size();i++){
+                    qianshuitotaltime += Long.parseLong(qianshui.get(i).get("widthtime"));
+                }
+
+                for(int i = 0;i<shenshui.size();i++){
+                    shenshuitotaltime += Long.parseLong(shenshui.get(i).get("widthtime"));
+                }
+                for (int i = 0;i<wake.size();i++){
+                    wakeTotalTime += Long.parseLong(wake.get(i).get("widthtime"));
+                }
+                Log.i("sleep", " qianshuitotaltime " + qianshuitotaltime + " shenshuitotaltime " + shenshuitotaltime + "wakeTotalTime;;;;;" + wakeTotalTime);
+                Log.i("sleep", " " + shenshui.size() + " " + qianshui.size());
+
+                Message msg = new Message();
+                BraceleteSleepDataForMonth bean = new BraceleteSleepDataForMonth();
+                bean.setTotalSleeptime(getFormatTimeStr(qianshuitotaltime + shenshuitotaltime));
+                bean.setDeeptime(getFormatTimeStr(shenshuitotaltime));
+                bean.setQianshuitime(getFormatTimeStr(qianshuitotaltime));
+                bean.setQuality(0);
+                bean.setWakeTime(getFormatTimeStr(wakeTotalTime));
+                bean.setWakeNum(wake.size()+"");
+                msg.obj = bean;
+                handler.sendMessage(msg);
+                sleepView.setSleepData(shenshui, qianshui, wake, null);
+                shenshuitotaltime = 0;
+                qianshuitotaltime = 0;
+                wakeTotalTime = 0;
+            }
+        });
+        thread.start();
+
+}
+
+    /*
+ * /** 排序适配器
+ */
+    private class Sortvalue implements Comparator<HashMap<String, Object>> {
+        public int compare(HashMap<String, Object> o1, HashMap<String, Object> o2) {
+            if (o1 instanceof HashMap && o2 instanceof HashMap) {
+
+                try {
+                    long time1 = Long.parseLong((String) o1.get("time"));
+                    long time2 = Long.parseLong((String) o2.get("time"));
+
+                    if (time1 > time2)
+                        return 1;
+                    else if (time1 < time2) {
+                        return -1;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return 0;
+            }
+
+            return 0;
+        }
+    }
+
+    /**
+     * 取出格式化为 00 的时间值
+     *
+     * void
+     */
+    private String getFormatTimeStr(long timeWidthL ) {
+
+        // 毫秒转秒
+        final float timeWidthF = Utility.div(timeWidthL, 1000);
+        final float timeWidthMinute = Utility.div(timeWidthF, 60);
+
+        // 计算睡眠时长 - 小时
+        final int hour = (int) (timeWidthMinute / 60);
+        // 计算睡眠时长 - 分钟
+        final int min = (int) (timeWidthMinute % 60);
+        String hourString = hour < 10 ? ("0" + hour) : String.valueOf(hour);
+        String minString = min < 10 ? ("0" + min) : String.valueOf(min);
+        return  hourString + "时"+minString+"分";
+    }
+
+
+
+    /**
+     * 插入睡眠总表
+     * test
+     */
+
+    private void saveSleepDataTotal(){
+        SleepDataTotalBean  totalBean = new SleepDataTotalBean();
+        totalBean.setRouseNumber(5);//清醒次数
+        totalBean.setSoberTime(90);//清醒时间
+        totalBean.setSomnolenceTime(60);//浅睡时间
+        totalBean.setSeepSleepTime(25);//深睡时间
+        totalBean.setSumNumber(180);//总时间
+        totalBean.setLongTime(1458131902);
+        totalBean.setUsername("wxy");
+        SleepDataTotalBean  totalBean1 = new SleepDataTotalBean();
+        totalBean1.setRouseNumber(5);//清醒次数
+        totalBean1.setSoberTime(90);//清醒时间
+        totalBean1.setSomnolenceTime(60);//浅睡时间
+        totalBean1.setSeepSleepTime(25);//深睡时间
+        totalBean1.setSumNumber(180);//总时间
+        totalBean1.setLongTime(1458142702);
+        totalBean1.setUsername("wxy");
+        SleepDataTotalBean  totalBean2 = new SleepDataTotalBean();
+        totalBean2.setRouseNumber(5);//清醒次数
+        totalBean2.setSoberTime(90);//清醒时间
+        totalBean2.setSomnolenceTime(60);//浅睡时间
+        totalBean2.setSeepSleepTime(25);//深睡时间
+        totalBean2.setSumNumber(180);//总时间
+        totalBean2.setLongTime(1458193102);
+        totalBean2.setUsername("wxy");
+        try {
+            MyApplication.getDB().save(totalBean);
+            MyApplication.getDB().save(totalBean1);
+            MyApplication.getDB().save(totalBean2);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void update(){
+        OemLog.log(TAG,"param date" + BraceleteConst.day);
+        getSleepDataDetail();
+    }
+
+}

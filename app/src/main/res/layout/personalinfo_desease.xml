@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ascv="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <CheckBox
+        android:id="@+id/cb_hypertension"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/checkbox_disease"
+        android:paddingLeft="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:text="@string/persondetail_hypertension"
+        android:textColor="@drawable/selector_blue_pressed"
+        android:textSize="18sp"
+        android:button="@null"
+
+        />
+    <CheckBox
+        android:id="@+id/cb_stroke"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/checkbox_disease"
+        android:paddingLeft="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/persondetail_stroke"
+        android:textSize="18sp"
+        android:textColor="@drawable/selector_blue_pressed"
+        android:button="@null"
+        android:gravity="center_vertical"
+        />
+
+    <CheckBox
+        android:id="@+id/cb_chd"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/checkbox_disease"
+        android:paddingLeft="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/persondetail_chd"
+        android:textColor="@drawable/selector_blue_pressed"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:button="@null"
+
+        />
+
+    <CheckBox
+        android:id="@+id/cb_diabetic"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/checkbox_disease"
+        android:paddingLeft="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/persondetail_diabetic"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:button="@null"
+        android:textColor="@drawable/selector_blue_pressed"
+        />
+
+    <CheckBox
+        android:id="@+id/cb_obesity"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/checkbox_disease"
+        android:paddingLeft="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:text="@string/persondetail_obesity"
+        android:textColor="@drawable/selector_blue_pressed"
+        android:gravity="center_vertical"
+        android:button="@null"
+
+        />
+
+    <CheckBox
+        android:id="@+id/cb_therioma"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/checkbox_disease"
+        android:paddingLeft="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/persondetail_therioma"
+        android:textColor="@drawable/selector_blue_pressed"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
+        android:button="@null"
+
+        />
+
+    <CheckBox
+        android:id="@+id/cb_others"
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="30dp"
+        android:background="@drawable/checkbox_disease"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:textColor="@drawable/selector_blue_pressed"
+        android:text="@string/persondetail_others"
+        android:gravity="center_vertical"
+        android:button="@null"
+        />
+
+
+</LinearLayout>

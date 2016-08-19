@@ -1,0 +1,151 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.content.Intent;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Bean.WarnInfo;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+import com.capitalbio.oemv2.myapplication.dialog.ChooseHeightDialog;
+import com.capitalbio.oemv2.myapplication.dialog.Time_1daySelectDialog;
+
+import org.xutils.ex.DbException;
+
+import java.util.ArrayList;
+
+public class BraceleteAddWarnActivity extends BaseActivity implements View.OnClickListener {
+
+    LinearLayout contentLayout;
+    private TextView tv_warntype,tv_warnTime,tv_repeat_select;
+    private EditText memoEdt;
+    @Override
+    protected void initChildLayout() {
+        initChildView();
+    }
+
+    private void initChildView() {
+        rl.setBackgroundResource(R.color.bg_content);
+        rlNavigateBar.setBackgroundResource(R.drawable.bg_tang_zhi_san_xiang);
+        setLeftTopIcon(R.drawable.ic_back);
+        contentLayout = (LinearLayout) View.inflate(this, R.layout.activity_bracelete_addwarnsetting, null);
+        llBody.addView(contentLayout);
+        setTvTopTitle(R.string.addWarn);
+        setTvTopRight(R.string.baocun);
+        tv_warntype = (TextView)findViewById(R.id.tv_warntype);
+        tv_warntype.setOnClickListener(this);
+        tv_warnTime = (TextView) findViewById(R.id.tv_warnTime);
+        tv_warnTime.setOnClickListener(this);
+
+        tv_repeat_select = (TextView) findViewById(R.id.tv_repeat_select);
+        tv_repeat_select.setOnClickListener(this);
+        tvTopRight.setOnClickListener(this);
+        memoEdt = (EditText) findViewById(R.id.memo);
+    }
+
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+
+            case R.id.tv_warntype:
+                showPopCarSelect();
+                break;
+            case R.id.tv_warnTime:
+                showPopTimeSelect();
+                break;
+            case R.id.tv_repeat_select:
+                showPopRepeatSelect();
+                break;
+            case R.id.tv_right:
+                Log.e("warnadd", "save warn");
+                WarnInfo info = new WarnInfo();
+                info.setWarnType(tv_warntype.getText().toString());
+                info.setTime(tv_warnTime.getText().toString());
+                info.setRepeat(tv_repeat_select.getText().toString());
+                info.setWarnContent(memoEdt.getText().toString());
+               try {
+                    MyApplication.getDB().saveOrUpdate(info);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                Intent intent = new Intent();
+                intent.putExtra("warntype",info.getWarnType());
+                intent.putExtra("warnTime",info.getWarnTime());
+                intent.putExtra("repeat",info.getRepeat());
+                 setResult(3,intent);
+                finish();
+                break;
+        }
+
+    }
+
+    public void showPopCarSelect(){
+        ArrayList<String> list = new ArrayList<>();
+        list.add("运动");
+        list.add("睡觉");
+        list.add("起床");
+        list.add("吃饭");
+        list.add("吃药");
+
+        ChooseHeightDialog dialog = new ChooseHeightDialog(this,list,tv_warntype.getText().toString(),"请选择职业");
+        dialog.show();
+        dialog.setBirthdayListener(new ChooseHeightDialog.OnBirthListener() {
+            @Override
+            public void onClick(String year) {
+             /*   Toast.makeText(PersonalDetailsAcitivity.this,
+                        year ,Toast.LENGTH_LONG).show();*/
+                tv_warntype.setText(year);
+            }
+        });
+    }
+
+
+    public void showPopTimeSelect(){
+
+        Time_1daySelectDialog dialog = new Time_1daySelectDialog(this);
+        dialog.show();
+        dialog.setOnOkListener(new Time_1daySelectDialog.onOK() {
+            @Override
+            public void onOk(String day, String hour, String minute) {
+                tv_warnTime.setText(day + " " + hour + ":" + minute);
+            }
+        });
+
+    }
+
+    public void showPopRepeatSelect(){
+        ArrayList<String> list = new ArrayList<>();
+        list.add("周一");
+        list.add("周二");
+        list.add("周三");
+        list.add("周四");
+        list.add("周五");
+        list.add("周六");
+        list.add("周日");
+        list.add("每天");
+        list.add("永不");
+
+
+        ChooseHeightDialog dialog = new ChooseHeightDialog(this,list,tv_repeat_select.getText().toString(),"是否重复");
+        dialog.show();
+        dialog.setBirthdayListener(new ChooseHeightDialog.OnBirthListener() {
+            @Override
+            public void onClick(String year) {
+             /*   Toast.makeText(PersonalDetailsAcitivity.this,
+                        year ,Toast.LENGTH_LONG).show();*/
+                tv_repeat_select.setText(year);
+            }
+        });
+    }
+    public void back(View v) {
+        finish();
+    }
+
+}

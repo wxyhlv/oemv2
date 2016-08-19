@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+   <ImageView
+       android:id="@+id/iv_aircatProgress"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:src="@drawable/animation_aircatsearch"
+       android:layout_gravity="center"
+       android:layout_marginTop="80dp"
+       />
+
+
+    <ListView
+        android:id="@+id/lv_aircat"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        />
+
+
+
+
+</LinearLayout>

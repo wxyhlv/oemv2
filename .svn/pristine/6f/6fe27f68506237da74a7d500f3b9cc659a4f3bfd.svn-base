@@ -1,0 +1,1023 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Bean.AirCatInfo;
+import com.capitalbio.oemv2.myapplication.Bean.AircatDevice;
+import com.capitalbio.oemv2.myapplication.Const.AircatConst;
+import com.capitalbio.oemv2.myapplication.Const.Base_Url;
+import com.capitalbio.oemv2.myapplication.Devices.AirCatDevices.esptouch.ISearchMacCallBack;
+import com.capitalbio.oemv2.myapplication.Devices.AirCatDevices.esptouch.command.SearchMacCommand;
+import com.capitalbio.oemv2.myapplication.Devices.AirCatDevices.esptouch.command.SetTargetAPCommand;
+import com.capitalbio.oemv2.myapplication.FirstPeriod.Interfaces.OnSearchResponseListener;
+import com.capitalbio.oemv2.myapplication.FirstPeriod.Utils.CityNameUtil;
+import com.capitalbio.oemv2.myapplication.FirstPeriod.Utils.SearchAreaidByNamecn;
+import com.capitalbio.oemv2.myapplication.NetUtils.HttpTools;
+import com.capitalbio.oemv2.myapplication.QR.MipcaActivityCapture;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.AirCatWifiDataParser;
+import com.capitalbio.oemv2.myapplication.Utils.AircatHistoryUtil;
+import com.capitalbio.oemv2.myapplication.Utils.AircatUtil;
+import com.capitalbio.oemv2.myapplication.Utils.BaiDuLocation;
+import com.capitalbio.oemv2.myapplication.Utils.ChinaWeather;
+import com.capitalbio.oemv2.myapplication.Utils.OemLog;
+import com.capitalbio.oemv2.myapplication.Utils.OutDoorAqi;
+import com.capitalbio.oemv2.myapplication.Utils.OutDoorAqiDataParser;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+import com.capitalbio.oemv2.myapplication.Utils.Utils;
+import com.capitalbio.oemv2.myapplication.Utils.WeatherAndTemParser;
+import com.capitalbio.oemv2.myapplication.Utils.WeatherDataParser;
+import com.capitalbio.oemv2.myapplication.View.views.VernierView;
+import com.capitalbio.oemv2.myapplication.dialog.WifiPwdSetDialog;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
+
+
+/**
+ * @author lzq
+ * @Time 2015/12/22 14:18
+ */
+public class AirCatActivity extends BaseActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, ISearchMacCallBack , WifiPwdSetDialog.IAircatInitSelect{
+    private final static int SCANNIN_GREQUEST_CODE = 1;
+
+    //获得最新空气猫数据消息
+    public static final int AIRCAR_NEWEST_DATA_MESSAGE = 1000;
+    public static final int AIRCAR_NEWEST_DATA_MESSAGE_DELAY_TIME = 1000;
+
+    public static final int AIRCAT_SET_AP_MESSAGE_COMEPLETE = 1001;
+    private boolean isAircatSetAp = false;
+
+
+    private TextView tv_airInfo;//空气猫信息
+    ScrollView mScrollView;
+    // PullToRefreshView mPullToRefreshView;
+    SwipeRefreshLayout mPullToRefreshView;
+    String deviceName;
+    String TAG = "AirCatActivity";
+    private TextView tvoutdooraqi;
+    private TextView tvtime;
+    private TextView tvweathertem;
+    private TextView tvweathertext;
+    private ImageView ivweathericon;
+
+
+    private LinearLayout ll_pm25;
+    private LinearLayout ll_formal;
+    private LinearLayout ll_tvoc;
+    private LinearLayout ll_api;
+    private LinearLayout ll_tem;
+    private LinearLayout ll_hum;
+
+
+    private VernierView vv_pm25;
+    private VernierView vv_formal;
+    private VernierView vv_tvoc;
+    private VernierView vv_api;
+    private VernierView vv_tem;
+    private VernierView vv_hum;
+
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case AIRCAT_SET_AP_MESSAGE_COMEPLETE:
+                    isAircatSetAp = false;
+                    break;
+            }
+
+        }
+    };
+
+
+    private SearchMacCommand searchMacCommand;
+
+    private SetTargetAPCommand setTargetAPCommand;
+
+
+    AircatDevice aircatShare;
+    List<AirCatInfo> aircatDeviceList;
+    boolean fromShare_first = false;
+    boolean fromShare_second = false;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // TODO Auto-generated method stub
+        super.onNewIntent(intent);
+        setIntent(intent);
+        fromShare_second = getIntent().getBooleanExtra("fromShare", false);
+        OemLog.log(TAG, "result is " + fromShare_second);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_aircat);
+        fromShare_first = getIntent().getBooleanExtra("fromShare", false);
+        findView();
+
+        initView();
+
+        registEvent();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("info", "=====================onResume");
+        initData();
+    }
+
+    AircatUtil.RegistOnGetResult onResultCallback = new AircatUtil.RegistOnGetResult() {
+        @Override
+        public void OnGetResult(int code, String msg) {
+            if (code == 11) {
+                MyApplication.getInstance().exit();
+                Toast.makeText(context, "用户未登陆,请重新登陆", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AirCatActivity.this, LoginActivity.class);
+                startActivity(intent);
+            } else if (code == 0) {
+                Toast.makeText(getContext(), "绑定设备成功", Toast.LENGTH_LONG).show();
+
+                PreferencesUtils.putString(context, "curAircatMac", aircatShare.getMac());
+                PreferencesUtils.putString(context, "curAircatName", aircatShare.getBindName());
+                tv_airInfo.setText(aircatShare.getBindName());
+                //获取数据
+                getNewestWifiData();
+                getHistory();
+
+            } else {
+                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+            }
+
+        }
+    };
+
+    private void initData() {
+        if (fromShare_first || fromShare_second) {
+            OemLog.log(TAG, "FIRST IS " + fromShare_first);
+            OemLog.log(TAG, "2 IS " + fromShare_second);
+            aircatShare = (AircatDevice) getIntent().getSerializableExtra("aircat");
+            AircatUtil aircatUtil = new AircatUtil(context, aircatShare, onResultCallback);
+            aircatUtil.bindDevice();
+            fromShare_first = false;
+            fromShare_second = false;
+        } else {
+            deviceName = MyApplication.getInstance().getAircatDeviceName();
+            tv_airInfo.setText(deviceName);
+            Log.i("====", "========这里执行了吗？=========");
+            //
+            showTime();
+            //获取数据
+            getNewestWifiData();
+            //定位
+            locate();
+            getHistory();
+        }
+    }
+
+    private void showTime() {
+        tvtime.setText(TimeStampUtil.currTime2(2));
+    }
+
+    private BaiDuLocation baiDuLocation;
+
+    //百度定位
+    private void locate() {
+        if (baiDuLocation == null) {
+            baiDuLocation = new BaiDuLocation();
+        }
+        baiDuLocation.setBDLocationListener(this, new BDLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation bdLocation) {
+                if (bdLocation == null) {
+                    Log.i("info", "======定位失败======");
+                    baiDuLocation.stop();
+                    return;
+                } else {
+                    Log.i("info", "======定位成功======" + bdLocation.getDistrict());
+
+                }
+                OemLog.log(TAG, "distict is " + bdLocation.getDistrict());
+                areaid(bdLocation.getDistrict());
+                if (bdLocation.getCity() != null) {
+                    outdooraqi(CityNameUtil.transfer(bdLocation.getCity()));
+                }
+                baiDuLocation.stop();
+            }
+        });
+        baiDuLocation.locate();
+    }
+
+    //获取某个区的区号
+    private void areaid(String district) {
+        SearchAreaidByNamecn searchAreaidByNamecn = new SearchAreaidByNamecn(this);
+        searchAreaidByNamecn.setOnSearchResponseListener(new OnSearchResponseListener() {
+            @Override
+            public void onSearchSuccess(String message) {
+                Log.i("===", "====onSearchSuccess====" + message);
+                weather(message);
+            }
+
+            @Override
+            public void onSearchFailed(String message) {
+                Log.i("===", "====onSearchFailed====" + message);
+            }
+        });
+        searchAreaidByNamecn.search(district);
+    }
+
+    //根据区号获取天气
+    private void weather(String areaid) {
+        ChinaWeather chinaWeather = ChinaWeather.getInstance();
+        chinaWeather.setOnReceiveWeatherListener(new ChinaWeather.OnReceiveWeatherListener() {
+            @Override
+            public void onSuccess(String result) {
+                Log.i("===天气===", "===========" + result);
+
+                String[] wt = WeatherAndTemParser.parse(result);
+                //白天天气现象
+                final String dayw = wt[0];
+                Log.i("====", "====白天天气现象====" + dayw);
+                //夜间天气现象
+                final String nightw = wt[1];
+                Log.i("====", "====夜间天气现象====" + nightw);
+                //白天天气温度
+                final String dayt = wt[2];
+                Log.i("====", "====白天天气温度====" + dayt);
+                //夜间天气温度
+                final String nightt = wt[3];
+                Log.i("====", "====夜间天气温度====" + nightt);
+
+
+                //将获取的天气数据保存到本地sp
+                //PreferencesUtils.putString(AirCatActivity.this,"dayweather",dayw);
+                //PreferencesUtils.putString(AirCatActivity.this,"nightweather",nightw);
+                //PreferencesUtils.putString(AirCatActivity.this,"daytem",dayt);
+                //PreferencesUtils.putString(AirCatActivity.this,"nighttem",nightt);
+
+                //当前为主线程
+                tvweathertem.setText(dayt + "℃" + "/" + nightt + "℃");
+
+                if (dayw != null && !dayw.equals("") && !dayw.equals("0")) {
+                    tvweathertext.setText(WeatherDataParser.parseNumber(dayw));
+                    initWeatherIcon(ivweathericon, WeatherDataParser.parseNumber(dayw));
+                } else {
+                    tvweathertext.setText(WeatherDataParser.parseNumber(nightw));
+                    initWeatherIcon(ivweathericon, WeatherDataParser.parseNumber(nightw));
+                }
+                Log.i("======", "=========dayw============" + WeatherDataParser.parseNumber(dayw));
+                Log.i("======", "=========nightw============" + WeatherDataParser.parseNumber(nightw));
+
+                Log.i("============", "????????????????????????????????????????????");
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
+        chinaWeather.getWeather(areaid, ChinaWeather.Config.FORECAST_V);
+    }
+
+    //获取室外空气质量
+    private void outdooraqi(String district) {
+        OutDoorAqi outDoorAqi = OutDoorAqi.getInstance();
+        outDoorAqi.setOnDataReceived(new OutDoorAqi.OnDataReceived() {
+            @Override
+            public void onSuccess(String result) {
+                Log.i("info", "========室外空气质量=================" + result);
+
+                final String aqi = OutDoorAqiDataParser.parse(result);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvoutdooraqi.setText("室外空气：" + aqi);
+                        //tvweathertem.setText(aqi);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure() {
+                Log.i("info", "========室外空气质量=================失败");
+            }
+        }).get(district);
+    }
+
+    private void findView() {
+        findViewById(R.id.iv_init_devices).setOnClickListener(this);
+        findViewById(R.id.iv_search_devices).setOnClickListener(this);
+        findViewById(R.id.iv_sao_yi_sao_devies).setOnClickListener(this);
+        findViewById(R.id.rl_aircat_refresh).setOnClickListener(this);
+        findViewById(R.id.rl_aircat_share).setOnClickListener(this);
+
+
+        tv_airInfo = (TextView) findViewById(R.id.tv_airInfo);
+
+        mPullToRefreshView = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh);
+
+        tvoutdooraqi = (TextView) this.findViewById(R.id.tv_aircat_wifi_outdooraqi);
+        tvtime = (TextView) this.findViewById(R.id.tv_aircat_wifi_time);
+        tvweathertem = (TextView) this.findViewById(R.id.tv_aircat_wifi_weathertem);
+        tvweathertext = (TextView) this.findViewById(R.id.tv_aircat_wifi_weathertext);
+
+        ivweathericon = (ImageView) this.findViewById(R.id.iv_aircat_wifi_weathericon);
+
+
+        ll_pm25 = (LinearLayout) this.findViewById(R.id.ll_aircat_pm25);
+        ll_formal = (LinearLayout) this.findViewById(R.id.ll_aircat_formal);
+        ll_tvoc = (LinearLayout) this.findViewById(R.id.ll_aircat_tvoc);
+        ll_api = (LinearLayout) this.findViewById(R.id.ll_aircat_api);
+        ll_tem = (LinearLayout) this.findViewById(R.id.ll_aircat_tem);
+        ll_hum = (LinearLayout) this.findViewById(R.id.ll_aircat_hum);
+
+        vv_pm25 = (VernierView) this.findViewById(R.id.vav_aircat_pm25);
+        vv_formal = (VernierView) this.findViewById(R.id.vav_aircat_formal);
+        vv_tvoc = (VernierView) this.findViewById(R.id.vav_aircat_tvoc);
+        vv_api = (VernierView) this.findViewById(R.id.vav_aircat_api);
+        vv_tem = (VernierView) this.findViewById(R.id.vav_aircat_tem);
+        vv_hum = (VernierView) this.findViewById(R.id.vav_aircat_hum);
+
+    }
+
+    private void initView() {
+        mPullToRefreshView.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.middle_to_big_4));
+        mPullToRefreshView.setColorSchemeResources(android.R.color.holo_blue_light);
+    }
+
+    private void registEvent() {
+        //  tv_airInfo.setOnClickListener(this);
+        mPullToRefreshView.setOnRefreshListener(this);
+
+        ll_pm25.setOnClickListener(this);
+        ll_formal.setOnClickListener(this);
+        ll_tvoc.setOnClickListener(this);
+        ll_api.setOnClickListener(this);
+        ll_tem.setOnClickListener(this);
+        ll_hum.setOnClickListener(this);
+
+        vv_pm25.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.i("info", "=====================OnGlobalLayoutListener===" + Thread.currentThread().getName());
+            }
+        });
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.rl_saoyisao:
+
+
+                //    Utility.startActivity(this, AircatAddDeviceActivtity.class);
+         /*       Intent intent = new Intent();
+                intent.setClass(this, MipcaActivityCapture.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(intent, SCANNIN_GREQUEST_CODE);*/
+                break;
+            case R.id.rl_aircat_share:
+                Utility.startActivity(getContext(), AircatShareDeviceActivtity.class);
+                break;
+            case R.id.rl_aircat_refresh:
+                Utility.startActivity(getContext(), AircatChangeDeviceActivity.class);
+                break;
+
+           /* case R.id.tv_airInfo:
+                Dialog dialog = new WifiPwdSetDialog(this,null,
+                        R.style.MyDialog);
+
+                dialog.show();
+                break;*/
+
+            case R.id.ll_aircat_pm25:
+                if (Utils.isFastClick()) {
+                    return;
+                }
+                AircatHistoryUtil.showDialogHistoryTem(aircatDeviceList, context, AircatConst.flag_pm2_5);
+                break;
+
+            case R.id.ll_aircat_formal:
+                if (Utils.isFastClick()) {
+                    return;
+                }
+                AircatHistoryUtil.showDialogHistoryTem(aircatDeviceList, context, AircatConst.flag_formaldehyde);
+
+                break;
+            case R.id.ll_aircat_tem:
+                if (Utils.isFastClick()) {
+                    return;
+                }
+                AircatHistoryUtil.showDialogHistoryTem(aircatDeviceList, context, AircatConst.flag_tempreature);
+
+                break;
+            case R.id.ll_aircat_hum:
+                if (Utils.isFastClick()) {
+                    return;
+                }
+                AircatHistoryUtil.showDialogHistoryTem(aircatDeviceList, context, AircatConst.flag_humidity);
+
+                break;
+            case R.id.ll_aircat_tvoc:
+                if (Utils.isFastClick()) {
+                    return;
+                }
+                AircatHistoryUtil.showDialogHistoryTem(aircatDeviceList, context, AircatConst.flag_tvoc);
+                break;
+            case R.id.ll_aircat_api:
+                if (Utils.isFastClick()) {
+                    return;
+                }
+                AircatHistoryUtil.showDialogHistoryTem(aircatDeviceList, context, AircatConst.flag_air_pollution_index);
+
+                break;
+
+            case R.id.iv_init_devices:
+                //初始化设备
+                WifiPwdSetDialog dialog = new WifiPwdSetDialog(this, R.style.MyDialog);
+                dialog.setAircatInitSelect(this);
+                dialog.show();
+                break;
+
+            case R.id.iv_search_devices:
+
+                if (Utils.isFastClick()) {
+                    return;
+                }
+                isAircatSetAp = true;
+                if (handler.hasMessages(AIRCAT_SET_AP_MESSAGE_COMEPLETE)) {
+                    handler.removeMessages(AIRCAT_SET_AP_MESSAGE_COMEPLETE);
+                }
+                handler.sendEmptyMessageDelayed(AIRCAT_SET_AP_MESSAGE_COMEPLETE, 30 * 1000);
+                if (setTargetAPCommand != null) {
+                    setTargetAPCommand.stopPreviousTask();
+                }
+
+                //每次重新开始搜索,都停止上一次的任务
+                if (searchMacCommand != null) {
+                    searchMacCommand.stopPreviousTask();
+                }
+                searchMacCommand = new SearchMacCommand(this);
+                searchMacCommand.excuteCommand();
+                break;
+            case R.id.iv_sao_yi_sao_devies:
+                //扫一扫添加设备
+                if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.CAMERA},
+                            1
+                    );
+                }else{
+                    Intent intent = new Intent();
+                    intent.setClass(this, MipcaActivityCapture.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+                }
+                break;
+        }
+
+    }
+
+    /**
+     * 获取历史纪录
+     */
+    private void getHistory() {
+        try {
+            //构造请求json对象
+            JSONObject jsonObject = new JSONObject();
+            JSONObject dataObj = new JSONObject();
+
+            jsonObject.put("apikey", MyApplication.getInstance().apikey);
+            jsonObject.put("username", MyApplication.getInstance().getCurrentUserName());
+            jsonObject.put("token", PreferencesUtils.getString(this, "token"));
+
+            dataObj.put("modelType", "airCat");
+            String mac = MyApplication.getInstance().getAircatDeviceMac();
+            if (mac != null) {
+                dataObj.put("mac", mac.toLowerCase());
+            }
+            OemLog.log(TAG, TimeStampUtil.currTime().toString());
+            dataObj.put("beginDate", TimeStampUtil.past24HYm());
+            dataObj.put("endDate", TimeStampUtil.currTimeforHistory());
+            jsonObject.put("data", dataObj.toString());
+            OemLog.log(TAG, "params is ....." + Base_Url.history_aircat_Url + "--" + jsonObject.toString());
+
+            //
+            HttpTools.post(this, Base_Url.Url_Base + Base_Url.history_aircat_Url, jsonObject, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                    String result = new String(responseBody);
+                    com.alibaba.fastjson.JSONObject resultObject = JSON.parseObject(result);
+
+                    int code = resultObject.getIntValue("code");
+                    if (code == 0) {
+                        OemLog.log(TAG, "===========result is ===============" + result);
+                        String dataString = resultObject.getString("data");
+
+                        // JSON串转用户对象列表
+                        aircatDeviceList = JSON.parseArray(dataString, AirCatInfo.class);
+                        //
+
+                        OemLog.log(TAG, aircatDeviceList != null ? aircatDeviceList.size() + "gggggg" : "null");
+                    } else {
+                        String msg = resultObject.getString("message");
+                        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Toast.makeText(context, "服务器异常", Toast.LENGTH_LONG).show();
+
+                }
+            });
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SCANNIN_GREQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    Bundle bundle = data.getExtras();
+                    OemLog.log(TAG, bundle.getString("result"));
+                    //Toast.makeText(this, bundle.getString("result"),Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AirCatActivity.this);
+                    builder.setMessage(bundle.getString("result") + "");
+                    builder.setTitle("添加设备");
+                    builder.setPositiveButton("添加设备", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+
+                    });
+                    builder.create().show();
+                }
+                break;
+        }
+    }
+
+    //获取最新数据
+    private void getNewestWifiData() {
+        try {
+            //构造请求json对象
+            JSONObject jsonObject = new JSONObject();
+            JSONObject dataObj = new JSONObject();
+
+            jsonObject.put("apikey", MyApplication.getInstance().apikey);
+            jsonObject.put("username", MyApplication.getInstance().getCurrentUserName());
+            jsonObject.put("token", PreferencesUtils.getString(this, "token"));
+
+            dataObj.put("modelType", "airCat");
+            String mac = MyApplication.getInstance().getAircatDeviceMac();
+            if (mac != null) {
+                dataObj.put("mac", mac.toLowerCase());
+            }
+
+            jsonObject.put("data", dataObj.toString());
+            OemLog.log(TAG, Base_Url.AIRCAT_WIFI_DATA + "_" + jsonObject.toString());
+
+            HttpTools.post(this, Base_Url.Url_Base + Base_Url.AIRCAT_WIFI_DATA, jsonObject, new AsyncHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    mPullToRefreshView.setRefreshing(true);
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                    String result = new String(responseBody);
+
+                    Log.i("onSuccess", "===================================" + result);
+
+
+                    mPullToRefreshView.setRefreshing(false);
+
+                    String[] wifidata = AirCatWifiDataParser.parse(result);
+
+                    String pm = wifidata[0];
+
+                    String formal = wifidata[1];
+
+                    String tem = wifidata[2];
+
+                    String hum = wifidata[3];
+
+                    String tvoc = wifidata[4];
+
+                    String poll = wifidata[5];
+
+                    //保存空气猫的污染指数
+                    PreferencesUtils.putInt(AirCatActivity.this, "aircat_poll_level", Integer.valueOf(poll));
+                    //当前线程 主线程
+                    PreferencesUtils.putString(AirCatActivity.this, "aircat_latest_measure_time", TimeStampUtil.latestTestTime(0));
+                    //延时执行自定义控件的动画，不然会有空指针
+                    postDo(pm, formal, tem, hum, tvoc, poll);
+
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                    mPullToRefreshView.setRefreshing(false);
+                }
+
+                @Override
+                public void onCancel() {
+                    mPullToRefreshView.setRefreshing(false);
+                }
+            });
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //  因为刚进入界面时，自定义控件没有创建完成，所以执行其内部的方法会报空指针，所以做延时操作
+
+    private void postDo(final String pm, final String formal, final String tem, final String hum, final String tvoc, final String poll) {
+        Message message = new Message();
+        Bundle bundle = new Bundle();
+        String[] array = new String[]{pm, formal, tvoc, poll, tem, hum};
+        bundle.putStringArray("data", array);
+        message.setData(bundle);
+        postHandler.sendMessageDelayed(message, 8000);
+    }
+
+    private Handler postHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle bundle = msg.getData();
+            String[] array = bundle.getStringArray("data");
+            String pm = array[0];
+            String formal = array[1];
+            String tvoc = array[2];
+            String poll = array[3];
+            String tem = array[4];
+            String hum = array[5];
+            //设置气泡动画
+
+            vv_pm25.setLevel(AirCatWifiDataParser.parseLevel(pm, AirCatWifiDataParser.PM));
+            vv_formal.setLevel(AirCatWifiDataParser.parseLevel(formal, AirCatWifiDataParser.FORMAL));
+            vv_tvoc.setLevel(AirCatWifiDataParser.parseLevel(tvoc, AirCatWifiDataParser.TVOC));
+            vv_api.setLevel(AirCatWifiDataParser.parseLevel(poll, AirCatWifiDataParser.POLL));
+            vv_tem.setLevel(AirCatWifiDataParser.parseLevel(tem, AirCatWifiDataParser.TEM));
+            vv_hum.setLevel(AirCatWifiDataParser.parseLevel(hum, AirCatWifiDataParser.HUM));
+
+            //设置气泡显示
+
+
+            Log.i("info", "========pm========" + pm);
+            Log.i("info", "========formal========" + formal);
+            Log.i("info", "========tvoc========" + tvoc);
+            Log.i("info", "========poll========" + poll);
+            Log.i("info", "========tem========" + tem);
+            Log.i("info", "========hum========" + hum);
+
+            vv_pm25.setText(pm, "", VernierView.CursorText.DECIMAL_ONE,false);
+            vv_formal.setText(formal, "", VernierView.CursorText.DECIMAL_TWO,false);
+            vv_tvoc.setText(tvoc, "", VernierView.CursorText.DECIMAL_TWO,false);
+            vv_api.setText(poll, "", VernierView.CursorText.DECIMAL_ZERO,false);
+            vv_tem.setText(tem, "", VernierView.CursorText.DECIMAL_ONE,false);
+            vv_hum.setText(hum, "%", VernierView.CursorText.DECIMAL_ONE, false);
+
+
+            if (!isAircatSetAp) {
+                getNewestWifiData();
+            }
+        }
+    };
+
+
+    public void back(View v) {
+        finish();
+    }
+
+    @Override
+    public void onRefresh() {
+        Log.i("======", "======onRefresh======");
+        //  initData();
+        getNewestWifiData();
+    }
+
+
+    private void initWeatherIcon(ImageView iv, String weat) {
+        boolean isDay = false;// true是白天，false是夜间
+        Date date = new Date(System.currentTimeMillis());
+        DateFormat dateFormat = new SimpleDateFormat("HH");
+        String h = dateFormat.format(date);
+        int ho = Integer.parseInt(h);
+        if (6 <= ho && ho <= 18) {
+            isDay = true;
+        }
+        if (isDay) {
+            // 白天
+            if (weat.equals("晴")) {
+                iv.setImageLevel(100);
+            }
+            if (weat.equals("多云")) {
+                iv.setImageLevel(101);
+            }
+            if (weat.equals("阴")) {
+                iv.setImageLevel(102);
+            }
+            if (weat.equals("阵雨")) {
+                iv.setImageLevel(103);
+            }
+            if (weat.equals("雷阵雨")) {
+                iv.setImageLevel(104);
+            }
+            if (weat.equals("雷阵雨伴有冰雹")) {
+                iv.setImageLevel(105);
+            }
+            if (weat.equals("雨夹雪")) {
+                iv.setImageLevel(106);
+            }
+            if (weat.equals("小雨")) {
+                iv.setImageLevel(107);
+            }
+            if (weat.equals("中雨")) {
+                iv.setImageLevel(108);
+            }
+            if (weat.equals("大雨")) {
+                iv.setImageLevel(109);
+            }
+            if (weat.equals("暴雨")) {
+                iv.setImageLevel(110);
+            }
+            if (weat.equals("大暴雨")) {
+                iv.setImageLevel(111);
+            }
+            if (weat.equals("特大暴雨")) {
+                iv.setImageLevel(112);
+            }
+            if (weat.equals("阵雪")) {
+                iv.setImageLevel(113);
+            }
+            if (weat.equals("小雪")) {
+                iv.setImageLevel(114);
+            }
+            if (weat.equals("中雪")) {
+                iv.setImageLevel(115);
+            }
+            if (weat.equals("大雪")) {
+                iv.setImageLevel(116);
+            }
+            if (weat.equals("暴雪")) {
+                iv.setImageLevel(117);
+            }
+            if (weat.equals("雾")) {
+                iv.setImageLevel(118);
+            }
+            if (weat.equals("冻雨")) {
+                iv.setImageLevel(119);
+            }
+            if (weat.equals("沙尘暴")) {
+                iv.setImageLevel(120);
+            }
+            if (weat.equals("小到中雨")) {
+                iv.setImageLevel(121);
+            }
+            if (weat.equals("中到大雨")) {
+                iv.setImageLevel(122);
+            }
+            if (weat.equals("大到暴雨")) {
+                iv.setImageLevel(123);
+            }
+            if (weat.equals("暴雨到大暴雨")) {
+                iv.setImageLevel(124);
+            }
+            if (weat.equals("大暴雨到特大暴雨")) {
+                iv.setImageLevel(125);
+            }
+            if (weat.equals("小到中雪")) {
+                iv.setImageLevel(126);
+            }
+            if (weat.equals("中到大雪")) {
+                iv.setImageLevel(127);
+            }
+            if (weat.equals("大到暴雪")) {
+                iv.setImageLevel(128);
+            }
+            if (weat.equals("浮尘")) {
+                iv.setImageLevel(129);
+            }
+            if (weat.equals("扬沙")) {
+                iv.setImageLevel(130);
+            }
+            if (weat.equals("强沙尘暴")) {
+                iv.setImageLevel(131);
+            }
+            if (weat.equals("霾")) {
+                iv.setImageLevel(153);
+            }
+        } else {
+            // 夜间
+            if (weat.equals("晴")) {
+                iv.setImageLevel(200);
+            }
+            if (weat.equals("多云")) {
+                iv.setImageLevel(201);
+            }
+            if (weat.equals("阴")) {
+                iv.setImageLevel(202);
+            }
+            if (weat.equals("阵雨")) {
+                iv.setImageLevel(203);
+            }
+            if (weat.equals("雷阵雨")) {
+                iv.setImageLevel(204);
+            }
+            if (weat.equals("雷阵雨伴有冰雹")) {
+                iv.setImageLevel(205);
+            }
+            if (weat.equals("雨夹雪")) {
+                iv.setImageLevel(206);
+            }
+            if (weat.equals("小雨")) {
+                iv.setImageLevel(207);
+            }
+            if (weat.equals("中雨")) {
+                iv.setImageLevel(208);
+            }
+            if (weat.equals("大雨")) {
+                iv.setImageLevel(209);
+            }
+            if (weat.equals("暴雨")) {
+                iv.setImageLevel(210);
+            }
+            if (weat.equals("大暴雨")) {
+                iv.setImageLevel(211);
+            }
+            if (weat.equals("特大暴雨")) {
+                iv.setImageLevel(212);
+            }
+            if (weat.equals("阵雪")) {
+                iv.setImageLevel(213);
+            }
+            if (weat.equals("小雪")) {
+                iv.setImageLevel(214);
+            }
+            if (weat.equals("中雪")) {
+                iv.setImageLevel(215);
+            }
+            if (weat.equals("大雪")) {
+                iv.setImageLevel(216);
+            }
+            if (weat.equals("暴雪")) {
+                iv.setImageLevel(217);
+            }
+            if (weat.equals("雾")) {
+                iv.setImageLevel(218);
+            }
+            if (weat.equals("冻雨")) {
+                iv.setImageLevel(219);
+            }
+            if (weat.equals("沙尘暴")) {
+                iv.setImageLevel(220);
+            }
+            if (weat.equals("小到中雨")) {
+                iv.setImageLevel(221);
+            }
+            if (weat.equals("中到大雨")) {
+                iv.setImageLevel(222);
+            }
+            if (weat.equals("大到暴雨")) {
+                iv.setImageLevel(223);
+            }
+            if (weat.equals("暴雨到大暴雨")) {
+                iv.setImageLevel(224);
+            }
+            if (weat.equals("大暴雨到特大暴雨")) {
+                iv.setImageLevel(225);
+            }
+            if (weat.equals("小到中雪")) {
+                iv.setImageLevel(226);
+            }
+            if (weat.equals("中到大雪")) {
+                iv.setImageLevel(227);
+            }
+            if (weat.equals("大到暴雪")) {
+                iv.setImageLevel(228);
+            }
+            if (weat.equals("浮尘")) {
+                iv.setImageLevel(229);
+            }
+            if (weat.equals("扬沙")) {
+                iv.setImageLevel(230);
+            }
+            if (weat.equals("强沙尘暴")) {
+                iv.setImageLevel(231);
+            }
+            if (weat.equals("霾")) {
+                iv.setImageLevel(253);
+            }
+        }
+    }
+
+
+    @Override
+    public void onSearchMacResult(byte[] mac) {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (searchMacCommand != null) {
+            searchMacCommand.stopPreviousTask();
+        }
+
+        if (setTargetAPCommand != null) {
+            setTargetAPCommand.stopPreviousTask();
+        }
+    }
+
+
+    @Override
+    public void onOk(String wifiPassword) {
+        isAircatSetAp = true;
+        if (handler.hasMessages(AIRCAT_SET_AP_MESSAGE_COMEPLETE)) {
+            handler.removeMessages(AIRCAT_SET_AP_MESSAGE_COMEPLETE);
+        }
+        handler.sendEmptyMessageDelayed(AIRCAT_SET_AP_MESSAGE_COMEPLETE, 30 * 1000);
+        //停止之前的任务
+        if (searchMacCommand != null) {
+            searchMacCommand.stopPreviousTask();
+        }
+
+
+        if (setTargetAPCommand != null) {
+            setTargetAPCommand.stopPreviousTask();
+        }
+
+        setTargetAPCommand = new SetTargetAPCommand(wifiPassword, null);
+        setTargetAPCommand.excuteCommand();
+    }
+
+    @Override
+    public void onCancel() {
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+}

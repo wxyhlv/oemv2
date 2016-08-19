@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <!--标题-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/bg_tang_zhi_san_xiang"
+        >
+
+        <RelativeLayout
+            android:id="@+id/rl_devicesetting_back"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_back"
+                android:onClick="back"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_devicesetting_titlename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="用户指南"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:typeface="normal" />
+    </RelativeLayout>
+
+
+    <RadioGroup
+        android:id="@+id/bh_radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_1"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/radiobuttonhistory"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:text="@string/bloodpress"
+            android:textSize="18sp"
+            android:textColor="@drawable/radiobuttoncolor" />
+
+        <RadioButton
+            android:id="@+id/rb_2"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/radiobuttonhistorymiddle"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center"
+            android:text="@string/bodyfat"
+            android:textSize="18sp"
+            android:textColor="@drawable/radiobuttoncolor" />
+        <RadioButton
+            android:id="@+id/rb_3"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/radiobuttonhistorymiddle"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center"
+            android:text="@string/bracelete"
+            android:textSize="18sp"
+            android:textColor="@drawable/radiobuttoncolor" />
+        <RadioButton
+            android:id="@+id/rb_4"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/radiobuttonhistory1"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center"
+            android:text="@string/aircat"
+            android:textSize="18sp"
+            android:textColor="@drawable/radiobuttoncolor" />
+        <RadioButton
+            android:id="@+id/rb_5"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/radiobuttonhistory1"
+            android:button="@null"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="@string/glycolipid"
+            android:textSize="18sp"
+            android:textColor="@drawable/radiobuttoncolor" />
+    </RadioGroup>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+
+        />
+
+</LinearLayout>

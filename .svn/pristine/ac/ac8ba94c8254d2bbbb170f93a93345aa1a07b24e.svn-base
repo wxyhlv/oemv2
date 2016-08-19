@@ -1,0 +1,197 @@
+package com.capitalbio.oemv2.myapplication.dialog;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.View.adapter.AbstractWheelTextAdapter;
+import com.capitalbio.oemv2.myapplication.View.views.OnWheelChangedListener;
+import com.capitalbio.oemv2.myapplication.View.views.OnWheelScrollListener;
+import com.capitalbio.oemv2.myapplication.View.views.WheelView;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
+
+/**
+ * 日期选择对话框
+ * 
+ * @author ywl
+ *
+ */
+public class ChooseHeightDialog extends Dialog implements View.OnClickListener {
+
+	private Context context;
+	private WheelView wheelview;
+
+	private TextView btnSure;
+	private TextView btnCancel;
+
+	private ArrayList<String> data = new ArrayList<String>();
+
+	private CalendarTextAdapter adapter;
+    private TextView tv_title;
+
+	private int maxTextSize = 24;
+	private int minTextSize = 14;
+
+
+	private String select;
+	private String title;
+
+	private OnBirthListener onBirthListener;
+
+	public ChooseHeightDialog(Context context, ArrayList<String> data,String cur,String title) {
+		super(context, R.style.ShareDialog);
+		this.context = context;
+		this.data = data;
+		this.select = cur;
+		this.title = title;
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.dialog_changeheight);
+		wheelview = (WheelView) findViewById(R.id.wheelview);
+
+
+		btnSure = (TextView) findViewById(R.id.btn_myinfo_sure);
+		btnCancel = (TextView) findViewById(R.id.btn_myinfo_cancel);
+
+		btnSure.setOnClickListener(this);
+		btnCancel.setOnClickListener(this);
+		tv_title = (TextView) findViewById(R.id.tv_title);
+		tv_title.setText(title);
+		adapter = new CalendarTextAdapter(context, data,setCurrent(select), maxTextSize, minTextSize);
+		wheelview.setVisibleItems(5);
+		wheelview.setViewAdapter(adapter);
+		wheelview.setCurrentItem(setCurrent(select));
+
+
+		wheelview.addChangingListener(new OnWheelChangedListener() {
+
+			@Override
+			public void onChanged(WheelView wheel, int oldValue, int newValue) {
+				// TODO Auto-generated method stub
+				String currentText = (String) adapter.getItemText(wheel.getCurrentItem());
+				select = currentText;
+				setTextviewSize(currentText, adapter);
+
+			}
+		});
+
+		wheelview.addScrollingListener(new OnWheelScrollListener() {
+
+			@Override
+			public void onScrollingStarted(WheelView wheel) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onScrollingFinished(WheelView wheel) {
+				// TODO Auto-generated method stub
+				String currentText = (String) adapter.getItemText(wheel.getCurrentItem());
+				select = currentText;
+				setTextviewSize(currentText, adapter);
+			}
+		});
+
+
+
+	}
+
+
+       public int setCurrent(String s){
+
+		  for(int i = 0;i<data.size();i++){
+			  if(s.equals(data.get(i))){
+				  return i;
+			  }
+		  }
+		   return 0;
+	   }
+
+	private class CalendarTextAdapter extends AbstractWheelTextAdapter {
+		ArrayList<String> list;
+
+		protected CalendarTextAdapter(Context context, ArrayList<String> list, int currentItem, int maxsize, int minsize) {
+			super(context, R.layout.item_birth_year, NO_RESOURCE, currentItem, maxsize, minsize);
+			this.list = list;
+			setItemTextResource(R.id.tempValue);
+		}
+
+		@Override
+		public View getItem(int index, View cachedView, ViewGroup parent) {
+			View view = super.getItem(index, cachedView, parent);
+			return view;
+		}
+
+		@Override
+		public int getItemsCount() {
+			return list.size();
+		}
+
+		@Override
+		protected CharSequence getItemText(int index) {
+			return list.get(index) + "";
+		}
+	}
+
+	public void setBirthdayListener(OnBirthListener onBirthListener) {
+		this.onBirthListener = onBirthListener;
+	}
+
+	@Override
+	public void onClick(View v) {
+
+		if (v == btnSure) {
+			if (onBirthListener != null) {
+				onBirthListener.onClick(select);
+			}
+
+		} else {
+			dismiss();
+		}
+		dismiss();
+
+	}
+
+	public interface OnBirthListener {
+		public void onClick(String year);
+	}
+
+	/**
+	 * 设置字体大小
+	 * 
+	 * @param curriteItemText
+	 * @param adapter
+	 */
+	public void setTextviewSize(String curriteItemText, CalendarTextAdapter adapter) {
+		ArrayList<View> arrayList = adapter.getTestViews();
+		int size = arrayList.size();
+		String currentText;
+		for (int i = 0; i < size; i++) {
+			TextView textvew = (TextView) arrayList.get(i);
+			currentText = textvew.getText().toString();
+			if (curriteItemText.equals(currentText)) {
+				textvew.setTextSize(maxTextSize);
+				textvew.setTextColor(Color.parseColor("#0096c1"));
+
+			} else {
+				textvew.setTextSize(minTextSize);
+				textvew.setTextColor(Color.parseColor("#8D9A99"));
+
+			}
+		}
+	}
+
+
+
+}

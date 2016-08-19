@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="125dp"
+    android:orientation="vertical"
+    android:background="@drawable/bg_devicesetting_dialog">
+
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="75dp">
+      <TextView
+          android:id="@+id/tv_devicesetting_dialog_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="是否解绑设备？"
+          android:textColor="@color/black"
+          android:textSize="@dimen/dp_20"
+          android:layout_centerInParent="true"/>
+
+  </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray_dialog_dividerline"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:id="@+id/rl_devicesetting_dialog_yes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="是"
+               android:textSize="@dimen/dp_20"
+               android:layout_centerInParent="true"
+               android:textColor="@color/blue_dialog_text"/>
+        </RelativeLayout>
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/gray_dialog_dividerline"/>
+        <RelativeLayout
+            android:id="@+id/rl_devicesetting_dialog_no"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="否"
+                android:textSize="@dimen/dp_20"
+                android:layout_centerInParent="true"
+                android:textColor="@color/blue_dialog_text"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

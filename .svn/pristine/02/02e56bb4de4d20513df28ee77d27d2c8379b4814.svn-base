@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@drawable/bg_cat_history_dialog"
+    android:alpha="0.8"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:text="初始化空气猫的网络信息"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        />
+
+    <TextView
+        android:id="@+id/tv_ssid"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:text="网络名称"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        />
+    <EditText
+        android:id="@+id/edt_pwd"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:hint="请输入路由器密码"
+        android:inputType="textPassword"
+        android:layout_gravity="center"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+     <Button
+         android:id="@+id/btn_ok"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/ok"
+         android:background="@null"
+         android:padding="10dp"
+         />
+        <Button
+            android:id="@+id/btn_skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/skip"
+            android:background="@null"
+
+            android:padding="10dp"
+            />
+
+
+    </LinearLayout>
+</LinearLayout>

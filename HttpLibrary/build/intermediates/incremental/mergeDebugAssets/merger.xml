@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/home/wxy/Desktop/oemv2_0512/HttpLibrary/assets"/><source path="/home/wxy/Desktop/oemv2_0512/HttpLibrary/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/home/wxy/Desktop/oemv2_0512/HttpLibrary/src/debug/assets"/></dataSet></merger>

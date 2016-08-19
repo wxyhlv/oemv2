@@ -1,0 +1,437 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.bluetooth.BluetoothProfile;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.capitalbio.oemv2.myapplication.Base.IConnectionStateChange;
+import com.capitalbio.oemv2.myapplication.Bean.SportDataTotalBean;
+import com.capitalbio.oemv2.myapplication.Const.BraceleteConst;
+import com.capitalbio.oemv2.myapplication.Const.Const;
+import com.capitalbio.oemv2.myapplication.Devices.Bracelete.ISportDataCallback;
+import com.capitalbio.oemv2.myapplication.Devices.Bracelete.DevicesDataObserver;
+import com.capitalbio.oemv2.myapplication.Fragment.BodyFatFragmentDay;
+import com.capitalbio.oemv2.myapplication.Fragment.BodyFatFragmentMonth;
+import com.capitalbio.oemv2.myapplication.Fragment.BraceleteFragmentDay;
+import com.capitalbio.oemv2.myapplication.Fragment.BraceleteFragmentDaySleep;
+import com.capitalbio.oemv2.myapplication.Fragment.BraceleteFragmentMonth;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+import com.capitalbio.oemv2.myapplication.dialog.ChangeDateDialog;
+import com.capitalbio.oemv2.myapplication.dialog.DateChooseYMDialog;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.editorpage.ShareActivity;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.shareboard.SnsPlatform;
+import com.umeng.socialize.utils.ShareBoardlistener;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
+/**
+ * 运动手环
+ * Created by wxy on 15-11-4.
+ */
+public class Bracelete2Activity extends Activity implements View.OnClickListener ,IConnectionStateChange{
+
+    RelativeLayout rl_fgcontainer;
+    FragmentManager fragmentManager;
+    BraceleteFragmentDay fgBraceleteDay;
+    BraceleteFragmentMonth fgBraceleteMonth;
+    BraceleteFragmentDaySleep fgBraceleteDaySleep;
+    FragmentTransaction trx ;
+    private ImageView iv_bracelete_set;//set
+    private TextView tv_year,tv_month,tv_day;//datewheelview
+    private TextView tv_switch_day,tv_switch_month,tv_state;//switchdateview
+    private LinearLayout ll_date,ll_switch_date,ll_switch_sportorsleep;
+    private TextView tv_switch_sports,tv_switch_sleep;
+    String yearString,monthString,dayString;
+    private boolean isSports= true;
+    private boolean isDay=true;
+    private String curDay;
+    private String currentFragmentTag;
+    private Context context;
+    private UMShareAPI mShareAPI;
+    UMImage image;
+    private int const_setok = 1;
+    ProgressBar pb_progress;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);  //无title
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);  //全屏
+        setContentView(R.layout.activity_bracelete);
+        context = this;
+        image = new UMImage(context, "http://www.umeng.com/images/pic/social/integrated_3.png");
+
+        initView();
+        initData();
+        DevicesDataObserver.getObserver().registerConnectStateCallBack(this);
+    }
+
+    public void initData() {
+        // 初始化当前显示日期
+        Date time = Calendar.getInstance().getTime();
+        curDay = time.getDate()+"";
+        tv_year.setText(time.getYear() + 1900 + "年");
+        tv_month.setText(time.getMonth() + 1 + "月");
+        tv_day.setText(curDay + "日");
+        BraceleteConst.day = TimeStampUtil.currTime2(1);
+        BraceleteConst.month = TimeStampUtil.currMonth(System.currentTimeMillis());;
+
+        currentFragmentTag = "daySport";
+        tv_state.setText(PreferencesUtils.getBoolean(context, "connect_state", false) ? "已连接":"未连接");
+    }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch(msg.what){
+                case(BluetoothProfile.STATE_CONNECTED):
+                    tv_state.setText("设备已连接");
+                    break;
+                case(BluetoothProfile.STATE_CONNECTING):
+                        tv_state.setText("正在连接设备...");
+                    break;
+                case(BluetoothProfile.STATE_DISCONNECTED):
+                        tv_state.setText("设备已断开");
+                    break;
+
+            }
+        }
+    };
+
+    @Override
+    public void onClick(View v) {
+        Bundle bundle =new Bundle();
+        switch (v.getId()){
+             //日操作
+            case R.id.tv_switch_day:
+                iv_bracelete_set.setVisibility(View.VISIBLE);
+
+                ll_switch_date.setBackground(getResources().getDrawable(R.drawable.switch_bracelete_day));
+                tv_switch_day.setTextColor(Color.parseColor("#0EA8C3"));
+                tv_switch_month.setTextColor(Color.WHITE);
+
+                FragmentTransaction trans = getFragmentManager()
+                        .beginTransaction();
+                if(isSports){
+                    rl_fgcontainer.setBackground(getResources().getDrawable(R.drawable.bg_tang_zhi_san_xiang));
+                    trans.replace(R.id.ll_fg_body,fgBraceleteDay,"daySport").commit();
+                    currentFragmentTag = "daySport";
+                }else{
+                    rl_fgcontainer.setBackground(getResources().getDrawable(R.drawable.bg_shou_huan));
+                    trans.replace(R.id.ll_fg_body,fgBraceleteDaySleep,"daySleep").commit();
+                    currentFragmentTag = "daySleep";
+                }
+                isDay = true;
+                //顶部日期滚动控件显示年月日
+                tv_day.setVisibility(View.VISIBLE);
+                tv_day.setText(curDay + "日");
+                break;
+            //月操作
+            case R.id.tv_switch_month:
+                if(isSports){
+                    rl_fgcontainer.setBackground(getResources().getDrawable(R.drawable.bg_tang_zhi_san_xiang));
+                }else{
+                    rl_fgcontainer.setBackground(getResources().getDrawable(R.drawable.bg_shou_huan));
+
+                }
+
+                ll_switch_date.setBackground(getResources().getDrawable(R.drawable.switch_bracelete_month));
+                tv_switch_month.setTextColor(Color.parseColor("#0EA8C3"));
+                tv_switch_day.setTextColor(Color.WHITE);
+                iv_bracelete_set.setVisibility(View.GONE);
+                if (isDay) {
+                    FragmentTransaction tran = getFragmentManager()
+                            .beginTransaction();
+                    tran.replace(R.id.ll_fg_body, fgBraceleteMonth, "fgMonth").commit();
+                    bundle.putBoolean("isSports", isSports);
+                    fgBraceleteMonth.setArguments(bundle);
+                }
+
+                currentFragmentTag = "fgMonth";
+
+                isDay = false;
+                //顶部日期滚动控件显示年月
+                tv_day.setVisibility(View.GONE);
+                break;
+            //运动
+            case R.id.tv_switch_sports:
+                isSports = true;
+                isDay = true;
+                iv_bracelete_set.setVisibility(View.VISIBLE);
+
+                ll_switch_date.setBackground(getResources().getDrawable(R.drawable.switch_bracelete_day));
+                rl_fgcontainer.setBackground(getResources().getDrawable(R.drawable.bg_tang_zhi_san_xiang));
+                ll_switch_sportorsleep.setBackground(getResources().getDrawable(R.drawable.switch_sportorsleep));
+                tv_switch_sports.setTextColor(Color.WHITE);
+                tv_switch_sleep.setTextColor(Color.parseColor("#00AEB5"));
+                tv_switch_day.setTextColor(Color.parseColor("#00AEB5"));
+                tv_switch_month.setTextColor(Color.WHITE);
+
+                FragmentTransaction transports = getFragmentManager()
+                        .beginTransaction();
+                transports.replace(R.id.ll_fg_body,fgBraceleteDay).commit();
+                currentFragmentTag = "daySport";
+                tv_day.setVisibility(View.VISIBLE);
+                tv_day.setText(curDay + "日");
+                break;
+            //睡眠
+            case R.id.tv_switch_sleep:
+                iv_bracelete_set.setVisibility(View.VISIBLE);
+                isSports = false;
+                isDay = true;
+                tv_day.setVisibility(View.VISIBLE);
+                tv_day.setText(curDay + "日");
+                ll_switch_date.setBackground(getResources().getDrawable(R.drawable.switch_bracelete_day));
+                rl_fgcontainer.setBackground(getResources().getDrawable(R.drawable.bg_shou_huan));
+                ll_switch_sportorsleep.setBackground(getResources().getDrawable(R.drawable.switch_sleeporsports_));
+                tv_switch_sleep.setTextColor(Color.WHITE);
+                tv_switch_sports.setTextColor(Color.parseColor("#001749"));
+                tv_switch_day.setTextColor(Color.parseColor("#001749"));
+                tv_switch_month.setTextColor(Color.WHITE);
+                FragmentTransaction tranSleep = getFragmentManager().beginTransaction();
+                tranSleep.replace(R.id.ll_fg_body,fgBraceleteDaySleep,"daySleep").commit();
+                currentFragmentTag = "daySleep";
+                break;
+            //日期滚动触发点
+            case R.id.ll_date:
+                //弹出日期滚动的对话框
+                PopDateWheelView();
+                break;
+            //设置
+            case R.id.iv_bracelete_set:
+                Intent intent = new Intent(context,BraceleteSettingActivity.class);
+                startActivityForResult(intent,const_setok);
+                break;
+            case R.id.iv_top_right:
+                //Utility.startActivity(context,BraceleteEditActivity.class);
+
+                //授权
+
+/*
+                   final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
+                           {
+                                   SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.SINA,
+                                   SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE,SHARE_MEDIA.DOUBAN
+                           };
+                   new ShareAction(this).setDisplayList( displaylist )
+                           .withText( "呵呵" )
+                           .withTitle("title")
+                           .withTargetUrl("http://www.baidu.com")
+                           .withMedia( image )
+                           .setListenerList(umShareListener,umShareListener)
+                           .setShareboardclickCallback(shareBoardlistener)
+                           .open();
+
+                mShareAPI = UMShareAPI.get(this);*/
+
+
+                break;
+            case R.id.iv_top_left_return:
+                finish();
+                break;
+        }
+    }
+    private ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
+
+        @Override
+        public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+
+            SHARE_MEDIA platform = share_media;
+            mShareAPI.doOauthVerify(Bracelete2Activity.this, platform, umAuthListener);
+
+        }
+
+
+    };
+    private UMAuthListener umAuthListener = new UMAuthListener() {
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+            Toast.makeText(getApplicationContext(), "Authorize succeed", Toast.LENGTH_SHORT).show();
+            new ShareAction(Bracelete2Activity.this).setPlatform(platform).setCallback(umShareListener)
+                    .withText("hello umeng")
+                    .withMedia(image)
+                    .share();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            Toast.makeText( getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            Toast.makeText( getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    UMShareListener umShareListener =new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(Bracelete2Activity.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(Bracelete2Activity.this,platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(Bracelete2Activity.this,platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+        }
+    };
+    //日期滚动的对话框
+
+    private void PopDateWheelView() {
+        yearString = tv_year.getText().toString();
+        monthString = tv_month.getText().toString();
+        dayString = tv_day.getText().toString();
+        int yearInt = Integer.valueOf(yearString.substring(0,yearString.length()-1));
+        int monthInt = Integer.valueOf(monthString.substring(0, monthString.length()-1));
+
+        ChangeDateDialog mChangeDateDialog = new ChangeDateDialog(
+                Bracelete2Activity.this,isDay);
+        if(isDay){
+            int dayInt = Integer.valueOf(dayString.substring(0, dayString.length()-1));
+            mChangeDateDialog.setDate(yearInt, monthInt,dayInt);
+        }else {
+            mChangeDateDialog.setDate(yearInt, monthInt);
+        }
+
+        mChangeDateDialog.show();
+        mChangeDateDialog.setBirthdayListener(new ChangeDateDialog.OnBirthListener() {
+
+            @Override
+            public void onClick(String year, String month, String day) {
+                // TODO Auto-generated method stub
+              /*  Toast.makeText(Bracelete2Activity.this,
+                        year + "-" + month + "-" + day,
+                        Toast.LENGTH_LONG).show();*/
+                tv_year.setText(year + "年");
+                tv_month.setText(month + "月");
+                tv_day.setText(day + "日");
+                if(day!=null){
+                    curDay = day;
+
+                }
+
+                if(isSports&&isDay){
+                    BraceleteConst.day = year+"-"+TimeStampUtil.singleIntToDoubleString(Integer.valueOf(month))+
+                            "-"+TimeStampUtil.singleIntToDoubleString(Integer.valueOf(day));
+                    BraceleteConst.month = year+"-"+TimeStampUtil.singleIntToDoubleString(Integer.valueOf(month));
+
+                    fgBraceleteDay.updateByDate();
+                }else if(!isDay){
+                    String day_ =  BraceleteConst.day.substring(8,10);
+
+                    BraceleteConst.day = year+"-"+TimeStampUtil.singleIntToDoubleString(Integer.valueOf(month))+
+                            "-"+day_;
+                    BraceleteConst.month = year+"-"+TimeStampUtil.singleIntToDoubleString(Integer.valueOf(month));
+                    fgBraceleteMonth.update();
+                }else  if(!isSports && isDay){
+                    BraceleteConst.month = year+"-"+TimeStampUtil.singleIntToDoubleString(Integer.valueOf(month));
+
+                    BraceleteConst.day = year+"-"+TimeStampUtil.singleIntToDoubleString(Integer.valueOf(month))+
+                            "-"+TimeStampUtil.singleIntToDoubleString(Integer.valueOf(day));
+                    fgBraceleteDaySleep.update();
+                }
+            }
+        });
+
+    }
+
+    public void initView(){
+        pb_progress = (ProgressBar) findViewById(R.id.pb_progress);
+        rl_fgcontainer = (RelativeLayout) findViewById(R.id.rl_fgcontainer);
+        fgBraceleteMonth =new BraceleteFragmentMonth();
+        fgBraceleteDay = new BraceleteFragmentDay();
+        fgBraceleteDaySleep= new BraceleteFragmentDaySleep();
+        trx = getFragmentManager().beginTransaction();
+      //  trx.add(R.id.ll_fg_body, fgBraceleteMonth);
+        trx.add(R.id.ll_fg_body, fgBraceleteDay,"daySport").show(fgBraceleteDay).commit();
+        iv_bracelete_set = (ImageView) findViewById(R.id.iv_bracelete_set);
+        tv_year = (TextView) findViewById(R.id.tv_year);
+        tv_month = (TextView) findViewById(R.id.tv_month);
+        tv_day = (TextView) findViewById(R.id.tv_day);
+
+        tv_switch_day = (TextView) findViewById(R.id.tv_switch_day);
+        tv_switch_month = (TextView) findViewById(R.id.tv_switch_month);
+        ll_switch_date = (LinearLayout) findViewById(R.id.ll_switch_date);
+        ll_switch_sportorsleep = (LinearLayout) findViewById(R.id.ll_switch_sportorsleep);
+        tv_switch_sports = (TextView) findViewById(R.id.tv_switch_sports);
+        tv_switch_sleep = (TextView) findViewById(R.id.tv_switch_sleep);
+        ll_date = (LinearLayout) findViewById(R.id.ll_date);
+
+        iv_bracelete_set.setOnClickListener(this);
+        ll_date.setOnClickListener(this);
+        tv_switch_day.setOnClickListener(this);
+        tv_switch_month.setOnClickListener(this);
+        tv_switch_sleep.setOnClickListener(this);
+        tv_switch_sports.setOnClickListener(this);
+        findViewById(R.id.iv_top_left_return).setOnClickListener(this);
+        findViewById(R.id.iv_top_right).setOnClickListener(this);
+        tv_state = (TextView) findViewById(R.id.tv_state);
+    }
+
+    @Override
+    public void onConnectStateChange(int deviceType, int state) {
+
+            if(deviceType== Const.OEM_DEVICES_TYPE_BRACELETE){
+                Log.i("bracelete",state+"");
+
+                Message msg = new Message();
+                msg.what=state;
+                handler.sendMessage(msg);
+
+            }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == const_setok){
+            finish();
+        }
+        if(data!=null){
+            mShareAPI.onActivityResult(requestCode, resultCode, data);
+            UMShareAPI.get( this ).onActivityResult( requestCode, resultCode, data);
+
+        }
+
+    }
+
+}

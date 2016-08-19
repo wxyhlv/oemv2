@@ -1,0 +1,257 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.capitalbio.oemv2.myapplication.Base.Const;
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Bean.LoginUser;
+import com.capitalbio.oemv2.myapplication.BraceleteLib.BraceleteDevices;
+import com.capitalbio.oemv2.myapplication.Const.Base_Url;
+import com.capitalbio.oemv2.myapplication.Const.BraceleteConst;
+import com.capitalbio.oemv2.myapplication.Devices.Bracelete.BraceleteCommand.SetPersonDataBraceleteCommand;
+import com.capitalbio.oemv2.myapplication.NetUtils.HttpTools;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.OemLog;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+import cz.msebera.android.httpclient.Header;
+
+public class BraceleteSettingActivity extends BaseActivity implements View.OnClickListener {
+
+    LinearLayout contentLayout;
+    LinearLayout leftOrRightSet;
+    private  TextView tv_unbind ;
+    private  boolean bindflag = false;
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+
+         int what = msg.what;
+            if(what == 1){
+                PreferencesUtils.putString(context, "default_bracelete_address", "");
+                PreferencesUtils.putBoolean(BraceleteSettingActivity.this, "connect_state", false);
+                PreferencesUtils.putBoolean(BraceleteSettingActivity.this, "pre_connect_state", false);
+                PreferencesUtils.putBoolean(BraceleteSettingActivity.this, "bracelete_init_complete", false);
+                BraceleteDevices.getInstance().disconnect();
+                Log.i("disconnect","disconnecting...");
+            }
+            return false;
+        }
+    });
+    @Override
+    protected void initChildLayout() {
+        initChildView();
+    }
+
+    private void initChildView() {
+        rl.setBackgroundResource(R.color.bg_content);
+        rlNavigateBar.setBackgroundResource(R.drawable.bg_tang_zhi_san_xiang);
+        setLeftTopIcon(R.drawable.ic_back);
+        contentLayout = (LinearLayout) View.inflate(this, R.layout.activity_bracelete_setting, null);
+        llBody.addView(contentLayout);
+        setTvTopTitle(R.string.bracleteSetting);
+        leftOrRightSet = (LinearLayout) findViewById(R.id.ll_switch_hand);
+        leftOrRightSet.setOnClickListener(this);
+        findViewById(R.id.rl_warnsetting).setOnClickListener(this);
+        findViewById(R.id.rl_goalset).setOnClickListener(this);
+        findViewById(R.id.tv_switch_left).setOnClickListener(this);
+        findViewById(R.id.tv_switch_right).setOnClickListener(this);
+        findViewById(R.id.rl_unbind).setOnClickListener(this);
+        tv_unbind = (TextView) findViewById(R.id.tv_unbind);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.rl_warnsetting:
+                Utility.startActivity(context,BraceleteWarnSettingActivity.class);
+                break;
+            case R.id.rl_goalset:
+                Utility.startActivity(context,BraceleteGoalSettingActivity.class);
+                break;
+            case R.id.tv_switch_left:
+                leftOrRightSet.setBackgroundResource(R.drawable.lefthandselect);
+                break;
+            case R.id.tv_switch_right:
+                leftOrRightSet.setBackgroundResource(R.drawable.righthandselect);
+                break;
+            case R.id.rl_unbind:
+                //解绑 unbindDevice_Url
+                if (bindflag) {
+                    //绑定
+                    bindflag = false;
+
+                    Intent braceleteIntent = new Intent(this, SearchDeviceActivity.class);
+                    braceleteIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    braceleteIntent.putExtra("currentDevices", "bracelete");
+                    startActivity(braceleteIntent);
+                    finish();
+                } else {
+                    //"{\"watchId\":\"000111\",\"modelType\":\"braceletSports\",\"mac\":\"a8:20:66:1a:35:24\"}",
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+                    final android.support.v7.app.AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    Window window = alertDialog.getWindow();
+                    window.setContentView(R.layout.dialog_devicesetting);
+
+                    TextView tvtitle = (TextView) window.findViewById(R.id.tv_devicesetting_dialog_title);
+                    tvtitle.setText("是否解绑设备？");
+                    RelativeLayout rlyes = (RelativeLayout) window.findViewById(R.id.rl_devicesetting_dialog_yes);
+                    RelativeLayout rlno = (RelativeLayout) window.findViewById(R.id.rl_devicesetting_dialog_no);
+
+                    rlyes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //是
+                            showDialog();
+
+
+                            alertDialog.dismiss();
+                        }
+                    });
+                    rlno.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //否
+                            alertDialog.dismiss();
+                        }
+                    });
+                }
+                break;
+        }
+
+    }
+
+    private void showDialog() {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+        final android.support.v7.app.AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        Window window = alertDialog.getWindow();
+        window.setContentView(R.layout.dialog_devicesetting);
+
+        TextView tvtitle = (TextView) window.findViewById(R.id.tv_devicesetting_dialog_title);
+        tvtitle.setText("是否清除手环数据？");
+        RelativeLayout rlyes = (RelativeLayout) window.findViewById(R.id.rl_devicesetting_dialog_yes);
+        RelativeLayout rlno = (RelativeLayout) window.findViewById(R.id.rl_devicesetting_dialog_no);
+
+        rlyes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //是
+                //TODO 清除数据
+
+                unbind(true);
+
+
+                alertDialog.dismiss();
+            }
+        });
+        rlno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //否
+                unbind(false);
+
+                alertDialog.dismiss();
+
+            }
+        });
+    }
+
+
+    //解绑
+    public void unbind(final boolean isClear){
+
+        try {
+            //构造请求json对象
+            JSONObject jsonObject = new JSONObject();
+            JSONObject dataObj = new JSONObject();
+
+            jsonObject.put("apikey", MyApplication.getInstance().apikey);
+            jsonObject.put("username", MyApplication.getInstance().getCurrentUserName());
+            jsonObject.put("token", PreferencesUtils.getString(this, "token"));
+            dataObj.put("modelType", Const.TYPE_BRACELETE);
+            dataObj.put("mac", BraceleteConst.mac);
+            dataObj.put("watchId", BraceleteConst.mac);
+
+            jsonObject.put("data", dataObj.toString());
+            OemLog.log(TAG, "params is ....." + Base_Url.unbindDevice_Url + "--" + jsonObject.toString());
+
+            //
+            HttpTools.post(this, Base_Url.Url_Base + Base_Url.unbindDevice_Url, jsonObject, new AsyncHttpResponseHandler() {
+
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                    String result = new String(responseBody);
+                    Log.i(TAG,"result is "+result);
+                    try {
+                        JSONObject jsonObject1 = new JSONObject(result);
+                        String msg = jsonObject1.optString("message");
+                        if("success".equals(msg)){
+                            Toast.makeText(context,"解绑成功",Toast.LENGTH_SHORT).show();
+                            Message msg1 = new Message();
+                            msg1.what = 1;
+
+                            if(isClear){
+                                BraceleteDevices.getInstance().addCommandToQueue(new SetPersonDataBraceleteCommand(0, 1987, 10, 16, 175, 72));
+
+                            }
+
+                            handler.sendMessageDelayed(msg1,3000);
+                            tv_unbind.setText("绑定");
+                            bindflag = true;
+                            setResult(1);
+                        }else{
+                            Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Toast.makeText(context, "服务器异常", Toast.LENGTH_LONG).show();
+
+                }
+
+
+            });
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void back(View v) {
+
+
+        //TODO
+
+        finish();
+    }
+
+
+}

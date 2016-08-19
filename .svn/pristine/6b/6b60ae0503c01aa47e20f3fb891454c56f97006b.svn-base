@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户使用说明</title>
+<style type="text/css">
+body{
+	font-family:"MicroSoft YaHei", Helvetica, Arial, Tahoma; color:#3e3e3e;
+} 
+h3,ul,li {
+	line-height: 30px;
+}
+
+h2 {
+	-webkit-margin-before: 0.2em;
+	-webkit-margin-after: 0.5em;
+}
+div{
+	text-indent: 2em;
+	line-height: 30px;
+}
+</style>
+</head>
+<body>
+    <h2 style="text-align: center">运动手环操作使用指南</h2>
+	</div><span style="margin-left:50px;"/>
+		<div><B>支持系统</B></div>
+	<div><li>适用于Android4.3及以上系统，蓝牙4.0及以上配置</li></div>
+		</div><span style="margin-left:50px;"/>
+		<div><B>手环介绍</B></div>
+			<div><li>第一次使用手环，长按手环侧键开机。开机后，显示时间为出厂设置时间，连接手机后自动同步为手机时间</li></div>
+	<p align=center>
+		<img src="shouhuan1.2.jpg"height="150" width="200"  /></p>
+		<div><li>首屏显示时间日期、电量</li></div>
+		<p align=center>
+			<img src="shouhuan1.1.jpg"height="150" width="200"  /></p>
+		<div><li>第二、三、四屏显示日常计步：单机手环按键切换，查看运动信息：步数、距离及卡路里。查看完，单机3次侧按键可回到首屏</li></div>
+		<p align=center>
+			<img src="shouhuan3.jpg"height="150" width="200"  /></p>
+		<p align=center>
+			<img src="shouhuan3.1.jpg"height="150" width="200"  /></p>
+		<p align=center>
+			<img src="shouhuan3.2.jpg"height="150" width="200"  /></p>
+		<div><li>进入睡眠模式：点亮手环屏幕后，长按手环侧按键2秒进入睡眠模式，长按2秒可退出睡眠模式</li></div>
+		<p align=center>
+			<img src="shouhuan4.jpg"height="150" width="200"  /></p>
+		</div><span style="margin-left:50px;"/>
+		<div><B>手环充电：</B></div>
+		<div><li>如图所示，将充电线的充电头夹住手环充电口，另一头接入USB接口</li></div>
+		<p align=center>
+			<img src="shouhuan5.jpg"height="100" width="200"  /></p>
+		</div><span style="margin-left:100px;"/>
+		<p align=center>
+		<img src="shouhuan6.jpg"height="100" width="200"  /></p>
+		</div><span style="margin-left:50px;"/>
+	<div><B>绑定设备：</B></div>
+	<div><li>在主页点击运动手环设备，进入运动手环绑定页面</li></div>
+		<p align=center>
+			<img src="shouhuan7.jpg"height="500" width="300"  /></p>
+	<div><li>搜索手环设备</li></div>
+		<p align=center>
+			<img src="shouhuan8.jpg"height="500" width="300"  /></p>
+	<div><li>页面弹出设备名称，点击设备名称进行绑定</li></div>
+      <p align=center>
+		  <img src="shouhuan9.jpg"height="500" width="300"  /></p>
+		<p align=center>
+			<img src="shouhuan10.jpg"height="500" width="300"  /></p>
+		<div><li>绑定成功</li></div>
+      <div align=center>
+		  <img src="shouhuan11.jpg"height="500" width="300"  /></div>
+     <div><B>同步手环数据</B></div>
+	  <div><li>请将手环靠近手机（有网络）手环数据自动上传至app</li></div>
+		 <p align=center>
+			 <img src="shouhuan12.jpg"height="500" width="300"  /></p>
+      <div><li>切换查看上传的睡眠数据</li></div>
+		 <p align=center>
+			 <img src="shouhuan13.jpg"height="500" width="300"  /></p>
+		<div><li>查看历史记录</li></div>
+		 <p align=center>
+			 <img src="shouhuan14.jpg"height="500" width="300"  /></p>
+			 <p align=center>
+				 <img src="shouhuan15.jpg"height="500" width="300"  /></p>
+		<div><li>可设置手环目标、手环提醒等</li></div>
+		<p align=center>
+			<img src="shouhuan16.jpg"height="500" width="300"  /></p>
+		 <p align="center">
+			 <img src="shouhuan17.jpg"height="500" width="300"  /></p>
+		</div><span style="margin-left:50px;"/>
+		<div style="margin:0;padding:0; width:350px;height:1px;background-color:#D4D4D4;">
+		</div><span style="margin-left:10px;"/>
+		<div><B>注意问题</B></div>
+		<div>1.为什么手环同步不了</div>
+		<div>解决：</div>
+		<div><li>首次使用手环同步数据时，是校准手环上时间，当手环时间正确后，运动一会儿再完成同步即可</li></div>
+		<div><li>第二次同步同一手环的数据时，只需将手环靠近手机，就可自动同步运动睡眠数据</li></div>
+		<div><li>在睡眠模式下不支持同步数据，长按侧键，结束睡眠即可</li></div>
+		</div><span style="margin-left:10px;"/>
+		<div>2.手环按键失效</div>
+		<div>解决：如下情况，支持重返</div>
+		<div><li>长按侧键，无法进入睡眠模式</li></div>
+		<div><li>点击侧键，无法查看内容</li></div>
+		</div><span style="margin-left:50px;"/>
+		<div>3.运动手环步数、距离为0时，消耗热量（基础代谢率）仍然有数据</div>
+		<div>解决：</div>
+		<div><li>在不运动情况下，手环会有基础代谢率，故其他数据都为零的情况下，热量仍有数据</li></div>
+</body>
+</html>

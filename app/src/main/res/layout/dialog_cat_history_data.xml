@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:alpha="0.8"
+    android:background="@drawable/bg_cat_history_dialog"
+    android:orientation="vertical"
+     >
+		
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/tv_cat_history_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="趋势图"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/iv_cat_history_close"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/x"
+            android:clickable="true" />
+    </RelativeLayout>
+<LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="match_parent" 
+    android:orientation="vertical"
+    android:paddingRight="10dp"
+    android:paddingLeft="5dp"
+     >
+   <!--  <TextView 
+         android:id="@+id/tv_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="%RH"
+        android:layout_marginLeft ="10dp"
+        android:paddingBottom = "5dp"
+        android:textSize="15sp"
+        android:textColor="#000000"
+        android:gravity="left"
+        /> -->
+       <TextView
+            android:id="@+id/tv_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="温度（°C）"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lc_cat_history"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+       
+         >
+    </com.github.mikephil.charting.charts.LineChart>
+   
+</LinearLayout>
+
+<!--  <TextView
+            android:id="@+id/activity_air_chart_chartTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="温度（°C）"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/activity_air_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp" /> -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:paddingBottom="3dp" 
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <RelativeLayout
+            android:id="@+id/rl_cat_history_dialog_remark1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/pop_btom_bg"
+            android:gravity="center"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/tv_cat_history_dialog_remark1_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:text="优"
+                android:textSize="12dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:textSize="12dp"
+                android:id="@+id/tv_cat_history_dialog_remark1_values"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="0-35ug/ml"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_cat_history_dialog_remark4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/pop_btom_bg"
+            android:gravity="center"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/tv_cat_history_dialog_remark4_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:text="中度污染"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/tv_cat_history_dialog_remark4_values"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="0-35ug/ml"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="3dp" 
+         android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <RelativeLayout
+            android:id="@+id/rl_cat_history_dialog_remark2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/pop_btom_bg"
+            android:gravity="center"
+            android:padding="5dp" >
+
+            <TextView
+                android:textSize="12dp"
+                android:id="@+id/tv_cat_history_dialog_remark2_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:text="良"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:textSize="12dp"
+                android:id="@+id/tv_cat_history_dialog_remark2_values"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="0-35ug/ml"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_cat_history_dialog_remark5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/pop_btom_bg"
+            android:gravity="center"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/tv_cat_history_dialog_remark5_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:text="重度污染"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/tv_cat_history_dialog_remark5_values"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="0-35ug/ml"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="3dp"
+         android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
+
+        <RelativeLayout
+            android:id="@+id/rl_cat_history_dialog_remark3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/pop_btom_bg"
+            android:gravity="center"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/tv_cat_history_dialog_remark3_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:text="轻度污染"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/tv_cat_history_dialog_remark3_values"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="0-35ug/ml"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_cat_history_dialog_remark6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/pop_btom_bg"
+            android:gravity="center"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/tv_cat_history_dialog_remark6_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:text="严重污染"
+                android:textSize="12dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_cat_history_dialog_remark6_values"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="0-35ug/ml"
+                android:textSize="12dp"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

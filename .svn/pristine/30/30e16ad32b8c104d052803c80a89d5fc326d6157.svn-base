@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/transparent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="40dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="时间选择"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <!-- 滚轴区 -->
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal" >
+
+                <com.capitalbio.oemv2.myapplication.View.views.WheelView
+                    android:id="@+id/wv_dialog_selecttime_day"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1" />
+
+                <com.capitalbio.oemv2.myapplication.View.views.WheelView
+                    android:id="@+id/wv_dialog_selecttime_hour"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1" />
+
+                <com.capitalbio.oemv2.myapplication.View.views.WheelView
+                    android:id="@+id/wv_dialog_selecttime_minute"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal" >
+
+
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:padding="4dp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:padding="4dp"
+                    android:text="时"
+                    android:textColor="@color/black"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:padding="4dp"
+                    android:text="分"
+                    android:textColor="@color/black"
+                    android:textSize="10dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/bt_dialog_selecttime_cancel"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:text="取消"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/bt_dialog_selecttime_ok"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:text="确定"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

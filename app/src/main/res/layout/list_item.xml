@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    	
+    <!-- <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        />
+     -->
+    <RelativeLayout
+        android:id="@+id/rl_item1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        >
+
+      <!--  <ImageView
+            android:id="@+id/iv_delete"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/bg_delete"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+
+            />-->
+
+        <FrameLayout
+            android:id="@+id/fl_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            >
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="lovelvoeevlo"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:maxLength="12"
+                android:singleLine="true"
+                android:cursorVisible="true"
+                />
+
+
+            <TextView
+                android:id="@+id/tv_devicename"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@id/title"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:text="lovelvoeevlo"
+                />
+        </FrameLayout>
+       <!-- <EditText
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="公司"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:background="@null"
+            android:focusable="false"
+            android:layout_toRightOf="@id/iv_delete"
+            />-->
+        <TextView
+            android:id="@+id/tv_current_device"
+
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/bg_duihou"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+
+            />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/rl_item1"
+        android:background="@color/text_grey"
+        >
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="12月30日 9点"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/way"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="扫一扫"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            />
+
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

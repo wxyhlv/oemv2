@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/bg_tang_zhi_san_xiang"
+    android:layout_height="match_parent">
+    <!-- 顶部导航 -->
+
+    <RelativeLayout
+        android:id="@+id/rl_navigate_bar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+        iv_top_left_return
+        <!-- 左箭头 -->
+        <RelativeLayout
+            android:id="@+id/rl_top_left_return"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:layout_alignParentLeft="true">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_top_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/glycolipid"
+            android:textColor="#ffffff"
+            android:textSize="24sp" />
+
+        <!-- 分割线 -->
+        <ImageView
+            android:id="@+id/iv_spiltline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="54dp"
+            android:background="@color/white" />
+
+        <!--记一下 -->
+        <ImageView
+            android:id="@+id/iv_top_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ic_edit"
+            android:clickable="true"
+            />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_below="@id/rl_navigate_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center"
+        android:text="2016年5月17日"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="20sp"/>
+    <RelativeLayout
+        android:id="@+id/rl_set"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/tv_date"
+        android:gravity="center_vertical"
+        android:background="@color/white">
+        <TextView
+            android:id="@+id/tv_state"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:padding="5dp"
+            android:text="正在连接设备中...."
+            android:textColor="#000000"
+            android:textSize="20sp"
+            ></TextView>
+
+        <ImageView
+            android:id="@+id/iv_glycolipid_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/setting_gray"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="28dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_switch_date"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/tv_date"
+        android:visibility="invisible"
+        android:padding="7dp"
+        >
+        <LinearLayout
+            android:id="@+id/ll_switch_date"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/switch_bracelete_day"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/tv_switch_day"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="日"
+                android:textColor="@color/shouhuan_day_bgcolor"
+                android:clickable="true"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_switch_month"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="月"
+                android:clickable="true"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_switch_sportorsleep"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        >
+        <LinearLayout
+            android:id="@+id/ll_switch_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/switch_sportorsleep"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_switch_realtime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:clickable="true"
+                android:text="即时测量"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_switch_history"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="历史记录"
+                android:clickable="true"
+                android:textColor="@color/shouhuan_day_bgcolor"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </RelativeLayout>
+    <ScrollView
+        android:id="@+id/sc_gly_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_set"
+        android:background="@color/white"
+        android:scrollbars="none"
+        android:layout_above="@+id/rl_switch_sportorsleep">
+        <LinearLayout
+            android:id="@+id/ll_fg_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/home/wxy/oem_svn/Xutils/res"/><source path="/home/wxy/oem_svn/Xutils/build/generated/res/rs/release"/><source path="/home/wxy/oem_svn/Xutils/build/generated/res/resValues/release"/></dataSet><dataSet config="release"><source path="/home/wxy/oem_svn/Xutils/src/release/res"/></dataSet><mergedItems/></merger>

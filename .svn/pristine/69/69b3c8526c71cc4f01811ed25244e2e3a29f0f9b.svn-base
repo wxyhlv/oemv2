@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/home/chengkun/0319_2/MPChartLib/res"/><source path="/home/chengkun/0319_2/MPChartLib/build/generated/res/rs/release"/><source path="/home/chengkun/0319_2/MPChartLib/build/generated/res/resValues/release"/></dataSet><dataSet config="release"><source path="/home/chengkun/0319_2/MPChartLib/src/release/res"/></dataSet><mergedItems/></merger>

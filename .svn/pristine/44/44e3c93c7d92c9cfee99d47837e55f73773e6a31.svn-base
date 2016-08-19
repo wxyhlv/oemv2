@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/skyblue"
+        >
+
+        <RelativeLayout
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:onClick="back"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_back" />
+        </RelativeLayout>
+        <ProgressBar
+            android:id="@+id/pb_progress"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/textView"
+            android:indeterminateDrawable="@drawable/frame_loading"
+            android:visibility="gone" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="切换设备"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            android:id="@+id/textView" />
+<!--
+        <ToggleButton
+            android:id="@+id/tb_edit"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:textOff="编辑"
+            android:textOn="完成"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:button="@null"
+            android:background="@null"
+            android:layout_alignParentRight="true"/>-->
+        <TextView
+            android:id="@+id/tv_edit"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+           android:text="编辑"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:button="@null"
+            android:background="@null"
+            android:visibility="gone"
+            android:layout_alignParentRight="true"/>
+
+
+
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff4f7f9"
+        >
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="您还没有设备"
+            android:visibility="gone"
+            />
+
+    </FrameLayout>
+
+
+<!--   <com.capitalbio.oemv2.myapplication.View.slideDeleteView.ListViewCompat
+        android:id="@+id/list"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:background="#fff4f7f9"
+       android:cacheColorHint="#00000000"
+       android:divider="#dddbdb"
+       android:dividerHeight="1.0px"
+       android:drawSelectorOnTop="false"
+       android:listSelector="@android:color/transparent"
+       android:scrollbars="none"
+        >
+
+
+    </com.capitalbio.oemv2.myapplication.View.slideDeleteView.ListViewCompat>-->
+
+
+</LinearLayout>

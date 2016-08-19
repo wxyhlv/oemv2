@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户使用说明</title>
+<style type="text/css">
+body{
+	font-family:"MicroSoft YaHei", Helvetica, Arial, Tahoma; color:#3e3e3e;
+} 
+h3,ul,li {
+	line-height: 30px;
+}
+
+h2 {
+	-webkit-margin-before: 0.2em;
+	-webkit-margin-after: 0.5em;
+}
+div{
+	text-indent: 2em;
+	line-height: 30px;
+}
+</style>
+</head>
+<body>
+    <h2 style="text-align: center">脂肪秤操作使用指南</h2>
+	<span style="margin-left:50px;">
+	<p align=center>
+		<img src="bodyfat1.jpg"height="100" width="200"  /></p>
+	</div><span style="margin-left:50px;">
+		<div style="margin:0;padding:0; width:350px;height:1px;background-color:#D4D4D4;">
+		</div><span style="margin-left:50px;">
+	<div><B>支持系统</B></div>
+	<div><li>适用于Android4.3及以上系统，蓝牙4.0及以上配置</li></div>
+		</div><span style="margin-left:50px;">
+	<div><B>绑定设备：</B></div>
+	<div><li>在主页点击脂肪秤设备，进入脂肪秤绑定页面</li></div>
+		<p align=center>
+			<img src="bodyfat2.jpg"height="500" width="300"  /></p>
+	<div><li>请站在脂肪秤上，搜索设备</li></div>
+		<p align=center>
+			<img src="bodyfat3.jpg"height="500" width="300"  /></p>
+	<div><li>页面弹出设备名称，点击设备名称进行绑定</li></div>
+      <p align=center>
+		  <img src="bodyfat4.jpg"height="500" width="300"  /></p>
+		<p align=center>
+			<img src="bodyfat5.jpg"height="500" width="300"  /></p>
+		<div><li>绑定成功</li></div>
+      <p align=center>
+		  <img src="bodyfat6.jpg"height="500" width="300"  /></p>
+     <div><B>测量体质</B></div>
+	  <div><li>请赤脚上称，脂肪秤显示体重数据并将各项数据上传至APP</li></div>
+		 <p align=center>
+			 <img src="bodyfat7.jpg"height="200" width="300"  /></p>
+      <div><li>测量时，转盘转动，测量完毕，上传体质各项数据，指针指向体重测量结果，各项数据偏低偏高显示为红色，正常显示为绿色</li></div>
+		 <p align=center>
+			 <img src="bodyfat8.jpg"height="500" width="300"  /></p>
+		<div><li>可手动录入测量后的体重值</li></div>
+		 <p align=center>
+			 <img src="bodyfat9.jpg"height="500" width="300"  /></p>
+		<div><li>可查看体质测量后的历史记录</li></div>
+		<p align=center>
+		<img src="bodyfat10.jpg"height="500" width="300"  /></p>
+		 <p align=center>
+			 <img src="bodyfat11.jpg"height="500" width="300"  /></p>
+		</div><span style="margin-left:50px;">
+		<div style="margin:0;padding:0; width:350px;height:1px;background-color:#D4D4D4;">
+		</div><span style="margin-left:10px;">
+		<div><B>注意问题</B></div>
+		<div>1.手机app提示连接成功，但是测量时，手机页面转盘不转动</div>
+		<div>解决：</div>
+		<div><li>排除周围是否有别的脂肪秤</li></div>
+		<div><li>排除是否就连接上其他手机设备</li></div>
+		</div><span style="margin-left:10px;">
+		<div>2.脂肪秤测量完成后，手机端只显示体重和BMI的值，其他数据全为0</div>
+		<div>解决：</div>
+		<div><li>脂肪秤应放置在平坦且坚硬的地面上，避免放置于地毯，凹凸不平的地面</li></div>
+		<div><li>确定已经脱掉鞋和袜子，赤脚站在脂肪秤上</li></div>
+		<div><li>测量时，双脚应如图适中站立于中心logo两侧，避免双脚并拢或距离太远</li></div>
+		</div><span style="margin-left:50px;">
+		<div>3.测量结果不准确</div>
+		<div>解决：</div>
+		<div><li>测量前要保持个人信息中年龄、身高、性别填写正确</li></div>
+		<div><li>测量体质的适合年龄为18-80岁，身高为100cm-220cm</li></div>
+</body>
+</html>

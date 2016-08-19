@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户使用说明</title>
+<style type="text/css">
+body{
+	font-family:"MicroSoft YaHei", Helvetica, Arial, Tahoma; color:#3e3e3e;
+} 
+h3,ul,li {
+	line-height: 30px;
+}
+
+h2 {
+	-webkit-margin-before: 0.2em;
+	-webkit-margin-after: 0.5em;
+}
+div{
+	text-indent: 2em;
+	line-height: 30px;
+}
+</style>
+</head>
+<body>
+   
+		<span><img src="zhifangcheng1.jpg" height="100" width="350" /></span>
+	<div>
+	<li>BMI（Body Mass Index）即身体质量指数，是与体内总量密切相关的指标，主要反映全身体性超重或肥胖。
+		<div>由于BMI计算的是身体脂肪比例，所以在测量身体因超重而面临的心脏病、高血压等风险上，比单纯的以体重来认定，更加准确性。</div>
+		<div>体质指数（BMI）=体重（kg）÷身高（m）²</div>
+		<div>说明：肥胖的世界标准：BMI在18.5至24.9属于正常范围，BMI大于30为肥胖。肥胖亚洲标准：亚洲人的体格偏小，用肥胖的世界标准来衡量就不适应。肥胖的中国标准：我国专家认为，中国人虽属于亚非人种，但体重指数的正常范围上限应该比亚非标准低些，理想指数是18.5至22.9。</div>
+		<div>注：不是每个人都适用BMI的，如果您属于以下情况，那么BMI的指数对您不适用：未满18岁，是运动员，正在做重量训练，怀孕或哺乳中，身体虚弱或久坐不动的老人。</div></li>
+		<span align=center><img src="zhifangcheng2.jpg" height="150" width="350" /></span>
+		<li>BMR（基础代谢率  单位：KCAL）为维持呼吸、心脏跳动和保持体温等基本生命而消耗掉的能量，占一天中能量消耗的70%，基础代谢量越高，就越不容易胖。</li>
+		<div>注：BMR计算公式：</div>
+		<div>女: BMR = 655 + ( 9.6 x 体重kg ) + ( 1.8 x 身高cm ) - ( 4.7 x 年龄years )</div>
+		<div>男: BMR = 66 + ( 13.7 x 体重kg ) + ( 5 x 身高cm ) - ( 6.8 x 年龄years )</div>
+		<div>基础代谢率在±10%以内属于正常，低于10%为偏低，高于10%为偏高</div>
+		<span><img src="zhifangcheng3.jpg" height="350" width="350" /></span>
+		<li>内脏等级（即内脏脂肪）内脏脂肪是人体脂肪中的一种，与皮下脂肪（也就是我们身体上的可以摸得到的“肥肉”）不同，它围绕着人的脏器，主要存在于腹腔中，内脏脂肪是积累在腹部内脏周围的脂肪，内脏脂肪过多容易引起糖尿病、高血压和高血脂等病症，从而造成动脉硬化。</li>
+		<span><img src="zhifangcheng4.jpg" height="80" width="350" /></span>
+		<li>骨含量（单位：kg）骨量：单位体积内，骨组织【骨矿物质（钙、磷等）和骨基质（骨胶原、蛋白质、无机盐等等）】含量。无论对任何脊椎动物，无论他们是老还是少，骨量都是非常重要的，它代表骨骼健康的情况。骨骼是支撑起身体的重要支架，掌握自己的骨量，注意补充流失的钙质，加强骨骼密度，是必须长期坚持的健康之道。</li>
+		<span><img src="zhifangcheng5.jpg" height="180" width="350" /></span>
+		<li>脂肪率（单位：%）脂肪率是指身体成分中，脂肪组织所占的比率，是判断肥胖与否的参考标准。脂肪在体内的含量是有一定限度的，过多则会影响机体的代谢活动，产生许多疾病，这也是人们常说的“肥胖是疾病发生的温床”，测量脂肪率比单纯的只测量体重更能反映我们身体的脂肪水平（肥胖程度）。</li>
+		<span><img src="zhifangcheng6.jpg" height="350" width="350" /></span>
+		<li>肌肉含量（单位：%）肌肉率是指身体成分中，肌肉所占的比率，肌肉最消耗热量，因此肌肉越多，基础代谢量越高，就越不容易胖。</li>
+		<span><img src="zhifangcheng7.jpg" height="350" width="350" /></span>
+		<li>水分含量（单位：%）水分率是指身体成分中，水分所占的比率，水对人体来讲是构成细胞不可缺少的物质，具有调节身体机能、溶解营养素等重要作用。</li>
+		<span><img src="zhifangcheng8.jpg" height="60" width="350" /></span>
+<body>
+</html>

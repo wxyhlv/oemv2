@@ -1,0 +1,887 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--头-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_60"
+        android:layout_alignParentTop="true"
+        android:background="@color/blue_zonghepingding">
+
+        <RelativeLayout
+            android:id="@+id/rl_zonghe_back"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_back" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <!--综合评定周报-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_zonghepingding">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/zonghepingding" />
+    </RelativeLayout>
+    <!--三个人-->
+    <com.capitalbio.oemv2.myapplication.View.StageView
+        android:id="@+id/stageview"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@color/blue_zonghepingding"
+        android:visibility="gone" />
+
+    <!--蒜头表情-->
+    <!--第一行-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_zonghepingding"
+        android:orientation="horizontal">
+        <!--睡眠-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_zonghe_garlic_sleep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/garlic_poor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="睡眠质量"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_zonghe_garlic_sleep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="无数据"
+                android:textColor="@color/yellow" />
+        </LinearLayout>
+        <!--肌肉-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_zonghe_garlic_muscle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/garlic_poor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="肌肉含量"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_zonghe_garlic_muscle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="无数据"
+                android:textColor="@color/yellow" />
+        </LinearLayout>
+        <!--心率-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_zonghe_garlic_heartrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/garlic_poor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="心率"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_zonghe_garlic_heartrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="无数据"
+                android:textColor="@color/yellow" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--第二行-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_zonghepingding"
+        android:orientation="horizontal">
+        <!--血脂-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_zonghe_garlic_bloodfat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/garlic_poor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="血脂"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_zonghe_garlic_bloodfat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="无数据"
+                android:textColor="@color/yellow" />
+        </LinearLayout>
+        <!--血糖-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_zonghe_garlic_bloodsugar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/garlic_poor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="血糖"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_zonghe_garlic_bloodsugar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="无数据"
+                android:textColor="@color/yellow" />
+        </LinearLayout>
+        <!--血压-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_zonghe_garlic_bloodpressure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/garlic_poor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="血压"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_zonghe_garlic_bloodpressure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="无数据"
+                android:textColor="@color/yellow" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--本周-->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/benzhou" />
+
+    <!--脂肪血压血糖-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_zonghe_banners_high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_banners_red"
+            android:gravity="center"
+            android:text="脂肪、血压、血糖超标"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <!--预留-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!--脂肪-->
+        <RelativeLayout
+            android:id="@+id/rl_zonghe_rv_high_fat"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1">
+
+            <com.capitalbio.oemv2.myapplication.View.views.RingView
+                android:id="@+id/rv_zonghe_high_fat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@color/white">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_zonghe_rv_high_fat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="超标50%" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="脂肪" />
+                </LinearLayout>
+            </com.capitalbio.oemv2.myapplication.View.views.RingView>
+        </RelativeLayout>
+        <!--血压-->
+        <RelativeLayout
+            android:id="@+id/rl_zonghe_rv_high_bp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1">
+
+            <com.capitalbio.oemv2.myapplication.View.views.RingView
+                android:id="@+id/rv_zonghe_high_bloodpressure"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_zonghe_rv_high_bloodpressure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="超标50%" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="血压" />
+                </LinearLayout>
+
+
+            </com.capitalbio.oemv2.myapplication.View.views.RingView>
+
+        </RelativeLayout>
+        <!--血糖-->
+        <!--<RelativeLayout
+            android:id="@+id/rl_zonghe_rv_high_bs"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:visibility="gone"
+            android:layout_weight="1">
+
+            <com.capitalbio.oemv2.myapplication.View.views.RingView
+                android:id="@+id/rv_zonghe_high_bloodsugar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_zonghe_rv_high_bloodsugar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="超标50%" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="血糖" />
+                </LinearLayout>
+
+
+            </com.capitalbio.oemv2.myapplication.View.views.RingView>
+
+        </RelativeLayout>-->
+        <!--血脂-->
+        <!--<RelativeLayout
+            android:id="@+id/rl_zonghe_rv_high_bf"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1">
+
+            <com.capitalbio.oemv2.myapplication.View.views.RingView
+                android:id="@+id/rv_zonghe_high_bloodfat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_zonghe_rv_high_bloodfat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="超标50%" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="血脂" />
+                </LinearLayout>
+
+
+            </com.capitalbio.oemv2.myapplication.View.views.RingView>
+
+        </RelativeLayout>-->
+
+    </LinearLayout>
+
+    <!--警惕-->
+    <LinearLayout
+        android:id="@+id/ll_zonghe_high_toast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_toast_bevigilant" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_banners_dark"
+                android:gravity="center"
+                android:text="心脏病"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_banners_dark"
+                android:gravity="center"
+                android:text="高血压"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_banners_dark"
+                android:gravity="center"
+                android:text="胆固醇过高"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_man_handsup" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--分割线-->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_divider_bluepoint" />
+    <!--血脂体重-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_zonghe_banners_low"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_banners_red"
+            android:gravity="center"
+            android:text="本周血脂、体重偏低"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <!--预留-偏低区域-->
+    <LinearLayout
+        android:id="@+id/ll_zonghe_low"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal">
+
+        <!--血脂-->
+        <!--<RelativeLayout
+            android:id="@+id/rl_zonghe_rv_low_bf"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1">
+
+            <com.capitalbio.oemv2.myapplication.View.views.RingView
+                android:id="@+id/rv_zonghe_low_bloodfat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_zonghe_rv_low_bloodfat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="超标50%" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="血脂" />
+                </LinearLayout>
+            </com.capitalbio.oemv2.myapplication.View.views.RingView>
+
+        </RelativeLayout>-->
+
+        <!--血压-->
+        <RelativeLayout
+            android:id="@+id/rl_zonghe_rv_low_bp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1">
+
+            <com.capitalbio.oemv2.myapplication.View.views.RingView
+                android:id="@+id/rv_zonghe_low_bp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_zonghe_rv_low_bp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="超标50%" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="血压" />
+                </LinearLayout>
+
+            </com.capitalbio.oemv2.myapplication.View.views.RingView>
+
+        </RelativeLayout>
+
+        <!--血糖-->
+        <!--<RelativeLayout
+            android:id="@+id/rl_zonghe_rv_low_bs"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1">
+
+            <com.capitalbio.oemv2.myapplication.View.views.RingView
+                android:id="@+id/rv_zonghe_low_bs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_zonghe_rv_low_bs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="超标50%" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="血糖" />
+                </LinearLayout>
+
+            </com.capitalbio.oemv2.myapplication.View.views.RingView>
+
+        </RelativeLayout>-->
+
+        <!--脂肪-->
+        <RelativeLayout
+            android:id="@+id/rl_zonghe_rv_low_fat"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1">
+
+            <com.capitalbio.oemv2.myapplication.View.views.RingView
+                android:id="@+id/rv_zonghe_low_fat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_zonghe_rv_low_fat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="超标50%" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="脂肪" />
+                </LinearLayout>
+
+            </com.capitalbio.oemv2.myapplication.View.views.RingView>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_zonghe_low_toast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_woman_barbell" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="建议您加强运动锻炼，增强体质加强营养，合理膳食，必要时请及时就医"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dp_20"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--分割线-->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_divider_bluepoint" />
+
+    <TextView
+        android:id="@+id/tv_zonghe_muscle_des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="肌肉含量偏低，建议您适当增强有氧运动（比如：游泳、慢跑、骑自行车等）"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_20"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/iv_zonghe_muscle_des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_woman_swimming" />
+
+
+    <!--分割线-->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_divider_bluepoint" />
+
+    <TextView
+        android:id="@+id/tv_zonghe_indoorairquality_des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="室内甲醛和TVOC稍稍偏高，注意经常开窗通风换气，如出现不适请及时就医"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_25"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/ll_zonghe_indoorairquality_des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_man_openthewindow" />
+
+        <!--建议-->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_toast_suggest" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/ic_banners_green"
+                android:gravity="center"
+                android:text="使用空气净化器"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/ic_banners_green"
+                android:gravity="center"
+                android:text="放一些绿色植物净化空气"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--分割线-->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_divider_bluepoint" />
+
+    <LinearLayout
+        android:id="@+id/ll_zonghe_sleep_des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_woman_sleeping" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_zonghe_sleep_des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="您本周睡眠偏多，睡眠过多会削弱精神和体力，建议保证适当睡眠"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dp_25"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--分割线-->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_divider_bluepoint" />
+
+    <LinearLayout
+        android:id="@+id/ll_zonghe_heartrate_des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_zonghe_heartrate_des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="本周您的心动过速易出现心悸、胸闷、乏力、头晕等症状建议您加强运动锻炼，增强体质；保证充足的睡眠必要时请及时就医"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dp_25"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_woman_palpitation" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--分割线-->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_divider_bluepoint" />
+
+
+</LinearLayout>

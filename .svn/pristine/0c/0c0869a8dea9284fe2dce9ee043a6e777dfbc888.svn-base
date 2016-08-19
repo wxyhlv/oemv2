@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.capitalbio.oemv2.myapplication">
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.LOCATION_HARDWARE" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- 发送消息 -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <!-- 阅读消息 -->
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <!-- 写入消息 -->
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <!-- 接收消息 -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <application
+        android:name=".Base.MyApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Activity.RegisterActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.UserAgreementActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.BaseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Bracelete2Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.BloodPressureActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.BodyFatActivity"
+            android:screenOrientation="portrait" />
+        <!-- <activity android:name=".View.charview.CharViewActivity" /> -->
+        <activity
+            android:name=".Activity.MainActivity"
+            android:label="@string/title_activity_register"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.LoadActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name=".Activity.LoadActivity" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activity.LoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity
+            android:name=".Activity.PreviewActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.PersonalDetailsAcitivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.ForgetPwdActivity"
+            android:label="@string/title_activity_forget_pw"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.BraceleteSettingActivity"
+            android:label="@string/title_activity_bracelete_setting"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.BraceleteWarnSettingActivity"
+            android:label="@string/title_activity_bracelete_setting"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.BraceleteCustomWarnSettingActivity"
+            android:label="@string/title_activity_bracelete_setting"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.BraceleteGoalSettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.BraceleteAddWarnActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.BraceleteEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.SearchDeviceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.DeviceBindActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.DeviceSettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.DatainputBloodpressActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.DatainputBodyfatActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.AirCatActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.AircatAddDeviceActivtity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.AircatScanResultActivtity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.AircatSearcDeviceActivtity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.AircatShareDeviceActivtity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.AircatChangeDeviceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Activity.AirGerQECodeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".QR.MipcaActivityCapture"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <receiver
+            android:name=".Devices.Bracelete.SystemEventReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".Devices.Bracelete.SmsReceiver">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".Devices.Bracelete.OemBackgroundService"
+            android:enabled="true"
+            
+            android:exported="true" />
+
+        <activity
+            android:name=".Activity.AirCatBlueActivity"
+            android:label="@string/title_activity_air_cat_blue"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service android:name=".FirstPeriod.Service.CatService" />
+
+        <activity
+            android:name=".FirstPeriod.Activity.CatDataInput"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.UserHelpActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activity.CommandTestActivity" />
+        <activity
+            android:name=".Activity.ZonghecepingActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 定位服务 -->
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="BGt97Lf8o606cXSmUzpgRl73" />
+
+        <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+
+        <!-- umeng 分享等功能 -->
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="56cea575e0f55ad3b30015cc" />
+
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+        <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.READ_LOGS" />
+        <uses-permission android:name="android.permission.CALL_PHONE" />
+        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+        <uses-permission android:name="android.permission.GET_TASKS" />
+        <uses-permission android:name="android.permission.SET_DEBUG_APP" />
+        <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+        <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+        <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+        <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+
+        <activity
+            android:name="com.umeng.socialize.editorpage.ShareActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.UMDefault" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1105154211" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".Activity.SettingActivity"
+            android:label="@string/title_activity_setting"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.AboutUsActivity"
+            android:label="@string/title_activity_about_us"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".wbapi.WBShareActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <service
+            android:name="com.sina.weibo.sdk.net.DownloadService"
+            android:exported="false" />
+
+        <activity android:name=".Activity.GlycolipidActivity" />
+        <activity android:name=".Activity.DataInputGlycolipid"></activity>
+    </application>
+
+</manifest>

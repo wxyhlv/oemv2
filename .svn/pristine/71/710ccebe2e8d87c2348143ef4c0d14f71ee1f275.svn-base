@@ -1,0 +1,317 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.capitalbio.oemv2.myapplication.Base.Const;
+import com.capitalbio.oemv2.myapplication.Base.IDeviceSearchCallBack;
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.BraceleteLib.BraceleteDevices;
+import com.capitalbio.oemv2.myapplication.Const.Base_Url;
+import com.capitalbio.oemv2.myapplication.Const.BraceleteConst;
+import com.capitalbio.oemv2.myapplication.Devices.Bracelete.DevicesDataObserver;
+import com.capitalbio.oemv2.myapplication.NetUtils.HttpTools;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.OemLog;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+import com.capitalbio.oemv2.myapplication.adapter.SearchDeviceAdapter;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
+
+
+/**
+ * Created by wxy on 15-12-21.
+ */
+public class SearchDeviceActivity extends BaseActivity implements IDeviceSearchCallBack ,View.OnClickListener{
+    RelativeLayout contentLayout;
+    ListView listView;
+    SearchDeviceAdapter adapter;
+    List<String> list;
+    List<BluetoothDevice> devices = new ArrayList<>();
+
+    ProgressDialog progressDialog;
+    String TAG = "SearchDeviceActivity";
+    private TextView tv_unbind;
+    ProgressBar progressBar;
+
+    private BraceleteDevices braceleteDevices = BraceleteDevices.getInstance();
+    public static final int REQUEST_PERMISSON_SUCCESSFULL = 200;
+
+    private String currentSearchDevices;
+
+    @Override
+    protected void initChildLayout() {
+
+        if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            //your code that requires permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_PERMISSON_SUCCESSFULL);
+        }
+
+        //每次创建都取的当前的点击设备
+        Intent targetIntent = getIntent();
+        currentSearchDevices = targetIntent.getStringExtra("currentDevices");
+
+        initChildView();
+    }
+
+    private void initChildView() {
+        rl.setBackgroundResource(R.color.bg_content);
+        rlNavigateBar.setBackgroundResource(R.drawable.bg_tang_zhi_san_xiang);
+        setLeftTopIcon(R.drawable.ic_back);
+        contentLayout = (RelativeLayout) View.inflate(this, R.layout.activity_search_device, null);
+        llBody.addView(contentLayout);
+        progressBar = (ProgressBar) findViewById(R.id.pb_progress);
+        if (android.os.Build.VERSION.SDK_INT > 22) {//android 6.0替换clip的加载动画
+            final Drawable drawable =  context.getApplicationContext().getResources().getDrawable(R.drawable.frame_loading2);
+            progressBar.setIndeterminateDrawable(drawable);
+        }
+        switch (currentSearchDevices) {
+            case "bodyfat":
+                setTvTopTitle(R.string.bodyfat);
+                break;
+            case "bloodPress":
+                setTvTopTitle(R.string.bloodpress);
+                break;
+            case "bracelete":
+                setTvTopTitle(R.string.bracelete);
+                break;
+            default:
+                break;
+        }
+
+        tv_unbind = (TextView) findViewById(R.id.tv_unbind);
+        tv_unbind.setOnClickListener(this);
+        listView = (ListView) findViewById(R.id.lv_bracelete);
+        progressDialog = new ProgressDialog(SearchDeviceActivity.this);
+        progressDialog.setMessage("正在绑定设备.....");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setIndeterminate(false);
+        // 设置ProgressDialog 是否可以按退回按键取消
+        progressDialog.setCancelable(true);
+
+        DevicesDataObserver.getObserver().registerDeviceSearchCallBack(this);
+        list = new ArrayList<>();
+
+        adapter = new SearchDeviceAdapter(getContext(), list);
+
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                //绑定
+                OemLog.log("TAG", devices.get(position).getAddress());
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+                final android.support.v7.app.AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                Window window = alertDialog.getWindow();
+                window.setContentView(R.layout.dialog_devicesetting);
+
+                TextView tvtitle = (TextView) window.findViewById(R.id.tv_devicesetting_dialog_title);
+                tvtitle.setText("是否绑定设备？");
+                RelativeLayout rlyes = (RelativeLayout) window.findViewById(R.id.rl_devicesetting_dialog_yes);
+                RelativeLayout rlno = (RelativeLayout) window.findViewById(R.id.rl_devicesetting_dialog_no);
+
+                rlyes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //是
+                        switch (currentSearchDevices) {
+                            case "bodyfat":
+                                bindDevice(devices.get(position), Const.TYPE_BODYFAT);
+                                break;
+                            case "bloodPress":
+                                bindDevice(devices.get(position), Const.TYPE_BLOODPRESS);
+                                break;
+                            case "bracelete":
+                                bindDevice(devices.get(position), Const.TYPE_BRACELETE);
+                                break;
+                            default:
+                                break;
+                        }
+
+
+
+
+                        alertDialog.dismiss();
+                    }
+                });
+                rlno.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //否
+                        alertDialog.dismiss();
+                    }
+                });
+                /**/
+            }
+        });
+
+
+
+    }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            adapter.setData(list);
+        }
+    };
+
+    @Override
+    public void deviceSearchCallBack(BluetoothDevice device) {
+        if (device == null) {
+            return;
+        }
+        OemLog.log(TAG, "name...." + device.getName());
+        OemLog.log(TAG, "address...." + device.getAddress());
+
+        if (device.getName() != null) {
+            switch (currentSearchDevices) {
+                case "bodyfat":
+                    showCurrentSearchDevices(device, "eBody-Fat-Scale");
+                    break;
+                case "bloodPress":
+                    showCurrentSearchDevices(device, "Bluetooth BP");
+                    break;
+                case "bracelete":
+                    showCurrentSearchDevices(device, "L28T");
+                    break;
+                default:
+                    break;
+            }
+        }
+        OemLog.log(TAG, "list...." + list.size());
+
+    }
+
+//绑定手还
+    public void bindDevice(final BluetoothDevice device, String modetype) {
+        try {
+            //构造请求json对象
+            JSONObject jsonObject = new JSONObject();
+            JSONObject dataObject = new JSONObject();
+
+            jsonObject.put("apikey", myApp.apikey);//所有接口必填
+            jsonObject.put("username",myApp.getCurrentUserName());
+            jsonObject.put("token", myApp.getCurentToken());
+            dataObject.put("modelType", modetype);
+            dataObject.put("mac",device.getAddress());
+            dataObject.put("watchId",device.getAddress());
+            dataObject.put("bindName", device.getName());
+          //  dataObject.put("way", way);
+            jsonObject.put("data", dataObject.toString());
+            //绑定设备
+            Log.d("codeUrl", Base_Url.Url_Base + Base_Url.bindDevice_Url);
+            HttpTools.post(this, Base_Url.Url_Base + Base_Url.bindDevice_Url, jsonObject, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    String result = new String(responseBody);
+                    OemLog.log(TAG, result);
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(result);
+                        int code = jsonObject.optInt("code");
+                        String msg = jsonObject.optString("message");
+                        if (code == 11) {
+                            MyApplication.getInstance().exit();
+                            Toast.makeText(context, "用户未登陆,请重新登陆", Toast.LENGTH_SHORT).show();
+
+                        } else if (code == 0) {
+
+                            Toast.makeText(getContext(), "绑定设备成功", Toast.LENGTH_LONG).show();
+                            BraceleteConst.mac = device.getAddress();
+                            switch (currentSearchDevices) {
+                                case "bodyfat":
+                                    Utility.startActivity(getContext(), BodyFatActivity.class);
+                                    PreferencesUtils.putString(context, "default_bodyfat_address", device.getAddress());
+                                    MyApplication.getInstance().setHasBindDevices(true);
+                                    break;
+                                case "bloodPress":
+                                    Utility.startActivity(getContext(), BloodPressureActivity.class);
+                                    PreferencesUtils.putString(context, "default_bloodpress_address", device.getAddress());
+                                    MyApplication.getInstance().setHasBindDevices(true);
+                                    break;
+                                case "bracelete":
+                                    Utility.startActivity(getContext(), Bracelete2Activity.class);
+                                    PreferencesUtils.putString(context, "default_bracelete_address", device.getAddress());
+                                    MyApplication.getInstance().setHasBindDevices(true);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            finish();
+                        } else {
+                            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    OemLog.log(TAG, "服务器请求失败");
+                }
+            });
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void showCurrentSearchDevices(BluetoothDevice device, String deviceName) {
+        if (!list.contains(device.getName()) && device.getName().contains(deviceName)) {
+            list.add(device.getName());
+            devices.add(device);
+            handler.sendEmptyMessage(0);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        OemLog.log(TAG, "request result is " + requestCode);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId()==R.id.tv_unbind){
+            finish();
+        }
+    }
+
+
+
+
+}

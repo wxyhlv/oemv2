@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <RelativeLayout
+         android:background="@color/gray_zonghe_bg"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_150"
+        >
+
+        <LinearLayout
+
+            android:id="@+id/ll_accountmanagement_addaccount"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:layout_alignParentTop="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_plus"
+                android:layout_marginLeft="@dimen/dp_30"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:text="@string/addaccount"
+                android:textColor="@color/blue"
+                android:layout_gravity="center_vertical"/>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_accountmanagement_modifypwd"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:layout_alignParentBottom="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_pencil"
+                android:layout_marginLeft="@dimen/dp_30"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:text="@string/modifypassword"
+                android:textColor="@color/red"
+                android:layout_gravity="center_vertical"/>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

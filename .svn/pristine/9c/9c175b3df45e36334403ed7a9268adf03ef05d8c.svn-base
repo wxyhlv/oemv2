@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户协议</title>
+<style type="text/css">
+body{
+	font-family:"MicroSoft YaHei", Helvetica, Arial, Tahoma; color:#3e3e3e;
+}
+h3,ul,li {
+	-webkit-margin-before: 0.2em;
+	-webkit-margin-after: 0.2em;
+	font-weight: bolder;
+}
+
+h2 {
+	-webkit-margin-before: 0.2em;
+	-webkit-margin-after: 0.5em;
+	font-weight: bolder;
+}
+div{
+	text-indent: 2em;
+	line-height: 30px;
+}
+</style>
+</head>
+<body>
+	<div>博奥颐和健康科学技术（北京）有限公司是博奥生物集团旗下的健康综合管理旗舰公司。博奥颐和以“打造以个体为中心的大健康管理系统”为使命；以疾病的预测、预防和个体化医疗为目标；致力于生物大数据催生高端特种检验，以实现中国全民健康的终极梦想。</div>
+	<div>博奥颐和围绕“测”、“调”、“增”的健康管理理念，通过基因组学检测、中医体质检测联合评估健康风险；提供适宜的体质调理、机能增强等健康管家式服务，真正做到科学、专业、个性化的一站式“全人全程”的健康管理。</div>
+	<div style="width: 100%;text-align: center;"><img alt="" height="200px;" src="./1.jpg"></div>
+	<div style="width: 100%;text-align: center;">颐和康城微信公众账号</div>
+    <div style="width: 100%;text-align: center;"><a href="http://www.bioeh.com">访问官网：http：//www.bioeh.com</a></div>
+</body>
+</html>

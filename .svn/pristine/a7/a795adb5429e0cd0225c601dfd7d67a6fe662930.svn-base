@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    >
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/text_grey"
+        android:layout_centerVertical="true"
+        />
+    <!-- <com.capitalbio.oemv2.myapplication.View.HorizontalListView
+        android:id="@+id/horizontallistview"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+
+        ></com.capitalbio.oemv2.myapplication.View.HorizontalListView>-->
+    <com.capitalbio.oemv2.myapplication.View.recyclerview.MyRecyclerView
+        android:id="@+id/id_recyclerview_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:scrollbars="none" />
+</RelativeLayout>

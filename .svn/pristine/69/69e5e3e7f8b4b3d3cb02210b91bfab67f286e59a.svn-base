@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
+
+    defaultConfig {
+        applicationId "com.capitalbio.oemv2.myapplication"
+        minSdkVersion 17
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    useLibrary 'org.apache.http.legacy'
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':MPChartLib')
+    compile 'com.android.support:multidex:'
+    compile files('libs/slidingmenu.jar')
+    compile project(':HttpLibrary')
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:support-v4:23.1.0'
+    compile 'org.xutils:xutils:3.1.24'
+    compile 'com.google.code.gson:gson:2.5'
+    compile files('libs/zxing.jar')
+    compile files('libs/fastjson-1.1.40.jar')
+    compile files('libs/BaiduLBS_Android.jar')
+    compile files('libs/SmartWeatherAPI_Android_3.0.2.jar')
+    compile files('libs/androidmvc.jar')
+    compile files('libs/jxl.jar')
+    compile files('libs/universal-image-loader-1.8.6-with-sources.jar')
+    compile files('libs/mta-sdk-1.6.2.jar')
+    compile files('libs/open_sdk_r5509.jar')
+    compile files('libs/com.broadcom.bt.jar')
+    compile files('libs/samsung_ble_sdk_200.jar')
+    compile 'org.apache.directory.studio:org.apache.commons.codec:1.8'
+
+}

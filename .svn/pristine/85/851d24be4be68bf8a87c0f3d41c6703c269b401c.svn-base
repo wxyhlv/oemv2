@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_content">#EEEEEE</color>
+    <color name="register_text">#CCCFCF</color>
+    <color name="grey">#F0F0F0</color>
+    <color name="text_grey_light">#BEBEBE</color>
+    <color name="text_grey">#E5E5E5</color>
+    <color name="text_newgrey">#C8C8C8</color>
+    <color name="green">#A8D76F</color>
+    <color name="lucency">#00000000</color>
+    <color name="blue_light">#22beef</color>
+    <color name="skyblue">#1479C4</color>
+    <color name="red_light">#fa8564</color>
+    <color name="red_deep">#f75858</color>
+    <color name="green_light">#a9d76f</color>
+    <color name="orange_light">#f8a20f</color>
+    <color name="ching_light">#32d2c9</color>
+    <color name="green_bracelete">#1FBACC</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="white_transparent">#D1E9F3</color>
+    <color name="black">#000000</color>
+    <color name="grey_light">#BBBBBB</color>
+    <color name="grey_deep">#6A6A6A</color>
+    <color name="brown">#AB7B07</color>
+    <color name="green_deep">#355000</color>
+    <color name="red">#AD1400</color>
+    <color name="blue">#5FAEE3</color>
+    <color name="blue_weight">#00ccfe</color>
+    <color name="slideswitch_bg">#00A8BF</color>
+    <color name="yellow">#ffb80c</color>
+    <color name="orange">#FF7200</color>
+    <color name="transparent">#00000000</color>
+    <color name="wheelview_bg">#ee4e4e4e</color>
+
+
+    <!--主界面圆圈和透明度变换的颜色颜色-->
+    <color name="small_circle">#59C1D4</color>
+    <color name="small_to_middle_1">#66C9DF</color>
+    <color name="small_to_middle_2">#73CEE1</color>
+    <color name="small_to_middle_3">#80D3E4</color>
+    <color name="small_to_middle_4">#8CD6E7</color>
+    <color name="middle_circle">#99DBE9</color>
+    <color name="middle_to_big_1">#A6E0EC</color>
+    <color name="middle_to_big_2">#B3E4EF</color>
+    <color name="middle_to_big_3">#BFE9F1</color>
+    <color name="middle_to_big_4">#CCEDF4</color>
+    <color name="big_circle">#E9F2F7</color>
+
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+
+
+
+    <!--主界面分割线颜色-->
+    <color name="mainSplitLine">#80C6E8</color>
+
+    <color name="circle_color">#23adc9</color>
+    <color name="circle_color_grey">#E2ECEB</color>
+    <color name="ring_color">#D3F0F4</color>
+    <color name="shouhuan_day_bgcolor">#00AEB5</color>
+    <color name="white_sleep">#CCD3DD</color>
+
+    <!--个人信息页面背景色-->
+    <color name="gray_light">#DEE8E7</color>
+    <color name="persondetail_text_color">#616161</color>
+    <color name="persondetail_date_color">#A4A4A4</color>
+
+    <!--侧滑页的背景颜色-->
+    <color name="slidemunu_bg">#4E4E4E</color>
+    <color name="slidemunu_line">#717171</color>
+
+
+    <color name="circle_text_color">#00ACC6</color>
+
+    <color name="green_bmi">#9BCD5E</color>
+    <color name="red_bmr">#fa602e</color>
+    <color name="blue_virus">#30d2c7</color>
+    <color name="orange_bone">#FF7E00</color>
+    <color name="orange_mucle">#ffbd0c</color>
+    <color name="red_fat">#ff6263</color>
+
+    <color name="blue_water">#297FBA</color>
+
+    <color name = "bg_pmb_nomal">#D6F6DE</color>
+    <color name = "bg_pmb_low">#FFFAE0</color>
+    <color name = "bg_pmb_high">#FFEBEC</color>
+
+
+    <color name="gray_scale_disc_edge">#E5EBEC</color>
+    <color name="gray_fatsmeasure_unit">#BEC2C3</color>
+    <color name="blue_fatsmeasure_result">#0095BF</color>
+
+    <color name = "bg_goal">#EAFCFC</color>
+
+    <color name="gray_dialog_dividerline">#CECECE</color>
+    <color name="blue_dialog_text">#01A5C0</color>
+
+
+    <color name="gray">#888888</color>
+    <color name="wihte_shallow">#A7C5E1</color>
+
+    <color name="yellow_qipao_arc">#FFEA03</color>
+    <color name="red_qipao_arc">#FE2222</color>
+    <color name="green_qipao_arc">#60FF1C</color>
+
+    <color name="gray_3">#EDEDED</color>
+    <color name="gray_4">#F7F7F7</color>
+    <color name="gray_2">#E4E4E4</color>
+    <color name="gray_1">#E3E3E3</color>
+    <color name="gray_5">#A8C9EA</color>
+
+    <color name="black_1">#5A5A5A</color>
+    <color name="black_2">#606060</color>
+    <color name="black_3">#888888</color>
+    <color name="black_4">#DDDDDD</color>
+
+    <color name="red_bubble">#FF2F2F</color>
+    <color name="yellow_bubble">#FF7E00</color>
+    <color name="green_bubble">#7BBE1A</color>
+    <color name="default_ascv_selected_color">#0099CC</color>
+    <color name="default_ascv_unselected_color">#FFFFFF</color>
+
+    <color name="nomal">#FFFFFF</color>
+    <color name="press">#0097db</color>
+    <color name="blue_zonghepingding">#01A6DE</color>
+    
+    <color name="gray_zonghe_bg">#E6EEF1</color>
+    <color name="blue_setting_title">#00AED9</color>
+
+</resources>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

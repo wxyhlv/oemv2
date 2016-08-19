@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ascv="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/layout_desease_factor"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/tv_factor_hypertension"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_bg_bluelight"
+        android:padding="6dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/persondetail_hypertension_factor"
+        android:textSize="16sp"
+        android:paddingLeft="18dp"
+        />
+
+    <ViewStub
+        android:id="@+id/viewstub_hypertension"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout="@layout/factor_persondetail_hypertension"/>
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+<include layout="@layout/factor_persondetail_hypertension"/>
+
+    </LinearLayout>-->
+    <TextView
+        android:id="@+id/tv_factor_stroke"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_bg_bluelight"
+        android:padding="6dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/persondetail_stroke_factor"
+        android:textSize="16sp"
+        android:gravity="center"
+        />
+<!--    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        ></LinearLayout>-->
+
+    <ViewStub
+        android:id="@+id/viewstub_stroke"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout="@layout/factor_persondetail_stroke"/>
+    <TextView
+        android:id="@+id/tv_factor_chd"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_bg_bluelight"
+        android:padding="6dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/persondetail_chd_factor"
+        android:gravity="center"
+        android:textSize="16sp"
+
+        />
+    <ViewStub
+        android:id="@+id/viewstub_chd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout="@layout/factor_persondetail_chd"/>
+    <TextView
+        android:id="@+id/tv_factor_diabetic"
+
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_bg_bluelight"
+        android:padding="6dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/persondetail_diabetic_factor"
+        android:gravity="center"
+        android:textSize="16sp"
+
+        />
+    <ViewStub
+        android:id="@+id/viewstub_diabetic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout="@layout/factor_persondetail_diabetic"/>
+    <TextView
+        android:id="@+id/tv_factor_obesity"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_bg_bluelight"
+        android:padding="6dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:text="@string/persondetail_obesity_factor"
+        android:gravity="center"
+        />
+    <ViewStub
+        android:id="@+id/viewstub_obesity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout="@layout/factor_persondetail_obesity"/>
+
+    <TextView
+        android:id="@+id/tv_factor_therioma"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_bg_bluelight"
+        android:padding="6dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/persondetail_therioma_factor"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:button="@null"
+
+        />
+    <ViewStub
+        android:id="@+id/viewstub_therioma"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout="@layout/factor_persondetail_therioma"/>
+
+
+</LinearLayout>

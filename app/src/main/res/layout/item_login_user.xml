@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:gravity="center"
+    android:padding="10dp">
+
+    <com.capitalbio.oemv2.myapplication.View.RoundImageView
+        android:id="@+id/iv_user_photo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_scene" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/iv_user_photo"
+        android:gravity="center"
+        android:text="hahah "
+        android:layout_centerVertical="true"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/search_clear_normal"
+        android:gravity="center" />
+
+</RelativeLayout>

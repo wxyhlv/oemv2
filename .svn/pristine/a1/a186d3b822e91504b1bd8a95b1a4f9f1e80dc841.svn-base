@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:id="@+id/ll_bloodpressmeasure">
+
+    <!---->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+            <!--按钮-->
+            <RelativeLayout
+                android:id="@+id/rl_bloodpressmeasure_setting"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true">
+
+                <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/setting_gray" />
+            </RelativeLayout>
+
+            <!--文本提示语-->
+            <TextView
+                android:id="@+id/tv_bloodpressmeasure_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="设备已绑定"
+                android:textSize="@dimen/dp_20" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--转盘-->
+            <com.capitalbio.oemv2.myapplication.View.views.SphygmomanometerTurntable
+                android:id="@+id/st"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:paddingLeft="@dimen/dp_40"
+                android:paddingRight="@dimen/dp_40" />
+
+
+            <!--尺子-->
+
+
+            <com.capitalbio.oemv2.myapplication.View.views.BloodpressRuler
+                android:id="@+id/bprv"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/st"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@id/st"
+                android:layout_marginRight="@dimen/dp_10"></com.capitalbio.oemv2.myapplication.View.views.BloodpressRuler>
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <!---->
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:background="@color/white">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bloodpressmeasure_high"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_bloodpressmeasure_value_sysbp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_bloodpressmeasure_value_sysbp"
+                        android:gravity="center"
+                        android:text="mmHg"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:gravity="center"
+                    android:text="@string/systolic_blood_pressure"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bloodpressmeasure_low"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_bloodpressmeasure_value_diabp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_bloodpressmeasure_value_diabp"
+                        android:gravity="center"
+                        android:text="mmHg"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:gravity="center"
+                    android:text="@string/diastolic_blood_pressure"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_bloodpressmeasure_heartrate"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_bloodpressmeasure_value_water"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_bloodpressmeasure_grade_water"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_bloodpressmeasure_value_water"
+                        android:gravity="center"
+                        android:text="bpm"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:gravity="center"
+                    android:text="@string/heart_rate"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

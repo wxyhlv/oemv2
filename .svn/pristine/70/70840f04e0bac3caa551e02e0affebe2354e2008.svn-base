@@ -1,0 +1,44 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.text.Html;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.capitalbio.oemv2.myapplication.R;
+
+public class UserHelpActivity extends BaseActivity {
+	private TextView textView;
+    private LinearLayout llUserAgreement;
+
+	protected void initChildLayout(){
+
+		setNavigateBarBackGround(R.color.blue_light);
+		setTvTopTitle(R.string.userhelp);
+		setLeftTopIcon(R.drawable.ic_back);
+		llUserAgreement = (LinearLayout) View.inflate(this, R.layout.ac_userhelp, null);
+		llBody.addView(llUserAgreement);
+		textView  = (TextView) findViewById(R.id.tv_view);
+
+		textView.setText(Html
+				.fromHtml("一：首次添加注意事项<br /> <br />" +
+								"\n" +
+								"  添加方法：<br /><br />1) 保证您的手机已连接一个可以连接到internet的无线路由器\n" +
+								"\t  <br /> <br />2) 点击空气猫图标，输入路由器密码，确定。\n" +
+								"\t   <br /><br />3) 进入搜索界面，空气猫连接成功后会自动搜索到空气猫的mac地址。\n" +
+								"\t   <br /><br />4) 点击mac地址进行添加，同时为空气猫设置备注。确认添加。" +
+								" <br /> <br />\n" +
+								" 二：新增设备注意事项 <br /> <br />\n" +
+								"\n" +
+								"  添加方法:  <br /><br />1) 进入空气猫主界面后点击右上角的加号“+”图标\n" +
+								"            <br /><br />2) 为空气猫设置可连接外网的路由器，然后搜索添加。<br /> <br />"
+								+ "三：分享设备方法<br /> <br />" +
+								"\n" +
+								"   关注方法:<br /> 1) 推送消息添加：点击分享图标，选择推送消息，输入对方用户名，点击“发送”。\n" +
+								"\t <br />2) 扫描二维码添加：点击分享图标，选择生成二维码，被分享用户点击app右上角加号“+”，选择“扫一扫”，成功扫描二维码后即可关注设备。\n" +
+								"\t  <br />"
+
+				));
+	}
+}

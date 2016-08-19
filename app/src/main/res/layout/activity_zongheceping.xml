@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.capitalbio.oemv2.myapplication.Activity.ZonghecepingActivity">
+
+
+    <com.capitalbio.oemv2.myapplication.View.views.WindowScrollView
+        android:id="@+id/wsv_zonghe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!--第一部分-->
+            <include layout="@layout/activity_zongheceping_firstpart"/>
+            <!--第二部分-->
+            <include layout="@layout/activity_zongheceping_secondpart"/>
+            <!--第三部分-->
+            <include layout="@layout/activity_zongheceping_thirdpart"/>
+
+
+
+
+        </LinearLayout>
+    </com.capitalbio.oemv2.myapplication.View.views.WindowScrollView>
+</RelativeLayout>

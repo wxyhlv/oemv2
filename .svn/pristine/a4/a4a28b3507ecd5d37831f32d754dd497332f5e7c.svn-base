@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none"
+    >
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/rl_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" >
+    </RelativeLayout>
+
+   <!-- <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <com.capitalbio.oemv2.myapplication.View.MyScaleLine
+            android:id="@+id/markline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>-->
+    <include layout="@layout/common_history_timeline"/>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        >
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <RelativeLayout
+                    android:id="@+id/rl_weight"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_value_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="58"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/tv_grade_weight"
+                        android:layout_below="@id/tv_value_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="偏低"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/weight"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <RelativeLayout
+                    android:id="@+id/rl_bmi"
+
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_value_bmi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="18"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/tv_grade_bmi"
+                        android:layout_below="@id/tv_value_bmi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="正常"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/BMI"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <RelativeLayout
+                    android:id="@+id/rl_bmr"
+
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/bodyfat_middle"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_value_bmr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="50"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/tv_grade_bmr"
+                        android:layout_below="@id/tv_value_bmr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="偏低"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/BMR"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <RelativeLayout
+                    android:id="@+id/rl_viscus"
+
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/mid"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_value_viscus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="2"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/tv_grade_viscus"
+                        android:layout_below="@id/tv_value_viscus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="偏高"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/viscus_grade"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <RelativeLayout
+                    android:id="@+id/rl_bone"
+
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/mid"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_value_bone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="28"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/tv_grade_bone"
+                        android:layout_below="@id/tv_value_bone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="偏高"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bone_content"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <RelativeLayout
+                    android:id="@+id/rl_fat"
+
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/mid"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_value_fat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="15.5"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        />
+                    <TextView
+                        android:id="@+id/tv_grade_fat"
+                        android:layout_below="@id/tv_value_fat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="脂肪率"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fat_content"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <RelativeLayout
+                    android:id="@+id/rl_muscle"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/mid"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_value_muscle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="56%"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/tv_grade_muscle"
+                        android:layout_below="@id/tv_value_muscle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="正常"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/muscal_content"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <RelativeLayout
+                    android:id="@+id/rl_water"
+
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/mid"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_value_water"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="80%"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/tv_grade_water"
+                        android:layout_below="@id/tv_value_water"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="偏高"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/water_content"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>
+</ScrollView>

@@ -1,0 +1,201 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.app.ProgressDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.android.pc.util.MD5;
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Bean.LoginUser;
+import com.capitalbio.oemv2.myapplication.Const.Base_Url;
+import com.capitalbio.oemv2.myapplication.NetUtils.AsyncResponseHandler;
+import com.capitalbio.oemv2.myapplication.NetUtils.HttpTools;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Tools.MDTools;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.ex.DbException;
+
+import cz.msebera.android.httpclient.Header;
+
+public class ModifyPasswordActivity extends BaseActivity implements View.OnClickListener {
+
+    private RelativeLayout rlback;
+
+    private EditText etoldpwd;
+
+    private EditText etnewpwd;
+
+    private EditText etnewpwdagain;
+
+    private Button btcommit;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_modify_password);
+
+        rlback = (RelativeLayout) this.findViewById(R.id.rl_modifypassword_back);
+        rlback.setOnClickListener(this);
+
+        etoldpwd = (EditText) this.findViewById(R.id.et_modifypassword_oldpassword);
+        etnewpwd = (EditText) this.findViewById(R.id.et_modifypassword_newpassword);
+        etnewpwdagain = (EditText) this.findViewById(R.id.et_modifypassword_newpasswordagain);
+
+        btcommit = (Button) this.findViewById(R.id.bt_modifypassword_commit);
+        btcommit.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.rl_modifypassword_back:
+                this.finish();
+                break;
+            case R.id.bt_modifypassword_commit:
+
+                if(etoldpwd.getText().toString()==null||etoldpwd.getText().toString().equals("")){
+                    Toast.makeText(this,"请输入原始密码",Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if(etnewpwd.getText().toString()==null||etnewpwd.getText().toString().equals("")){
+                    Toast.makeText(this,"请输入新密码",Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if(etnewpwdagain.getText().toString()==null||etnewpwdagain.getText().toString().equals("")){
+                    Toast.makeText(this,"请再次输入原始密码",Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+
+
+                if(!etnewpwd.getText().toString().equals(etnewpwdagain.getText().toString())){
+                    Toast.makeText(this,"两次输入的密码不一致，请确认",Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+
+                if(progressDialog==null){
+                    progressDialog = new ProgressDialog(this);
+                    progressDialog.setMessage("正在修改密码，请稍后");
+                    progressDialog.setTitle("修改密码");
+                }
+                progressDialog.show();
+
+                LoginUser loginUser = MyApplication.getInstance().getCurrentUser();
+                modifypwd(loginUser.getUsername(),etoldpwd.getText().toString(),etnewpwd.getText().toString());
+
+
+
+
+                break;
+
+        }
+    }
+
+
+    private ProgressDialog progressDialog = null;
+
+    private void modifypwd(String username, String oldpwd, final String newpwd){
+
+
+
+        try {
+            JSONObject reqbody = new JSONObject();
+
+            reqbody.put("apikey", MyApplication.getInstance().apikey);
+            reqbody.put("username",username);
+
+            String pwd_md5 = MDTools.MD5(oldpwd);
+            String imei = MyApplication.getInstance().getIMEI();
+            String token = MDTools.MD5(MyApplication.getInstance().apikey+pwd_md5+imei);
+            reqbody.put("token",token);
+
+            JSONObject reqdata = new JSONObject();
+            reqdata.put("newPwd",MDTools.MD5(newpwd));
+            reqdata.put("oldPwd",MDTools.MD5(oldpwd));
+
+            reqbody.put("data",reqdata.toString());
+
+            HttpTools.post(this, Base_Url.Url_Base+Base_Url.modifypwd_url,reqbody,new AsyncHttpResponseHandler(){
+
+
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+
+                    try {
+                        String backbody = new String(responseBody);
+                        JSONObject backobject = new JSONObject(backbody);
+                        String message = backobject.getString("message");
+
+                        //Log.i("info","-------------"+message);
+                        if(message!=null&&message.equals("success")){
+                            LoginUser loginUser = MyApplication.getInstance().getCurrentUser();
+                            loginUser.setPassword(newpwd);
+                            MyApplication.getDB().saveOrUpdate(loginUser);
+                            dismiss();
+                            Toast.makeText(ModifyPasswordActivity.this,message,Toast.LENGTH_LONG).show();
+                            ModifyPasswordActivity.this.finish();
+                        }else{
+                            dismiss();
+                            Toast.makeText(ModifyPasswordActivity.this,message,Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        dismiss();
+                        Toast.makeText(ModifyPasswordActivity.this,"服务器返回数据异常",Toast.LENGTH_LONG).show();
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                        dismiss();
+                        Toast.makeText(ModifyPasswordActivity.this,"修改成功，但本地数据库更新异常",Toast.LENGTH_LONG).show();
+                    }
+
+
+
+
+                    //Log.i("info",statusCode+"===============修改密码成功"+new String(responseBody));
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+
+                    dismiss();
+
+                    Toast.makeText(ModifyPasswordActivity.this,"onFailure",Toast.LENGTH_LONG).show();
+
+                    //Log.i("info","===============修改密码失败"+new String(responseBody));
+
+                }
+            });
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void dismiss(){
+        if(progressDialog!=null&&progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+    }
+}

@@ -1,0 +1,507 @@
+package com.capitalbio.oemv2.myapplication.Fragment;
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+import com.capitalbio.oemv2.myapplication.Activity.Bracelete2Activity;
+import com.capitalbio.oemv2.myapplication.Activity.LoginActivity;
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Bean.BraceleteHistory;
+import com.capitalbio.oemv2.myapplication.Bean.BraceleteJson;
+import com.capitalbio.oemv2.myapplication.Bean.BraceleteSleepDataForMonth;
+import com.capitalbio.oemv2.myapplication.Bean.BraceleteSleepMonthJson;
+import com.capitalbio.oemv2.myapplication.Bean.SportDataDetailBean;
+import com.capitalbio.oemv2.myapplication.BraceleteLib.SleepDataTotalBean;
+import com.capitalbio.oemv2.myapplication.Const.Base_Url;
+import com.capitalbio.oemv2.myapplication.Const.BodyFatConst;
+import com.capitalbio.oemv2.myapplication.Const.BraceleteConst;
+import com.capitalbio.oemv2.myapplication.NetUtils.HistoryDownd;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.BraceleteDataService;
+import com.capitalbio.oemv2.myapplication.Utils.OemLog;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.Utils.SleepRuler;
+import com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil;
+import com.capitalbio.oemv2.myapplication.View.TasksCompletedView;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+
+import org.xutils.ex.DbException;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * Created by wxy on 15-11-26.
+ */
+public class BraceleteFragmentMonth extends BaseFragment implements OnChartValueSelectedListener{
+
+    private TasksCompletedView arcView;//progress
+    private TextView tv_grade, tv_time_deep, tv_time_low,tv_total_time;//sleep data
+    private TextView tv_steps_value, tv_distance_value, tv_kal_value, tv_time_value;//sports data
+    private BarChart mChart;
+    private Typeface mtf;
+    private boolean isSports;
+    private RelativeLayout rl_sportsinfo, rl_sleepinfo;
+    ProgressBar pb_progress;
+
+
+    private List<BraceleteHistory> sportDatas ;
+    private List<SleepDataTotalBean> sleepData;
+
+    @Override
+    protected View loadViewLayout(LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.fg_bracelete_month, container, false);
+    }
+
+    @Override
+    protected void findViewById(View view) {
+        //睡眠
+        tv_grade = (TextView) view.findViewById(R.id.tv_grade);
+        tv_time_deep = (TextView) view.findViewById(R.id.tv_time_deep);
+        tv_time_low = (TextView) view.findViewById(R.id.tv_time_low);
+        tv_total_time = (TextView) view.findViewById(R.id.tv_total_time);
+
+        tv_steps_value = (TextView) view.findViewById(R.id.tv_steps_value);
+        tv_distance_value = (TextView) view.findViewById(R.id.tv_distance_value);
+        tv_kal_value = (TextView) view.findViewById(R.id.tv_kal_value);
+        tv_time_value = (TextView) view.findViewById(R.id.tv_time_value);
+        rl_sleepinfo = (RelativeLayout) view.findViewById(R.id.rl_sleepinfo);
+        rl_sportsinfo = (RelativeLayout) view.findViewById(R.id.rl_sportsinfo);
+        mChart = (BarChart) view.findViewById(R.id.barchart);
+
+        pb_progress = (ProgressBar) view.findViewById(R.id.pb_progress);
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    @Override
+    protected void processLogic() {
+        isSports = getArguments().getBoolean("isSports");
+        initchar();
+
+        if (isSports) {
+            updateSportData();
+        } else {
+          //  saveSleepMonthData();
+            updateSleepData();
+
+        }
+
+        Log.i("repeat", "repeat.......");
+    }
+
+    private void updateSleepData() {
+        rl_sleepinfo.setVisibility(View.VISIBLE);
+        rl_sportsinfo.setVisibility(View.GONE);
+
+        sleepData = BraceleteDataService.getSleepMonthData(BraceleteConst.month);
+        if(sleepData !=null && sleepData.size()>0){
+            pb_progress.setVisibility(View.GONE);
+            setData();
+        }else{
+           getSleepDataDailyByNet(BraceleteConst.month);
+
+           // getSleepDataTotalByNet(BraceleteConst.month);
+           }
+    }
+
+    private void updateSportData() {
+        rl_sportsinfo.setVisibility(View.VISIBLE);
+        rl_sleepinfo.setVisibility(View.GONE);
+        sportDatas = BraceleteDataService.getSportMonthData(BraceleteConst.month);
+        if(sportDatas !=null && sportDatas.size()>0){
+            pb_progress.setVisibility(View.GONE);
+            setData();
+        }else{
+        getSportDataByNet(BraceleteConst.month);}
+    }
+
+
+    public void initchar() {
+
+        mChart.setOnChartValueSelectedListener(this);
+
+        mChart.setDrawBarShadow(false);
+      //  mChart.setDrawValueAboveBar(false);
+
+        mChart.setDescription("");
+        // scaling can now only be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+
+        mChart.setDrawGridBackground(false);
+        // mChart.setDrawYLabels(false);
+
+        mChart.setAutoScaleMinMaxEnabled(false);
+        mChart.setScaleYEnabled(false);
+        mChart.setScaleEnabled(false);
+        mChart.setVisibleXRangeMaximum(7);
+        mChart.setNoDataText("无数据");
+        mtf = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTypeface(mtf);
+        xAxis.setDrawGridLines(false);
+        xAxis.setTextSize(16);
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setSpaceBetweenLabels(0);
+        xAxis.setLabelsToSkip(0);
+        xAxis.setDrawLabels(true);
+        YAxis leftAxis = mChart.getAxisLeft();
+
+        leftAxis.setLabelCount(8, false);
+        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        leftAxis.setSpaceTop(10f);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawAxisLine(false);
+        leftAxis.setDrawLabels(false);
+        mChart.getAxisRight().setEnabled(false);
+        mChart.getLegend().setEnabled(false);
+    }
+
+    private void setData( ) {
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        int  days = TimeStampUtil.daysInMonth(BraceleteConst.month);
+
+        for (int i = 0; i < days; i++) {
+            xVals.add(i+1+ "");
+        }
+        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        if(isSports){
+
+            for(int i = 0;i<sportDatas.size();i++){
+                String steps =  sportDatas.get(i).getSteps();
+                String day = sportDatas.get(i).getDay();
+                float value = Float.parseFloat(steps);
+                if(steps!=null){
+                    yVals1.add(new BarEntry(value,Integer.valueOf(day)-1));
+                }
+
+            }
+            BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
+            // BarDataSet set2 = new BarDataSet(yVals2, "DataSet");
+            //  set1.setBarSpacePercent(35f);
+            set1.setDrawValues(false);
+            set1.setColor(Color.parseColor("#4CCBD2"));
+            set1.setHighLightColor(Color.parseColor("#BEEEEE"));
+            dataSets.add(set1);
+        }else{
+
+            for(int i = 0;i<sleepData.size();i++){
+                int sleeptime =  sleepData.get(i).getSumNumber();
+
+                int day  = TimeStampUtil.getDay(sleepData.get(i).getYmd());
+                if(sleeptime!=0){
+                    yVals1.add(new BarEntry(sleeptime,Integer.valueOf(day)-1));
+                }
+
+            }
+            BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
+            // BarDataSet set2 = new BarDataSet(yVals2, "DataSet");
+            //  set1.setBarSpacePercent(35f);
+            set1.setDrawValues(false);
+            set1.setColor(Color.parseColor("#4D648D"));
+            set1.setHighLightColor(Color.parseColor("#C8D1E0"));
+            dataSets.add(set1);
+        }
+
+
+
+
+      //  dataSets.add(set2);
+        BarData data = new BarData(xVals, dataSets);
+
+        mChart.setData(data);
+        mChart.setVisibleXRangeMaximum(7);
+        mChart.getViewPortHandler().setMaximumScaleX(4f);
+        mChart.setScaleMinima(0.7f, 1f);
+        mChart.moveViewToX(data.getYValCount()-1);
+        mChart.highlightValue(yVals1.size()-1,0);
+    }
+
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+        Log.i("index", e.getXIndex() + "");
+        DecimalFormat format = new DecimalFormat("#.##");
+        if(e == null){return;}
+        if(isSports){
+            DecimalFormat format1 = new DecimalFormat("#");
+            tv_steps_value.setText((format1.format(e.getVal())) + "步" );
+
+            for(int i = 0;i<sportDatas.size();i++){
+                int xIndex = e.getXIndex();
+                String day =sportDatas.get(i).getDay();
+                int day_ = Integer.valueOf(day);
+                if((xIndex+1+"").equals(day_+"")){
+                    String distance = sportDatas.get(i).getDistance();
+                    float dis = Float.parseFloat(distance)/1000f;
+                    String kcal = sportDatas.get(i).getCal();
+                    float kcal_ = Float.parseFloat(kcal)/1000f;
+                    tv_distance_value.setText(format.format(dis) + "千米");
+                    tv_kal_value.setText(format.format(kcal_)+"千卡");
+                    float hour = dis * 12f/60;
+                    tv_time_value.setText(format.format(hour) + "小时");
+                }
+            }
+
+        }else {
+
+            for(int i = 0;i<sleepData.size();i++){
+                int xIndex = e.getXIndex();
+                int day  = TimeStampUtil.getDay(sleepData.get(i).getYmd());
+
+                Log.i("xindex_month",day + "-----------");
+                if((xIndex+1+"").equals(day+"")){
+
+                    float hour_deep = sleepData.get(i).getSeepSleepTime()/60f;
+                    float hour_shallow = sleepData.get(i).getSomnolenceTime()/60f;
+
+                    float hour = hour_deep+hour_shallow;
+                    String describ = SleepRuler.ruler(mContext,hour);
+                    tv_grade.setText(describ+"");
+                    int deep =  sleepData.get(i).getSeepSleepTime();
+                    int shallow =  sleepData.get(i).getSomnolenceTime();
+                    int total = deep + shallow;
+                    tv_total_time.setText(TimeStampUtil.formatMinute(total));
+                    tv_time_deep.setText(TimeStampUtil.formatMinute(deep));
+                    tv_time_low.setText(TimeStampUtil.formatMinute(shallow));
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
+
+
+    public void update(){
+
+        if (isSports) {
+            updateSportData();
+
+        } else {
+            updateSleepData();
+
+        }
+    }
+
+    /**
+     * 从网上获取月运动数据
+     */
+    private void  getSportDataByNet(String month){
+        pb_progress.setVisibility(View.VISIBLE);
+        String url = Base_Url.downloadtotalUrl;
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("modelType", "braceletSportsDaily");
+        param.put("url", url);
+        param.put("beginDate", month + "-01 00:00:00");
+        param.put("endDate", TimeStampUtil.getLastDayOfMonth_(month)+" 23:59:59");
+
+        HistoryDownd.getHistory(mContext, param, new HistoryDownd.RegistOnGetResult() {
+            @Override
+            public void OnGetResult(int code, String msg, String data) {
+                OemLog.log("mongthSportdownlod","mongthSportdownlod..."+msg);
+                pb_progress.setVisibility(View.GONE);
+                if (code == 11) {
+                    MyApplication.getInstance().exit();
+                    Toast.makeText(mContext, "用户未登陆,请重新登陆", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                } else if (code == 0) {
+                    List<BraceleteJson> list = JSON.parseArray(data, BraceleteJson.class);
+                    sportDatas = new ArrayList<BraceleteHistory>();
+                    for(int i = 0;i<list.size();i++){
+                        BraceleteHistory bean = new BraceleteHistory();
+                        bean.setSteps(list.get(i).getSteps());
+                        bean.setDistance(list.get(i).getDistance());
+                        bean.setCal(list.get(i).getCal());
+                        long testTime = list.get(i).getTestTime();
+                        bean.setDay(TimeStampUtil.getDay(testTime)+"");
+                        OemLog.log("mongthSportdownlod", "mongthSportdownlod...00000" + TimeStampUtil.getDay(testTime)+"");
+
+                        sportDatas.add(bean);
+                    }
+
+                    if(sportDatas!=null&&sportDatas.size()>0){
+                        OemLog.log("mongthSportdownlod","mongthSportdownlod..."+sportDatas);
+
+                        setData();
+                    }else{
+                        if (mChart.getData() != null) {
+                            mChart.clear();
+                            mChart.setNoDataText("无数据");
+                        }
+                    }
+                    OemLog.log("mongthSportdownlod","mongthSportdownlod..."+data);
+
+
+                } else {
+                    Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 从网上获取睡眠数据 braceletSleepDaily
+     */
+    private void  getSleepDataDailyByNet(String month){
+        pb_progress.setVisibility(View.VISIBLE);
+        String url = Base_Url.downloadtotalUrl;
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("modelType", "braceletSleepTotal");
+        param.put("url", url);
+        param.put("beginDate", month + "-01 00:00:00");
+        param.put("endDate", TimeStampUtil.getLastDayOfMonth_(month)+" 23:59:59");
+
+        HistoryDownd.getHistory(mContext, param, new HistoryDownd.RegistOnGetResult() {
+            @Override
+            public void OnGetResult(int code, String msg, String data) {
+                pb_progress.setVisibility(View.GONE);
+                Log.i("braceletesleep", "4,网上的月睡眠查询" + msg);
+
+                if (code == 11) {
+                    MyApplication.getInstance().exit();
+                    Toast.makeText(mContext, "用户未登陆,请重新登陆", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                } else if (code == 0) {
+                     List<BraceleteSleepMonthJson> list = JSON.parseArray(data, BraceleteSleepMonthJson.class);
+
+                    Log.i("braceletesleep", "5,网上的月睡眠查询" + data);
+                    sleepData = new ArrayList<SleepDataTotalBean>();
+                    for (int i = 0;i<list.size();i++){
+                        SleepDataTotalBean  bean = new SleepDataTotalBean();
+                        bean.setUsername(list.get(i).getUsername());
+                        bean.setYmd(list.get(i).getSleepDate());
+                        bean.setSeepSleepTime(list.get(i).getDeepSleepTime());
+                        bean.setSoberTime(list.get(i).getAwakeTime());
+                        bean.setSomnolenceTime(list.get(i).getShallowSleepTime());
+                        bean.setSumNumber(list.get(i).getTotalSleepTime());
+                        bean.setRouseNumber(list.get(i).getWakeUpNumber());
+                        bean.setGotoSleepTime(list.get(i).getTimeToSleep());
+                        bean.setLongTime(list.get(i).getTestTime());
+                        bean.setDataSource("网上");
+                        bean.setIsUpload(true);
+                        sleepData.add(bean);
+                        try {
+                            MyApplication.getDB().saveOrUpdate(bean);
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(sleepData.size()>0){
+                        setData();
+                    }else{
+                        if (mChart.getData() != null) {
+                            mChart.clear();
+                            mChart.setNoDataText("无数据");
+                        }
+                    }
+                    //TODO sleep 解析
+                } else {
+                    Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+    }
+
+
+    /**
+     * 从网上获取睡眠总数据
+     */
+    private void  getSleepDataTotalByNet(String month){
+        pb_progress.setVisibility(View.VISIBLE);
+        String url = Base_Url.downloadtotalUrl;
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("modelType", "braceletSleepTotal");
+        param.put("url", url);
+        param.put("beginDate", month + "-01 00:00:00");
+        param.put("endDate", TimeStampUtil.getLastDayOfMonth_(month)+" 23:59:59");
+
+        HistoryDownd.getHistory(mContext, param, new HistoryDownd.RegistOnGetResult() {
+            @Override
+            public void OnGetResult(int code, String msg, String data) {
+                pb_progress.setVisibility(View.GONE);
+                OemLog.log("mongthSleepdownlod", "mongthSleepdownlod..." + msg);
+                if (code == 11) {
+                    MyApplication.getInstance().exit();
+                    Toast.makeText(mContext, "用户未登陆,请重新登陆", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                } else if (code == 0) {
+                //    List<BraceleteSleepMonthJson> list = JSON.parseArray(data, BraceleteSleepMonthJson.class);
+
+                    OemLog.log("mongthSleepdownlod", "mongthSleepdownlod..." + data);
+                  /*  sleepData = new ArrayList<SleepDataTotalBean>();
+                    for (int i = 0;i<list.size();i++){
+                        SleepDataTotalBean  bean = new SleepDataTotalBean();
+                        bean.setUsername(list.get(i).getUsername());
+                        bean.setYmd(list.get(i).getSleepDate());
+                        bean.setSeepSleepTime(list.get(i).getDeepSleepTime());
+                        bean.setSoberTime(list.get(i).getAwakeTime());
+                        bean.setSomnolenceTime(list.get(i).getShallowSleepTime());
+                        bean.setSumNumber(list.get(i).getTotalSleepTime());
+                        bean.setRouseNumber(list.get(i).getWakeUpNumber());
+                        bean.setGotoSleepTime(list.get(i).getTimeToSleep());
+                        bean.setLongTime(list.get(i).getTestTime());
+                        sleepData.add(bean);
+                        try {
+                            MyApplication.getDB().saveOrUpdate(bean);
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(sleepData.size()>0){
+                        setData();
+                    }
+                    //TODO sleep 解析
+                } else {
+                    Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
+                }*/
+            }}
+        });
+
+    }
+
+
+}

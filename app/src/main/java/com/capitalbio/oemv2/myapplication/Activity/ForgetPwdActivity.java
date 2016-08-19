@@ -1,0 +1,525 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.capitalbio.oemv2.myapplication.Const.Base_Url;
+import com.capitalbio.oemv2.myapplication.NetUtils.HttpTools;
+import com.capitalbio.oemv2.myapplication.NetUtils.NetTool;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Tools.MDTools;
+import com.capitalbio.oemv2.myapplication.Utils.OemLog;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+import com.capitalbio.oemv2.myapplication.Utils.Utils;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import cz.msebera.android.httpclient.Header;
+
+/**
+ * 忘记密码界面
+ */
+
+public class ForgetPwdActivity extends BaseActivity implements View.OnClickListener{
+
+    public static final String TAG = "ForgetPwdActivity";
+    private int editState;
+
+    private RelativeLayout rlRegisterView;
+
+    private View.OnFocusChangeListener focusChangeListener;
+
+    //电话号码
+    private EditText etPhoneNumber;
+    private ImageView ivPhoneNumber;
+
+    //验证码
+    private EditText etVeryficationCode;
+    private ImageView ivVeryficationCode;
+
+    //密码
+    private EditText etPassword;
+    private ImageView ivPassword;
+
+    //再次输入密码
+    private EditText etRePassword;
+    private ImageView ivRePassword;
+
+    //获取验证码
+    private Button btGetVeryficationCode;
+    private Timer timer;
+    private TimerTask timerTask;
+    private int time;
+    private String btnMsg;
+
+    //注册
+    private Button btCommit;
+
+    private String phonenum;//手机号
+    private String checkcode;//验证码
+    private String password,pwd_ ;//密码
+    private String confirmPwd;//确认密码
+
+    //验证码是否输入正确状态
+    private boolean isVeryficatioCodeCorrect = true;
+
+    public class EditFocusChangeListener implements View.OnFocusChangeListener {
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                Drawable drawable;
+                switch (v.getId()) {
+                    case R.id.et_phone_number:
+                        drawable= getResources().getDrawable(R.drawable.ic_phone_light);
+                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                        etPhoneNumber.setCompoundDrawables(drawable, null, null, null);
+                        ivPhoneNumber.setBackground(getResources().getDrawable(R.color.blue));
+                        break;
+
+                    case R.id.et_veryfication_code:
+                        drawable= getResources().getDrawable(R.drawable.ic_veryfication_light);
+                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                        etVeryficationCode.setCompoundDrawables(drawable, null, null, null);
+                        ivVeryficationCode.setBackgroundResource(R.color.blue);
+                        break;
+
+
+
+                    case R.id.et_password:
+                        drawable= getResources().getDrawable(R.drawable.ic_password_light);
+                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                        etPassword.setCompoundDrawables(drawable, null, null, null);
+                        ivPassword.setBackgroundResource(R.color.blue);
+                        OemLog.log(TAG, "pwd....." + hasFocus);
+
+                        break;
+
+                    case R.id.et_re_password:
+                        drawable= getResources().getDrawable(R.drawable.ic_password_light);
+                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                        etRePassword.setCompoundDrawables(drawable, null, null, null);
+                        ivRePassword.setBackgroundResource(R.color.blue);
+                        OemLog.log(TAG, "pwd....." + hasFocus);
+                        OemLog.log(TAG, "pwd2....." + hasFocus);
+                        break;
+                }
+            }
+        }
+    }
+
+
+            private Handler handler = new Handler() {
+
+                public void handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case 1:
+                            // 倒计时完成后回复操作
+                            // 按钮重新可以点击
+                            btGetVeryficationCode.setEnabled(true);
+                            btGetVeryficationCode.setClickable(true);
+
+                            // 设置为原有的text
+                            btGetVeryficationCode.setText("重新获取");
+                            // timer 取消执行
+                            clearTimer();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            };
+
+
+    @Override
+    protected void initChildLayout() {
+        super.initChildLayout();
+
+        setNavigateBarBackGround(R.color.blue_light);
+        setTvTopTitle(R.string.getPwd);
+        setLeftTopIcon(R.drawable.ic_back);
+
+        focusChangeListener = new EditFocusChangeListener();
+
+        //添加自己的view
+        rlRegisterView = (RelativeLayout) View.inflate(this, R.layout.activity_fogetpwd, null);
+        llBody.addView(rlRegisterView);
+
+        //获取对应view的实例
+        etPhoneNumber = (EditText) rlRegisterView.findViewById(R.id.et_phone_number);
+        ivPhoneNumber = (ImageView) rlRegisterView.findViewById(R.id.iv_phone_number);
+
+        etVeryficationCode = (EditText) rlRegisterView.findViewById(R.id.et_veryfication_code);
+        ivVeryficationCode = (ImageView) rlRegisterView.findViewById(R.id.iv_get_veryfication_code);
+
+
+        etPassword = (EditText) rlRegisterView.findViewById(R.id.et_password);
+        ivPassword = (ImageView) findViewById(R.id.iv_password);
+
+        etRePassword = (EditText) rlRegisterView.findViewById(R.id.et_re_password);
+        ivRePassword = (ImageView) rlRegisterView.findViewById(R.id.iv_re_password);
+
+        btGetVeryficationCode = (Button) rlRegisterView.findViewById(R.id.bt_get_veryfication_code);
+        btCommit = (Button) rlRegisterView.findViewById(R.id.bt_commit);
+
+        btGetVeryficationCode.setOnClickListener(this);
+        btCommit.setOnClickListener(this);
+
+        //EditText焦点监听
+        etPhoneNumber.setOnFocusChangeListener(focusChangeListener);
+        etVeryficationCode.setOnFocusChangeListener(focusChangeListener);
+
+        etPassword.setOnFocusChangeListener(focusChangeListener);
+        etRePassword.setOnFocusChangeListener(focusChangeListener);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        Log.d(TAG, "onclick...");
+
+        switch (v.getId()) {
+            case R.id.bt_get_veryfication_code:
+                phonenum = etPhoneNumber.getText().toString();
+
+                checkAndGetVeryficationCode();
+                break;
+
+            case R.id.bt_commit:
+                if(NetTool.isNetwork(context, true)){
+                    beforeResetPwd();
+                }
+                break;
+
+            default:break;
+        }
+
+    }
+
+    private void getVeryficationCode() {
+
+        Log.d(TAG, "getVeryficationCode...");
+
+        try {
+            //构造请求json对象
+            JSONObject jsonObject = new JSONObject();
+            JSONObject tmpObject = new JSONObject();
+
+            jsonObject.put("apikey", myApp.apikey);//所有接口必填
+            tmpObject.put("mobile", etPhoneNumber.getText());
+            tmpObject.put("sendType", "resetpwd");
+            jsonObject.put("data", tmpObject.toString());
+            //请求短信验证码
+            OemLog.log(TAG, Base_Url.Url_Base + Base_Url.sendMessage_Url);
+            OemLog.log(TAG, jsonObject.toString());
+            HttpTools.post(this, Base_Url.Url_Base + Base_Url.sendMessage_Url, jsonObject, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    String result = new String(responseBody);
+                    btGetVeryficationCode.setClickable(true);
+
+                    OemLog.log(TAG,"找回密码的返回结果..."+result);
+                    try {
+                        JSONObject jsonString = new JSONObject(result);
+                        int code = jsonString.optInt("code");
+                        String msg = jsonString.optString("message");
+                        if(code == 10){
+                            Toast.makeText(context, "您的手机号未注册", Toast.LENGTH_LONG).show();
+                            btGetVeryficationCode.setClickable(true);
+                        }
+                        else if(code == 0){
+                            Toast.makeText(context, "发送成功", Toast.LENGTH_LONG).show();
+
+                            timer_show();
+                        }
+                        else if(code == 33){
+                            btGetVeryficationCode.setClickable(true);
+
+
+                            Toast.makeText(getContext(),"短信发送失败，每天只能发送短信5次",Toast.LENGTH_LONG).show();
+                        }else {
+                            btGetVeryficationCode.setClickable(true);
+                            Toast.makeText(getContext(),msg,Toast.LENGTH_LONG).show();
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    OemLog.log(TAG,"服务器请求失败");
+                    btGetVeryficationCode.setClickable(true);
+
+                }
+            });
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+    //616906b0bc011c361c05bd24e2209f0c
+
+
+
+    @Override
+    protected void networkCallBack(String result) {
+        Log.d(TAG, "network callback...");
+
+    }
+
+
+
+
+    private void checkAndGetVeryficationCode() {
+        if (TextUtils.isEmpty(phonenum)) {
+            Toast.makeText(this, R.string.veryfication_phone_is_null, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!Utils.isMobilePhoneNumber(phonenum)) {
+            Toast.makeText(this, R.string.veryfication_phone_request, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(NetTool.isNetwork(context, true)){
+            btGetVeryficationCode.setClickable(false);
+            getVeryficationCode();
+
+        }
+
+    }
+
+    private void beforeResetPwd() {
+
+        phonenum = etPhoneNumber.getText().toString();
+        checkcode = etVeryficationCode.getText().toString();
+        password = etPassword.getText().toString();
+        confirmPwd = etRePassword.getText().toString();
+
+        if(TextUtils.isEmpty(phonenum)){
+            Toast.makeText(this, R.string.veryfication_phone_is_null, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!Utils.isMobilePhoneNumber(phonenum)){
+            Toast.makeText(this, R.string.veryfication_phone_request, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(TextUtils.isEmpty(checkcode)){
+            Toast.makeText(this, R.string.veryfication_code_is_null, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(checkcode.length()!=6){
+            Toast.makeText(this, R.string.veryfication_code_is_not_correst, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(TextUtils.isEmpty(password)){
+            Toast.makeText(this, R.string.please_input_user_pwd, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!Utility.isPassWord(password)) {
+            Toast.makeText(this, "密码请输入6-16位数字字母组合！",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(5>password.length()||password.length()>16){
+            Toast.makeText(this,"密码请输入6-16位数字字母组合！",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(TextUtils.isEmpty(confirmPwd)){
+            Toast.makeText(this, R.string.please_input_user_confirmpwd, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!confirmPwd.equals(password)){
+            Toast.makeText(this, R.string.pwd_not_same, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        pwd_ = MDTools.MD5(password);
+
+
+        if(NetTool.isNetwork(context, true)){
+            resetPwd();
+            //
+        }
+    }
+
+
+
+    private void login() {
+        //转到登录页面进行操作
+        Intent login = new Intent(this, LoginActivity.class);
+        startActivity(login);
+    }
+
+    /**
+     * resetPwd
+     */
+    public void resetPwd(){
+
+        try {
+            //构造请求json对象
+            final JSONObject jsonObject = new JSONObject();
+            JSONObject tmpObject = new JSONObject();
+
+            jsonObject.put("apikey", myApp.apikey);
+           // jsonObject.put("username", "");//TODO 要去掉
+            tmpObject.put("newPwd",pwd_ );
+            tmpObject.put("code", checkcode);
+            tmpObject.put("mobile",phonenum);
+
+            jsonObject.put("data", tmpObject.toString());
+            //请求短信验证码
+            HttpTools.post(this, Base_Url.Url_Base + Base_Url.ResetPassword_Url, jsonObject, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    String result = new String(responseBody);
+                    OemLog.log(TAG,result);
+                    try {
+                        JSONObject jsonObject1 = new JSONObject(result);
+                        int code = jsonObject1.optInt("code");
+                        if(code == 0){
+                            Toast.makeText(getContext(), R.string.findpwd, Toast.LENGTH_LONG).show();
+                            finish();
+                            login();
+                        }
+                        else if(code == 32){
+                            Toast.makeText(getContext(), R.string.veryfication_code_is_not_correst, Toast.LENGTH_LONG).show();
+                        }else if(code == 10){
+                            Toast.makeText(getContext(), R.string.no_user, Toast.LENGTH_LONG).show();
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    String result = new String(responseBody);
+                    OemLog.log(TAG,result);
+                    Toast.makeText(getContext(), "服务器异常", Toast.LENGTH_LONG).show();
+
+                }
+            });
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    /**
+     *
+     * @方法名称:timer_show
+     * @描述: 定时器
+     * @创建人：wangxy
+     * @创建时间：2014-12-13 下午3:12:10
+     * @备注：
+     * @返回类型：void
+     */
+    @SuppressLint("ShowToast")
+    private void timer_show() {
+        // TODO
+        time = 60;
+        Toast.makeText(this, "正在获取验证码....", Toast.LENGTH_SHORT).show();
+        btnMsg = btGetVeryficationCode.getText().toString();
+        // 设置按钮不可点击
+        btGetVeryficationCode.setEnabled(false);
+		/*
+		 * bt_checkcode.setBackground(mContext.getResources().getDrawable(
+		 * R.drawable.bt_forgertpassword_gray));
+		 */
+        // 开启一个定时器
+        if (timer == null) {
+            timer = new Timer();
+        }
+        if (timerTask == null) {
+            timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    int i = time--;
+                    handler.post(new ButtonFresh(i));// handler.post
+                    // 中的run方法默认会在主线程中执行
+                    // 若倒计时i减到了0
+                    if (i == 0) {
+                        Message msg = new Message();
+                        msg.what = 1;
+                        handler.sendMessage(msg);
+                    }
+                }
+            };
+        }
+
+        // 1ms后就执行，之后每隔一秒执行一次
+        if (timer != null && timerTask != null) {
+            timer.scheduleAtFixedRate(timerTask, 1, 1000);
+        }
+    }
+
+    /**
+     *
+     * @类名称: ButtonFresh
+     * @类描述: 设置按钮倒计时
+     * @创建人：wangxy
+     * @创建时间：2014-12-13 下午3:11:15
+     * @备注：
+     */
+    class ButtonFresh implements Runnable {
+        private int iMsg;
+
+        public ButtonFresh(int iMsg) {
+            this.iMsg = iMsg;
+        }
+
+        @Override
+        public void run() {
+            btGetVeryficationCode.setText(iMsg  + "秒");
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        clearTimer();
+
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
+    }
+
+    private void clearTimer() {
+        // timer 取消执行
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        if (timerTask != null) {
+            timerTask.cancel();
+            timerTask = null;
+        }
+    }
+}

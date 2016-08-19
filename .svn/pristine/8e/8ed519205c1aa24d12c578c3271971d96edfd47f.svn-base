@@ -1,0 +1,767 @@
+package com.capitalbio.oemv2.myapplication.Activity;
+
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.capitalbio.oemv2.myapplication.Base.Const;
+import com.capitalbio.oemv2.myapplication.Base.MyApplication;
+import com.capitalbio.oemv2.myapplication.Bean.AircatDevice;
+import com.capitalbio.oemv2.myapplication.Bean.LoginUser;
+import com.capitalbio.oemv2.myapplication.Const.AircatConst;
+import com.capitalbio.oemv2.myapplication.Const.Base_Url;
+import com.capitalbio.oemv2.myapplication.Const.BraceleteConst;
+import com.capitalbio.oemv2.myapplication.Fragment.SlidingMenuFragment;
+import com.capitalbio.oemv2.myapplication.NetUtils.HttpTools;
+import com.capitalbio.oemv2.myapplication.R;
+import com.capitalbio.oemv2.myapplication.Utils.OemLog;
+import com.capitalbio.oemv2.myapplication.Utils.PreferencesUtils;
+import com.capitalbio.oemv2.myapplication.Utils.TimeStampUtil;
+import com.capitalbio.oemv2.myapplication.Utils.TipNoet;
+import com.capitalbio.oemv2.myapplication.Utils.Utility;
+import com.capitalbio.oemv2.myapplication.Utils.Utils;
+import com.capitalbio.oemv2.myapplication.View.ISelectedDeviceChange;
+import com.capitalbio.oemv2.myapplication.View.SpinnerLoader;
+import com.capitalbio.oemv2.myapplication.dialog.WifiPwdSetDialog;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.slidingmenu.lib.SlidingMenu;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.DbManager;
+
+import java.util.HashMap;
+
+import cz.msebera.android.httpclient.Header;
+
+/**
+ * Created by chengkun on 15-11-4.
+ */
+public class MainActivity extends BaseActivity implements ISelectedDeviceChange, View.OnClickListener {
+
+
+    public static final String TAG = "MainActivity";
+    private TextView tvTestTime;
+    private TextView tvCurrentDevicesTip;
+    private RelativeLayout fmMainView;
+    private ImageView icSelectedDevice;
+    private Bitmap bmBracelet;
+    private BitmapDrawable bmBraceletDrable;
+    private SpinnerLoader spinnerView;
+    private String currentDeviceName;
+
+    public static final int REQUEST_PERMISSON_SUCCESSFULL = 200;
+
+    public static final int CURRENT_DEVICES_AIRCAT = 1;
+    public static final int CURRENT_DEVICES_BRACELETE = 2;
+    public static final int CURRENT_DEVICES_BRACELETE_SPORT = 200;
+    public static final int CURRENT_DEVICES_BRACELETE_SLEEP = 201;
+
+    public static final int CURRENT_DEVICES_BLOODPRESS = 3;
+
+    public static final int CURRENT_DEVICES_BODYFAT = 4;
+
+    private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    private EnableBluetoothReiceiver enableBluetoothReiceiver;
+
+    // 侧滑菜单
+    private SlidingMenu slidingMenu;
+
+    //综合评定
+    private ImageView ivZonghepingding;
+    private LoginUser user;
+
+    //购物车
+    private ImageView ivShoppingcart;
+
+    private DbManager dbManager = MyApplication.getDB();
+
+    IntentFilter bluetoothIntentFilter = new IntentFilter();
+
+    private class EnableBluetoothReiceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            OemLog.log(TAG, "reiceive bluetooth intent action is " + action);
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+                int newState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                if (newState == BluetoothAdapter.STATE_ON) {
+                    Toast.makeText(MainActivity.this, "蓝牙开启成功!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void selectDeviceChange(SpinnerLoader.CirclePoint cp) {
+        Log.d(TAG, "selected device changed current device is " + cp.deviceName);
+        setCurrentDevice(cp);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ic_slected_device:
+                if (Utils.isFastClick()) {
+                    return;
+                }
+                startSelectedDevice(currentDeviceName);
+                break;
+            case R.id.iv_main_zongheceping:
+                Utility.startActivity(MainActivity.this, ZonghecepingActivity.class);
+                break;
+            //购物车
+            case R.id.iv_main_shoppingcart:
+                goBioEh();
+                break;
+        }
+    }
+
+    //打开颐和康城
+    private void goBioEh() {
+        //Uri uri = Uri.parse("http://www.bioeh.cn/");
+        Uri uri = Uri.parse("https://wap.koudaitong.com/v2/showcase/tag?alias=17hp4num1&sf=wx_menu");
+        Intent it = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(it);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void initChildLayout() {
+        super.initChildLayout();
+
+        rl.setBackgroundResource(R.drawable.bg_main);
+
+        setLeftTopIcon(R.drawable.ic_person);
+        setIvTopRight(R.drawable.ic_share);
+        setTvTopTitle(R.string.app_name);
+        ivSplitLine.setBackgroundResource(R.color.mainSplitLine);
+
+        fmMainView = (RelativeLayout) View.inflate(this, R.layout.activity_main, null);
+
+        //设置对应设备大圈的图标
+        icSelectedDevice = (ImageView) fmMainView.findViewById(R.id.ic_slected_device);
+        bmBracelet = BitmapFactory.decodeResource(getResources(), R.drawable.ic_aircat_light);
+        bmBraceletDrable = new BitmapDrawable(bmBracelet);
+        icSelectedDevice.setBackground(bmBraceletDrable);
+
+        //取得滚轮view的引用
+        spinnerView = (SpinnerLoader) fmMainView.findViewById(R.id.slid_spinner);
+        spinnerView.setDeviceChangeListener(this);
+
+        //最近更新时间
+        tvTestTime = (TextView) fmMainView.findViewById(R.id.tv_test_time);
+
+        //温馨提醒
+        tvCurrentDevicesTip = (TextView) fmMainView.findViewById(R.id.tv_current_device_tip);
+
+        //综合评定
+        ivZonghepingding = (ImageView) fmMainView.findViewById(R.id.iv_main_zongheceping);
+        ivZonghepingding.setOnClickListener(this);
+
+        //购物车
+        ivShoppingcart = (ImageView) fmMainView.findViewById(R.id.iv_main_shoppingcart);
+        ivShoppingcart.setOnClickListener(this);
+
+        llBody.addView(fmMainView);
+
+        icSelectedDevice.setOnClickListener(this);
+        // ivTopLeftReturn.setOnClickListener(this);
+
+        //设置初始选择的设备的名称
+        currentDeviceName = getResources().getString(R.string.aircat);
+
+        initSlidingMenu();
+
+        //增加监听蓝牙系统事件的广播
+        bluetoothIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        enableBluetoothReiceiver = new EnableBluetoothReiceiver();
+
+        registerReceiver(enableBluetoothReiceiver, bluetoothIntentFilter);
+
+        if (!bluetoothAdapter.isEnabled()) {
+            Toast.makeText(this, "正在打开蓝牙...", Toast.LENGTH_SHORT).show();
+            bluetoothAdapter.enable();
+        }
+
+        if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            //your code that requires permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_PERMISSON_SUCCESSFULL);
+        }
+        if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            //your code that requires permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_PERMISSON_SUCCESSFULL);
+        }
+        //  getBindDevices();
+
+      //  getBindDevices();
+    }
+
+
+    private void setCurrentDevice(SpinnerLoader.CirclePoint cp) {
+
+        currentDeviceName = cp.deviceName;
+
+        if (getResources().getString(R.string.bodyfat).equals(cp.deviceName)) {
+            icSelectedDevice.setBackgroundResource(R.drawable.ic_body_fat);
+            tvTestTime.setText(PreferencesUtils.getString(this, "bodyfat_latest_measure_time", ""));
+            int latestBmi = PreferencesUtils.getInt(this, "bodyfat_bmi", -1);
+            String tips = TipNoet.getTips(CURRENT_DEVICES_BODYFAT, -1, latestBmi);
+            tvCurrentDevicesTip.setText(tips);
+        } else if (getResources().getString(R.string.glycolipid).equals(cp.deviceName)) {
+            //设置血糖图片
+            icSelectedDevice.setBackgroundResource(R.drawable.ic_glycolipid_gray);
+            tvTestTime.setText("");
+            tvCurrentDevicesTip.setText("您还没有开始测量!");
+        } else if (getResources().getString(R.string.bracelete).equals(cp.deviceName)) {
+            icSelectedDevice.setBackgroundResource(R.drawable.ic_bracelet);
+            tvTestTime.setText(PreferencesUtils.getString(this, "bracelete_latest_sport_time", ""));
+            int currentSteps = PreferencesUtils.getInt(this, "bracelete_current_steps", -1);
+            int currentToatlSleep = PreferencesUtils.getInt(this, "bracelete_total_sleep", -1);
+            String sportTip = TipNoet.getTips(CURRENT_DEVICES_BRACELETE, CURRENT_DEVICES_BRACELETE_SPORT, currentSteps);
+            String sleepTip = TipNoet.getTips(CURRENT_DEVICES_BRACELETE, CURRENT_DEVICES_BRACELETE_SLEEP, currentToatlSleep);
+            tvCurrentDevicesTip.setText(sportTip + "," + sleepTip);
+        } else if (getResources().getString(R.string.bloodpress).equals(cp.deviceName)) {
+            icSelectedDevice.setBackgroundResource(R.drawable.ic_blood_press);
+            tvTestTime.setText(PreferencesUtils.getString(this, "blood_press_latest_meausre_time", ""));
+            //取全局的preference
+            int bloodLevel = PreferencesUtils.getInt(MyApplication.getInstance(), "bloodpressvalue", -1);
+            String bloodTips = TipNoet.getTips(CURRENT_DEVICES_BLOODPRESS, -1, bloodLevel);
+            tvCurrentDevicesTip.setText(bloodTips);
+        } else if ("空气猫".equals(cp.deviceName)) {
+            icSelectedDevice.setBackgroundResource(R.drawable.ic_aircat_light);
+            int pollLevel = PreferencesUtils.getInt(this, "aircat_poll_level", -1);
+            String aircatTips = TipNoet.getTips(CURRENT_DEVICES_AIRCAT, -1, pollLevel);
+            tvCurrentDevicesTip.setText(aircatTips);
+            tvTestTime.setText(PreferencesUtils.getString(this, "aircat_latest_measure_time", ""));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        spinnerView.invalidate();
+        tvTestTime.setText(PreferencesUtils.getString(this, "aircatUpdateTime", ""));
+        OemLog.log("time>>>>>", PreferencesUtils.getString(this, "aircatUpdateTime", ""));
+    }
+
+    private void startSelectedDevice(String deviceName) {
+        Intent intent;
+        OemLog.log(TAG, "devices name is " + deviceName);
+        if (deviceName.equals(getResources().getString(R.string.bloodpress))) {
+            /*intent = new Intent(this, BloodPressureActivity.class);
+            startActivity(intent);*/
+            getBloodPressBindDevices();
+        }
+        if (deviceName.equals(getResources().getString(R.string.bracelete))) {
+            getBindDevice_bracelete();
+        }
+        if (deviceName.equals(getResources().getString(R.string.bodyfat))) {
+            getBodyFatBindDevices();
+        }
+        if (deviceName.equals(getResources().getString(R.string.glycolipid))) {
+            String url = Base_Url.downloaddayUrl;
+            HashMap<String, Object> param = new HashMap<>();
+            param.put("modelType", "braceletSports");
+            param.put("url", url);
+            param.put("beginDate", TimeStampUtil.past24HYm());
+            param.put("endDate", TimeStampUtil.currTimeforHistory());
+
+            Utility.startActivity(MainActivity.this,GlycolipidActivity.class);
+        }
+        if (deviceName.equals("空气猫")) {
+            //TODO 判断是否添加过空气猫没有请求添加设备 getBindDevice_Url
+            if (PreferencesUtils.getString(context, "curAircatMac") == null || PreferencesUtils.getString(context, "curAircatMac").equals("")) {
+                getBindDevice();
+            } else {
+                //showAlertDialog();
+                Intent intentii = new Intent(MainActivity.this,AirCatActivity.class);
+                startActivity(intentii);
+            }
+        }
+
+        if (deviceName.equals("糖脂五项")) {
+        }
+
+    }
+
+    //写个弹出对话框
+
+    private AlertDialog alertDialog;
+
+    private void showAlertDialog() {
+        if (alertDialog == null) {
+            alertDialog = new AlertDialog.Builder(this).create();
+        }
+        alertDialog.show();
+
+        Window window = alertDialog.getWindow();
+        window.setContentView(R.layout.dialog_aircatchoose);
+
+        RelativeLayout rlwifi = (RelativeLayout) window.findViewById(R.id.rl_dialog_aircatchoose_wifi);
+        RelativeLayout rlbt = (RelativeLayout) window.findViewById(R.id.rl_dialog_aircatchoose_bt);
+
+        rlwifi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utility.startActivity(MainActivity.this, AirCatActivity.class);
+                alertDialog.dismiss();
+            }
+        });
+
+        rlbt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utility.startActivity(MainActivity.this, AirCatBlueActivity.class);
+                alertDialog.dismiss();
+            }
+        });
+
+    }
+
+
+    public void getBindDevice_bracelete() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("请稍后...");
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
+        try {
+            //构造请求json对象
+            JSONObject jsonObject = new JSONObject();
+            final JSONObject dataObject = new JSONObject();
+
+            jsonObject.put("apikey", myApp.apikey);//所有接口必填
+            jsonObject.put("username", myApp.getCurrentUserName());
+            jsonObject.put("token", PreferencesUtils.getString(context, "token"));
+            //dataObject.put("mobile", etPhoneNumber.getText());
+            dataObject.put("modelType", Const.TYPE_BRACELETE);
+
+            jsonObject.put("data", dataObject.toString());
+            //绑定设备
+            Log.d(TAG, Base_Url.Url_Base + Base_Url.getCurentBindDevice_URL);
+            Log.d(TAG, " all bindDevices " + jsonObject.toString());
+            HttpTools.post(this, Base_Url.Url_Base + Base_Url.getCurentBindDevice_URL, jsonObject, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    String result = new String(responseBody);
+                    mProgressDialog.dismiss();
+                    Log.d(TAG, result);
+                    try {
+                        JSONObject resultobj = new JSONObject(result);
+
+                        if (103 == resultobj.optInt("code")) {
+                            //没有绑定设备
+                            Intent braceleteIntent = new Intent(MainActivity.this, SearchDeviceActivity.class);
+                            braceleteIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            braceleteIntent.putExtra("currentDevices", "bracelete");
+                            startActivity(braceleteIntent);
+                            MyApplication.getInstance().setHasBindDevices(false);
+                        } else if (0 == resultobj.optInt("code")) {
+                            String data = resultobj.optString("data");
+                            JSONObject jsondata = new JSONObject(data);
+                            String mac = jsondata.optString("mac");
+                            PreferencesUtils.putString(context, "default_bracelete_address", mac);
+                            BraceleteConst.mac = mac;
+                            Utility.startActivity(getContext(), Bracelete2Activity.class);
+                        } else if (11 == resultobj.optInt("code")) {
+                            Toast.makeText(MainActivity.this, "您已下线，请重新登录...", Toast.LENGTH_SHORT);
+                            Intent logIntent = new Intent(MainActivity.this, LoginActivity.class);
+                            logIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(logIntent);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    OemLog.log(TAG, "服务器请求失败");
+                    mProgressDialog.dismiss();
+                    Toast.makeText(getContext(), "服务器请求失败", Toast.LENGTH_LONG).show();
+
+                }
+            });
+
+        } catch (JSONException e) {
+            mProgressDialog.dismiss();
+            OemLog.log(TAG, "JSON EXCEPTION !1");
+            e.printStackTrace();
+        }
+    }
+
+    ProgressDialog mProgressDialog = null;
+
+    public void getBindDevice() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("请稍后...");
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
+        try {
+
+            //构造请求json对象
+            JSONObject jsonObject = new JSONObject();
+            final JSONObject dataObject = new JSONObject();
+
+            jsonObject.put("apikey", myApp.apikey);//所有接口必填
+            jsonObject.put("username", myApp.getCurrentUserName());
+            jsonObject.put("token", PreferencesUtils.getString(context, "token"));
+            //dataObject.put("mobile", etPhoneNumber.getText());
+            dataObject.put("modelType", AircatConst.modelType);
+            jsonObject.put("data", dataObject.toString());
+            //绑定设备
+            Log.d(TAG, Base_Url.Url_Base + Base_Url.getCurentBindDevice_URL);
+            Log.d(TAG, "bindDevices " + jsonObject.toString());
+            HttpTools.post(this, Base_Url.Url_Base + Base_Url.getCurentBindDevice_URL, jsonObject, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    mProgressDialog.dismiss();
+                    String result = new String(responseBody);
+                    Log.d(TAG, result);
+                    mProgressDialog.dismiss();
+                    JSONObject jsonObject = null;
+                    JSONArray array;
+
+                    try {
+                        jsonObject = new JSONObject(result);
+                        int code = jsonObject.optInt("code");
+                        String msg = jsonObject.optString("message");
+                        //JSONObject data = jsonObject.getJSONObject("data");
+                        String data = jsonObject.optString("data");
+
+                        OemLog.log(TAG, data);
+
+                        if (code == 11) {
+                            MyApplication.getInstance().exit();
+                            Toast.makeText(context, "用户未登陆,请重新登陆", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        } else if (code == 0) {
+                            if (!data.equals("null")) {
+                                //TODO
+                                JSONObject dataObj = new JSONObject(data);
+                                AircatDevice aircat = new AircatDevice();
+                                aircat.setCurrent(dataObj.getBoolean("current"));
+                                aircat.setBindName(dataObj.optString("bindName"));
+                                aircat.setCtime(dataObj.optLong("ctime"));
+                                aircat.setId(dataObj.optString("id"));
+                                aircat.setMac(dataObj.optString("mac"));
+                                PreferencesUtils.putString(context, "curAircatMac", dataObj.optString("mac"));
+                                PreferencesUtils.putString(context, "curAircatName", dataObj.optString("bindName"));
+
+                                Intent intent = new Intent(MainActivity.this, AirCatActivity.class);
+                                startActivity(intent);
+                            } else {
+                                //未绑定过设备
+                                Dialog dialog = new WifiPwdSetDialog(MainActivity.this, R.style.MyDialog, WifiPwdSetDialog.NO_DEVICES_ENTER);
+                                dialog.show();
+                                //   Utility.startActivity(MainActivity.this,AircatAddDeviceActivtity.class);
+                            }
+                            //TODO
+                        } else Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+
+                    } catch (JSONException e) {
+                        mProgressDialog.dismiss();
+                        OemLog.log(TAG, "JSON EXCEPTION !");
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    OemLog.log(TAG, "服务器请求失败");
+                    mProgressDialog.dismiss();
+                    Toast.makeText(getContext(), "服务器请求失败", Toast.LENGTH_LONG).show();
+
+                }
+            });
+
+        } catch (JSONException e) {
+            mProgressDialog.dismiss();
+            OemLog.log(TAG, "JSON EXCEPTION !1");
+            e.printStackTrace();
+        }
+
+
+    }
+
+    /**
+     * 侧滑菜单
+     */
+    private void initSlidingMenu() {
+
+        // 获取屏幕宽度
+        DisplayMetrics dm = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screenWidth = dm.widthPixels;
+
+        slidingMenu = new SlidingMenu(this);
+        slidingMenu.setMode(SlidingMenu.LEFT);
+
+        // 设置触摸屏幕的模式
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+        slidingMenu.setShadowDrawable(R.drawable.shadow);
+
+        // 设置滑动菜单视图的宽度
+        slidingMenu.setBehindOffset(screenWidth / 3);
+        // 设置渐入渐出效果的值
+        slidingMenu.setFadeDegree(0.35f);
+
+        //为侧滑菜单设置布局
+        slidingMenu.setMenu(R.layout.leftmenu);
+
+        getFragmentManager().beginTransaction().replace(R.id.fl_leftmenu, new SlidingMenuFragment()).commit();
+
+        //把滑动菜单添加进所有的Activity中
+        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Utils.lastClickTime = 0;
+
+        spinnerView.invalidate();
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        float addNavi = getResources().getDimensionPixelSize(R.dimen.dp_130);
+        float bigCircleX = spinnerView.getInitialPoints()[3].x;
+        float bigCircleY = spinnerView.getInitialPoints()[3].y;
+
+
+        OemLog.log("touchTest", "bigCircle " + spinnerView.getBigCicle() + ", touch x " + event.getX() +
+                ", touch y " + event.getY() + ", x is " + bigCircleX + ", y is " + bigCircleY);
+
+
+        /*switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                OemLog.log("touchTest", "bigCircle" + spinnerView.getBigCicle() + ", touch x " + event.getX() +
+                        ", touch y " + event.getY() + ", x is " + bigCircleX + ", y is " + bigCircleY);
+                if (event.getX() > bigCircleX - spinnerView.getBigCicle() && event.getX() < bigCircleX + spinnerView.getBigCicle()
+                        && (event.getY() + addNavi) > (bigCircleY - spinnerView.getBigCicle()) && (event.getY() + addNavi) < (bigCircleY + spinnerView.getBigCicle())) {
+//                    Toast.makeText(MyApplication.getInstance(), "down", Toast.LENGTH_SHORT).show();
+
+                    if(PreferencesUtils.getString(context,"curAircatMac")==null||PreferencesUtils.getString(context,"curAircatMac").equals("")){
+                        getBindDevice();
+                    }else{
+                        Intent intentii = new Intent(MainActivity.this,AirCatActivity.class);
+                        startActivity(intentii);
+                    }
+
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
+                if (event.getX() > bigCircleX - spinnerView.getBigCicle() && event.getX() < bigCircleX + spinnerView.getBigCicle()
+                        && event.getY()  > bigCircleY - spinnerView.getBigCicle() && event.getY() < bigCircleY + spinnerView.getBigCicle()) {
+                }
+
+                break;
+        }*/
+
+        return false;
+
+    }
+
+    @Override
+    public void back(View v) {
+        slidingMenu.showMenu();
+    }
+
+    public void getBloodPressBindDevices() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("请稍后...");
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
+            try {
+                //构造请求json对象
+                JSONObject jsonObject = new JSONObject();
+                final JSONObject dataObject = new JSONObject();
+
+                jsonObject.put("apikey", myApp.apikey);//所有接口必填
+                jsonObject.put("username", myApp.getCurrentUserName());
+                jsonObject.put("token", PreferencesUtils.getString(context, "token"));
+                //dataObject.put("mobile", etPhoneNumber.getText());
+                dataObject.put("modelType", Const.TYPE_BLOODPRESS);
+
+                jsonObject.put("data", dataObject.toString());
+                //绑定设备
+                Log.d(TAG, Base_Url.Url_Base + Base_Url.getCurentBindDevice_URL);
+                Log.d(TAG, " all bindDevices " + jsonObject.toString());
+                HttpTools.post(this, Base_Url.Url_Base + Base_Url.getCurentBindDevice_URL, jsonObject, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        mProgressDialog.dismiss();
+                        String result = new String(responseBody);
+                        Log.d(TAG, result);
+                        try {
+                            JSONObject resultobj = new JSONObject(result);
+
+                            if (103 == resultobj.optInt("code")) {
+                                //没有绑定设备
+                                Intent bloodPressIntent = new Intent(MainActivity.this, SearchDeviceActivity.class);
+                                bloodPressIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                bloodPressIntent.putExtra("currentDevices", "bloodPress");
+                                startActivity(bloodPressIntent);
+                                MyApplication.getInstance().setHasBindDevices(false);
+                            } else if (0 == resultobj.optInt("code")) {
+                                String data = resultobj.optString("data");
+                                JSONObject jsondata = new JSONObject(data);
+                                String mac = jsondata.optString("mac");
+                                PreferencesUtils.putString(context, "default_bloodpress_address", mac);
+                                BraceleteConst.mac = mac;
+                                Utility.startActivity(getContext(), BloodPressureActivity.class);
+                                MyApplication.getInstance().setHasBindDevices(true);
+                            } else if (11 == resultobj.optInt("code")) {
+                                Toast.makeText(MainActivity.this, "您已下线，请重新登录...", Toast.LENGTH_SHORT);
+                                Intent logIntent = new Intent(MainActivity.this, LoginActivity.class);
+                                logIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(logIntent);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        OemLog.log(TAG, "服务器请求失败");
+                        mProgressDialog.dismiss();
+                        Toast.makeText(getContext(), "服务器请求失败", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+            } catch (JSONException e) {
+                mProgressDialog.dismiss();
+                OemLog.log(TAG, "JSON EXCEPTION !1");
+                e.printStackTrace();
+            }
+    }
+
+
+    public void getBodyFatBindDevices() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("请稍后...");
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
+        try {
+            //构造请求json对象
+            JSONObject jsonObject = new JSONObject();
+            final JSONObject dataObject = new JSONObject();
+
+            jsonObject.put("apikey", myApp.apikey);//所有接口必填
+            jsonObject.put("username", myApp.getCurrentUserName());
+            jsonObject.put("token", PreferencesUtils.getString(context, "token"));
+            //dataObject.put("mobile", etPhoneNumber.getText());
+            dataObject.put("modelType", Const.TYPE_BODYFAT);
+
+            jsonObject.put("data", dataObject.toString());
+            //绑定设备
+            OemLog.log(TAG, Base_Url.Url_Base + Base_Url.getCurentBindDevice_URL);
+            OemLog.log(TAG, " all bindDevices " + jsonObject.toString());
+            HttpTools.post(this, Base_Url.Url_Base + Base_Url.getCurentBindDevice_URL, jsonObject, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    mProgressDialog.dismiss();
+                    String result = new String(responseBody);
+                    OemLog.log(TAG, result);
+                    try {
+                        JSONObject resultobj = new JSONObject(result);
+
+                        if (103 == resultobj.optInt("code")) {
+                            //没有绑定设备
+//                            Utility.startActivity(getContext(), SearchDeviceActivity.class);
+                            Intent bodyfatIntent = new Intent(MainActivity.this, SearchDeviceActivity.class);
+                            bodyfatIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            bodyfatIntent.putExtra("currentDevices", "bodyfat");
+                            context.startActivity(bodyfatIntent);
+                            MyApplication.getInstance().setHasBindDevices(false);
+
+                        } else if (0 == resultobj.optInt("code")) {
+                            String data = resultobj.optString("data");
+                            JSONObject jsondata = new JSONObject(data);
+                            String mac = jsondata.optString("mac");
+                            PreferencesUtils.putString(context, "default_bodyfat_address", mac);
+                            BraceleteConst.mac = mac;
+                            Utility.startActivity(getContext(), BodyFatActivity.class);
+                            MyApplication.getInstance().setHasBindDevices(true);
+
+                        } else if (11 == resultobj.optInt("code")) {
+                            Toast.makeText(MainActivity.this, "您已下线，请重新登录...", Toast.LENGTH_SHORT);
+                            Intent logIntent = new Intent(MainActivity.this, LoginActivity.class);
+                            logIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(logIntent);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    OemLog.log(TAG, "服务器请求失败");
+                    mProgressDialog.dismiss();
+                    Toast.makeText(getContext(), "服务器请求失败", Toast.LENGTH_LONG).show();
+
+                }
+            });
+
+        } catch (JSONException e) {
+            mProgressDialog.dismiss();
+            OemLog.log(TAG, "JSON EXCEPTION !1");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        OemLog.log(TAG, "request result is " + requestCode);
+    }
+
+}

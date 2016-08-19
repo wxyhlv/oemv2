@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_main"
+        android:orientation="vertical">
+
+        <!-- title -->
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="空气猫"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+            <RelativeLayout
+                android:id="@+id/rl_catbt_back"
+                android:layout_width="40dp"
+                android:layout_height="fill_parent"
+                android:layout_alignParentLeft="true">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_back" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_catbt_edite"
+                android:layout_width="40dp"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_edit" />
+
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <!--body-->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+
+                <LinearLayout
+                    android:id="@+id/ll_catbt_monitor"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp">
+
+                        <TextView
+                            android:id="@+id/tv_catbt_monitor_devicename"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="5dp"
+                            android:text="设备名称"
+                            android:textColor="@color/wihte_shallow"
+                            android:textSize="16dp" />
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_catbt_monitor_date"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="--月--日  星期-"
+                                    android:textColor="@color/white"
+                                    android:textSize="20dp" />
+
+                                <TextView
+                                    android:id="@+id/tv_catbt_monitor_airquality"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="室外空气：-"
+                                    android:textColor="@color/white"
+                                    android:textSize="20dp" />
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true">
+
+                                <RelativeLayout
+                                    android:id="@+id/rl_catbt_monitor_tianqi"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
+
+                                    <LinearLayout
+                                        android:id="@+id/ll_catbt_monitor_sun"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_alignParentTop="true"
+                                        android:gravity="center_horizontal"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_tem"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="--°/--°"
+                                            android:textColor="@color/white"
+                                            android:textSize="14dp" />
+
+                                        <ImageView
+                                            android:id="@+id/iv_catbt_monitor_tianqi"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:src="@drawable/weather_icon_list" />
+                                    </LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/tv_catbt_monitor_tianqi"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginLeft="8dp"
+                                        android:layout_toRightOf="@id/ll_catbt_monitor_sun"
+                                        android:text="-"
+                                        android:textColor="@color/white"
+                                        android:textSize="18dp" />
+                                </RelativeLayout>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignEnd="@id/rl_catbt_monitor_tianqi"
+                                    android:layout_below="@id/rl_catbt_monitor_tianqi"
+                                    android:text="百度天气"
+                                    android:textColor="@color/white"
+                                    android:textSize="10dp" />
+                            </RelativeLayout>
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:alpha="0.5"
+                        android:background="@color/white" />
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:orientation="vertical">
+
+                            <!--1对儿-->
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <!-- 温度 -->
+
+                                <RelativeLayout
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="1">
+
+                                    <com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView
+                                        android:id="@+id/cqp_catbt_monitor_tem"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_alignParentRight="true"
+                                        android:background="@color/transparent"
+                                        android:padding="10dp"
+                                        app:animDuration="2000"
+                                        app:color_of_arc="@color/white">
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_tem1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="20dp"
+                                            android:text="0℃"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_tem2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="舒适"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginBottom="20dp"
+                                            android:text="温度"
+                                            android:textColor="@color/white"
+                                            android:textSize="24dp"
+                                            android:textStyle="bold" />
+                                    </com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView>
+                                </RelativeLayout>
+                                <!-- 湿度 -->
+
+                                <RelativeLayout
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="1">
+
+                                    <com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView
+                                        android:id="@+id/cqp_catbt_monitor_hum"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:background="@color/transparent"
+                                        android:padding="10dp"
+                                        app:animDuration="2000"
+                                        app:color_of_arc="@color/white">
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_hum1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp"
+                                            android:text="0%RH"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_hum2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="舒适"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginBottom="5dp"
+                                            android:text="湿度"
+                                            android:textColor="@color/white"
+                                            android:textSize="24dp"
+                                            android:textStyle="bold" />
+                                    </com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView>
+                                </RelativeLayout>
+                            </LinearLayout>
+
+                            <!--2对儿-->
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <!-- 甲醛 -->
+
+                                <RelativeLayout
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="1">
+
+                                    <com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView
+                                        android:id="@+id/cqp_catbt_monitor_jiaquan"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:background="@color/transparent"
+                                        android:padding="10dp"
+                                        app:animDuration="2000"
+                                        app:color_of_arc="@color/white">
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_jiaquan1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp"
+                                            android:text="0mg/m³"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_jiaquan2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="正常"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginBottom="5dp"
+                                            android:text="甲醛"
+                                            android:textColor="@color/white"
+                                            android:textSize="24dp"
+                                            android:textStyle="bold" />
+                                    </com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView>
+                                </RelativeLayout>
+                                <!-- TVOC -->
+
+                                <RelativeLayout
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="1">
+
+                                    <com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView
+                                        android:id="@+id/cqp_catbt_monitor_tvoc"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_alignParentTop="true"
+                                        android:background="@color/transparent"
+                                        android:padding="10dp"
+                                        app:animDuration="2000"
+                                        app:color_of_arc="@color/white">
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_tvoc1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp"
+                                            android:text="0mg/m³"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_tvoc2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="正常"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginBottom="5dp"
+                                            android:text="TVOC"
+                                            android:textColor="@color/white"
+                                            android:textSize="24dp"
+                                            android:textStyle="bold" />
+                                    </com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView>
+                                </RelativeLayout>
+                            </LinearLayout>
+                            <!--3对儿-->
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <!-- pm2.5 -->
+
+                                <RelativeLayout
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="1">
+
+                                    <com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView
+                                        android:id="@+id/cqp_catbt_monitor_pm2.5"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:background="@color/transparent"
+                                        android:padding="10dp"
+                                        app:animDuration="2000"
+                                        app:color_of_arc="@color/white">
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_pm2.51"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp"
+                                            android:text="0mg/m³"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_pm2.52"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="正常"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginBottom="5dp"
+                                            android:text="PM2.5"
+                                            android:textColor="@color/white"
+                                            android:textSize="24dp"
+                                            android:textStyle="bold" />
+                                    </com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView>
+                                </RelativeLayout>
+                                <!-- 空气污染指数 -->
+
+                                <RelativeLayout
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="1">
+
+                                    <com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView
+                                        android:id="@+id/cqp_catbt_monitor_wrzs"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_alignParentTop="true"
+                                        android:background="@color/transparent"
+                                        android:padding="10dp"
+                                        app:animDuration="2000"
+                                        app:color_of_arc="@color/white">
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_wrzs1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp"
+                                            android:text="0mg/m³"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:id="@+id/tv_catbt_monitor_wrzs2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="正常"
+                                            android:textColor="@color/white"
+                                            android:textSize="20dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginBottom="5dp"
+                                            android:text="污染指数"
+                                            android:textColor="@color/white"
+                                            android:textSize="24dp"
+                                            android:textStyle="bold" />
+                                    </com.capitalbio.oemv2.myapplication.View.views.CatQiPaoView>
+                                </RelativeLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_catbt_monitor_battery"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/battery_1"
+                            android:visibility="invisible" />
+
+                        <View
+                            android:layout_width="fill_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</RelativeLayout>

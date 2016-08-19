@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:id="@+id/text0"
+         
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="您的腰围是："
+            android:padding="7dp"
+            android:textSize="16sp"
+            android:textColor="@color/persondetail_text_color"
+            />
+        <EditText
+             android:id="@+id/edt_size"
+             android:layout_width="100dp"
+             android:layout_height="wrap_content"
+             android:layout_toRightOf="@+id/text0"
+             android:inputType="numberDecimal"
+             android:maxLength="4"
+             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cm"
+            android:textSize="16sp"
+            android:textColor="@color/persondetail_text_color"
+            android:layout_toRightOf="@+id/edt_size"
+
+            />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/text"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您的生活方式："
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_2"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_2_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="静坐"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_2_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="运动"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+    <TextView
+        android:id="@+id/text1"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否糖调节受损？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_3"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_3_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_3_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否正在接受血脂治疗？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_4"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_4_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_4_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text3"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否正在接受血压治疗？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_5"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_5_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_5_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text4"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否有动脉粥硬化性心血管疾病？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_6"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_6_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_6_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text5"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否有一过性类固醇糖尿病病史？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_7"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_7_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_7_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text6"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否是pcos（多囊卵巢综合症）？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_8"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_8_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_8_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text7"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您孩子是否为巨大儿（出生体重>=4kg)史？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_9"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_9_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_9_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text8"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否有妊娠糖尿病（GDM）？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_10"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_10_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_10_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+
+
+    <TextView
+        android:id="@+id/text9"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您是否长期接受抗精神病药物和（或）抗抑郁药物治疗？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_11"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_11_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_11_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/text10"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您的一级亲属（父母/兄弟姐妹）中是否有2型糖尿病家族史？"
+        android:padding="7dp"
+        android:textSize="16sp"
+        android:textColor="@color/persondetail_text_color"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_diabete_12"
+        android:layout_width="match_parent"
+
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rg_diabete_12_yes"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="是"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_left" />
+
+        <RadioButton
+            android:id="@+id/rg_diabete_12_no"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="否"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/select_radiobutton_right" />
+    </RadioGroup>
+</LinearLayout>
